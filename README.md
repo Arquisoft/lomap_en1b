@@ -261,3 +261,4 @@ After the actions process is finished, we can access the application using the I
 ## Team members
   
    - Mario Pérez Fernández (uo283720@uniovi.es)
+   - Sara María Ramírez Pérez (uo276188@uniovi.es)
