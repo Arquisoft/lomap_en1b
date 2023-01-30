@@ -264,3 +264,4 @@ After the actions process is finished, we can access the application using the I
    - Sara María Ramírez Pérez (uo276188@uniovi.es)
    - Silvia Suárez Prendes (uo277412@uniovi.es)
    - Iván Vega García (uo276670@uniovi.es)
+   - Elías Llera García-Riaño (uo271407@uniovi.es)
