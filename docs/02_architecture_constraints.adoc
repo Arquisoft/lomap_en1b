@@ -1,5 +1,20 @@
 [[section-architecture-constraints]]
 == Architecture Constraints
+=== Technical constraints
+Use of SOLID pods:: The user’s information must be secured and stored in personal SOLID pods.
+Use of Git:: The version control of the project must be done using Git.
+
+=== Organizational constraints
+Fixed number of members:: The Development Team has a fixed number of members. In case there is a loss of staff, we must take over their part of the work.
+Weekly meetings:: There must be a weekly meeting in which we will verify a minute where we can discuss the work distribution, problems, …
+Communication and code sharing in GitHub:: All members of the work must use GitHub to communicate, organize the work, write the minutes, …
+Milestones:: During the course of the project there will be four deliverables in which several requirements must be met.
+
+=== Conventional constraints
+Documentation in Arc42:: The documentation of the project must follow the Arc42 template for documentation and communication of software and system architectures.
+Use of the English language:: The project and the documentation must be written in the English language.
+
+
 
 
 [role="arc42help"]
