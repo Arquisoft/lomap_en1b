@@ -31,6 +31,20 @@ If requirements documents exist this overview should refer to these documents.
 Keep these excerpts as short as possible. Balance readability of this document with potential redundancy w.r.t to requirements documents.
 ****
 
+
+* Users must be able to add locations to their own maps
+** The locations could be of different types, initially shops, bars, restaurants, sight and monuments.
+* Users must be able to add reviews to locations.
+** Scores, comments and pictures could be added to a location.
+* Locations could be shared with other users.
+** Locations will be shared to a friend or a group of friends.
+* User's data will be extracted and stored into SOLID PODS.
+** Users' locations information will also be stored in the user' POD.
+* Locations will be printed in a map.
+** The map should have filters. Initially vategory, friends, and different types of locations.
+
+
+
 === Quality Goals
 
 [role="arc42help"]
