@@ -14,13 +14,15 @@ Another feature of the application will be to allow places to create their own s
 
 
 === Business Context
+image:BussinessView.png["Bussiness context diagram"]
 
 The system will allow users to add locations in different categories, see places and information about those places taken from their friends, show the locations in a map window, add review scores, comments... 
 
-The user is able to add locations in different categories, add review scores, comments, or pictures about the added places. It also will be possible to manage from the application the information that is accessible with other users, like their friends or group of friends and to see the map with filters like by category, friends... 
+The user is able to add locations in different categories, add review scores, comments, or pictures about the added places. It also will be possible to manage from the application the information that is accessible with other users and friendships. 
 
 
 The system is structured in two parts: a frontend and a backend. The user only interfaces with the frontend, which in turn interfaces with the backend, which then works with the Solid Pod provider and the database serve the data the frontend might need.
+The credentials of the users are stored in the PODs and the maps service provides the application with a visual map to show it to the user. 
 
 [role="arc42help"]
 ****
@@ -28,16 +30,9 @@ The system is structured in two parts: a frontend and a backend. The user only i
 
 
 === Technical Context
+image:TechnicalView.png["Technical context diagram"]
 
-The frontend of the application is made with React. It also uses Redux.
-
-Techology:
-    - TypeScript as programming language
-    - MongoDB as Database
-    - React Redux
-    - Axios
-    - Postman
-
+The frontend of the application is made with React, Redux and has a Map API wich provides the application with visual maps.
 
 
 [role="arc42help"]
