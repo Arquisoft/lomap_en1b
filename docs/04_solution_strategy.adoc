@@ -23,28 +23,32 @@ based upon your problem statement, the quality goals and key constraints.
 Refer to details in the following sections.
 ****
 
-Technology decisions
+=== Technology decisions
 This are the technologies that we have decided to use, some of them may vary in future iterations of the poyect:
- * SOLID Pods for security
- * TypeScript as programming language
- * MongoDb as our DMBS
- * Redux using React as UI
- * Axios
- * Postman
 
-Design decisions:
+* SOLID Pods for security
+* TypeScript as programming language
+* MongoDb as our DMBS
+* Redux using React as UI
+* Axios
+* Postman
+
+
+=== Design decisions:
 The general design of our project has two main parts, connected using a facade:
+
  * Webapp (frontend): with views and connections to the SOLID pods and to the RestAPI facade
  * RestAPI (backend): controls the acess to the database and works as a microservice
 
-Quality decisions
+
+=== Quality decisions
 The main quality attributes that we will focus on are the following:
 [options="header",cols="1,2,2"]
 |===
 |Quality goal|Scenario|Solution approach
 |Privacy|Any user using our application will feel their data is secure | We will use SOLID Pods to ensure that user's data is not compromised.
 |Usability|All users, regardless of their level, are able to navigate and use the application correctly|We will use UX conventions to ensure that the app has its components presented in a familiar way
-|Accessibility|All users, regardless of their level, will be able to navigate and use the application|
+|Accessibility||
 
 
 
