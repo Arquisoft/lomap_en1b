@@ -9,6 +9,7 @@ Describes the relevant requirements and the driving forces that software archite
 * quality goals for the architecture
 * relevant stakeholders and their expectations
 ****
+LoMap intends to be an easy-to-use tool for people to create, customize, and share personal maps filling them with the places they live
 
 === Requirements Overview
 
@@ -31,17 +32,18 @@ If requirements documents exist this overview should refer to these documents.
 Keep these excerpts as short as possible. Balance readability of this document with potential redundancy w.r.t to requirements documents.
 ****
 
-
+* Users must be able to create different maps
+** One user could have more than one map
 * Users must be able to add locations to their own maps
 ** The locations could be of different types, initially shops, bars, restaurants, sight and monuments.
 * Users must be able to add reviews to locations.
 ** Scores, comments and pictures could be added to a location.
 * Locations could be shared with other users.
-** Locations will be shared to a friend or a group of friends.
+** Locations can be shared with a friend or a group of friends.
 * User's data will be extracted and stored into SOLID PODS.
 ** Users' locations information will also be stored in the user' POD.
 * Locations will be printed in a map.
-** The map should have filters. Initially vategory, friends, and different types of locations.
+** The map should have filters. Initially category, friends, and different types of locations.
 
 
 
@@ -105,5 +107,5 @@ José Emilio Labra Gayo (labra@uniovi.es) |Professors of the course in charge of
 |Users| |Final users of LoMap. |Use the application, and they should be satisfied by it.
 |Solid|https://forum.solidproject.org|Specification to store users' data in a decentralized manner. | Gain decentralization of data.
 |Compaines |Inrupt +
-Empathy |Compaines involved in the Solid challenge. |
+Empathy |Compaines involved in the Solid challenge. | Evaluate the projects and decide a winner for the challenge
 |===
