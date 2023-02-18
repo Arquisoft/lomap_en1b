@@ -6,11 +6,6 @@ The maps will be under the full control of the users and the shared information 
 
 Another feature of the application will be to allow places to create their own space, like a digital version of their physical place.
 
-[role="arc42help"]
-****
-
-
-
 
 
 === Business Context
@@ -24,31 +19,13 @@ The user is able to add locations in different categories, add review scores, co
 The system is structured in two parts: a frontend and a backend. The user only interfaces with the frontend, which in turn interfaces with the backend, which then works with the Solid Pod provider and the database serve the data the frontend might need.
 The credentials of the users are stored in the PODs and the maps service provides the application with a visual map to show it to the user. 
 
-[role="arc42help"]
-****
-
 
 
 === Technical Context
 image:TechnicalView.png["Technical context diagram"]
 
-The frontend of the application is made with React, Redux and has a Map API wich provides the application with visual maps.
+The frontend of the application is made with React, Redux and has a Map API wich provides the application with visual maps. The frontend will communicate with the Solid POD by means of a library that is not determined yet.
 
+The Map will be used to search for an API and it will make HTTP requests. It will also communicate with the backend of the application using a technology that is not determined yet.
 
-[role="arc42help"]
-****
-
-.Motivation
-Many stakeholders make architectural decision based on the technical interfaces between the system and its context. Especially infrastructure or hardware designers decide these technical interfaces.
-
-.Form
-E.g. UML deployment diagram describing channels to neighboring systems,
-together with a mapping table showing the relationships between channels and input/output.
-
-****
-
-**<Diagram or Table>**
-
-**<optionally: Explanation of technical interfaces>**
-
-**<Mapping Input/Output to Channels>**
+The user will access the frontend of the application by using different devices such as a PC or a smartphone. 
