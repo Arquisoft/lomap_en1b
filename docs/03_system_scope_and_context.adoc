@@ -9,7 +9,7 @@ Another feature of the application will be to allow places to create their own s
 
 
 === Business Context
-image:BussinessView.png["Bussiness context diagram"]
+image:3-Context/BussinessView.png["Bussiness context diagram"]
 
 The system will allow users to add locations in different categories, see places and information about those places taken from their friends, show the locations in a map window, add review scores, comments... 
 
@@ -22,7 +22,7 @@ The credentials of the users are stored in the PODs and the maps service provide
 
 
 === Technical Context
-image:TechnicalView.png["Technical context diagram"]
+image:3-Context/TechnicalView.png["Technical context diagram"]
 
 The frontend of the application is made with React, Redux and has a Map API wich provides the application with visual maps. The frontend will communicate with the Solid POD by means of a library that is not determined yet.
 

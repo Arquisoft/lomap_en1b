@@ -1,28 +1,6 @@
 [[section-glossary]]
 == Glossary
 
-
-
-[role="arc42help"]
-****
-.Contents
-The most important domain and technical terms that your stakeholders use when discussing the system.
-
-You can also see the glossary as source for translations if you work in multi-language teams.
-
-.Motivation
-You should clearly define your terms, so that all stakeholders
-
-* have an identical understanding of these terms
-* do not use synonyms and homonyms
-
-.Form
-A table with columns <Term> and <Definition>.
-
-Potentially more columns in case you need translations.
-
-****
-
 [options="header"]
 |===
 | Term         | Definition
@@ -30,7 +8,7 @@ Potentially more columns in case you need translations.
 | PODS    | Pods are like secure personal web servers for data. When data is stored in someone's Pod, they control which people and applications can access it. (https://solidproject.org)
 | Container | Lightweight, standalone, and executable package of software that contains everything needed to run an application, including code, system tools, libraries, and settings.
 | DDoS protection | Set of technologies, practices, and strategies that organizations implement to prevent, mitigate, or minimize the impact of Distributed Denial of Service (DDoS) attacks
-| Framework |Standardized set of libraries, tools, and conventions that provide a foundation for developing software applications
-| Component |Modular, reusable, and independently deployable part of a software system that performs a specific function or set of functions
-| Module |Self-contained, interchangeable part of a software system that performs a specific function
+| Framework | Standardized set of libraries, tools, and conventions that provide a foundation for developing software applications
+| Component | Modular, reusable, and independently deployable part of a software system that performs a specific function or set of functions
+| Module | Self-contained, interchangeable part of a software system that performs a specific function
 |===

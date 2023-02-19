@@ -2,7 +2,7 @@
 == Quality Requirements
 
 === Quality Tree
-image:Quality-tree.png["Quality tree diagram"]
+image:10-QualityRequirements/Quality-tree.png["Quality tree diagram"]
 
 
 
@@ -41,3 +41,4 @@ image:Quality-tree.png["Quality tree diagram"]
 | Decentralization of the log in process (serverless). 
 | It is achieved by means of calling the Pod provider and delegating the process to it.
 | High
+|===
