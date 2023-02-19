@@ -27,6 +27,10 @@ Potentially more columns in case you need translations.
 |===
 | Term         | Definition
 | WCAG     | Web Content Accessibility Guidelines (https://www.w3.org/WAI/WCAG2AAA-Conformance) 
-|PODS    | Pods are like secure personal web servers for data. When data is stored in someone's Pod, they control which people and applications can access it. (https://solidproject.org)
-||
+| PODS    | Pods are like secure personal web servers for data. When data is stored in someone's Pod, they control which people and applications can access it. (https://solidproject.org)
+| Container | Lightweight, standalone, and executable package of software that contains everything needed to run an application, including code, system tools, libraries, and settings.
+| DDoS protection | Set of technologies, practices, and strategies that organizations implement to prevent, mitigate, or minimize the impact of Distributed Denial of Service (DDoS) attacks
+| Framework |Standardized set of libraries, tools, and conventions that provide a foundation for developing software applications
+| Component |Modular, reusable, and independently deployable part of a software system that performs a specific function or set of functions
+| Module |Self-contained, interchangeable part of a software system that performs a specific function
 |===
