@@ -27,5 +27,6 @@ Potentially more columns in case you need translations.
 |===
 | Term         | Definition
 | WCAG     | Web Content Accessibility Guidelines (https://www.w3.org/WAI/WCAG2AAA-Conformance) 
-| <Term-2>     | <definition-2>
+|PODS    | Pods are like secure personal web servers for data. When data is stored in someone's Pod, they control which people and applications can access it. (https://solidproject.org)
+||
 |===
