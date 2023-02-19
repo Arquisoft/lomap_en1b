@@ -1,86 +1,149 @@
 [[section-deployment-view]]
-
-
 == Deployment View
+=== General Diagram
+[plantuml, target=deployment-general-diagram, format=png]
+....
+actor user as "User browser"
+frame Server {
+    node Nginx
+    frame Docker {
+        frame StaticProviderContainer {
+            node WebApp
+        }
 
-[role="arc42help"]
-****
-.Content
-The deployment view describes:
+        frame NodeJsContainer {
+            node RestAPI
+        }
 
- 1. the technical infrastructure used to execute your system, with infrastructure elements like geographical locations, environments, computers, processors, channels and net topologies as well as other infrastructure elements and
+    }
+}
+cloud mongoAtlas as "MongoDB Atlas" {
+    database mongoDatabase as "MongoDB Database"
+}
 
-2. the mapping of (software) building blocks to that infrastructure elements.
-
-Often systems are executed in different environments, e.g. development environment, test environment, production environment. In such cases you should document all relevant environments.
-
-Especially document the deployment view when your software is executed as distributed system with more then one computer, processor, server or container or when you design and construct your own hardware processors and chips.
-
-From a software perspective it is sufficient to capture those elements of the infrastructure that are needed to show the deployment of your building blocks. Hardware architects can go beyond that and describe the infrastructure to any level of detail they need to capture.
-
-.Motivation
-Software does not run without hardware.
-This underlying infrastructure can and will influence your system and/or some
-cross-cutting concepts. Therefore, you need to know the infrastructure.
-
-.Form
-
-Maybe the highest level deployment diagram is already contained in section 3.2. as
-technical context with your own infrastructure as ONE black box. In this section you will
-zoom into this black box using additional deployment diagrams:
-
-* UML offers deployment diagrams to express that view. Use it, probably with nested diagrams,
-when your infrastructure is more complex.
-* When your (hardware) stakeholders prefer other kinds of diagrams rather than the deployment diagram, let them use any kind that is able to show nodes and channels of the infrastructure.
-****
+mongoDatabase -- RestAPI : MongoDB (TCP port 27017)
+user -- Nginx : HTTPS (Port 80)
+RestAPI -- Nginx
+WebApp -- Nginx
+....
 
 === Infrastructure Level 1
 
-[role="arc42help"]
-****
-Describe (usually in a combination of diagrams, tables, and text):
+[plantuml, target=deployment-l1-diagram, format=png]
+....
+circle port8080 as "port 8080"
 
-*  the distribution of your system to multiple locations, environments, computers, processors, .. as well as the physical connections between them
-*  important justification or motivation for this deployment structure
-* Quality and/or performance features of the infrastructure
-*  the mapping of software artifacts to elements of the infrastructure
-
-For multiple environments or alternative deployments please copy that section of arc42 for all relevant environments.
-****
-
-_**<Overview Diagram>**_
+    node Nginx
+    frame Docker {
+        frame StaticProviderContainer {
+        }
+        frame NodeJsContainer {
+        }
+    }
+port8080 -- Nginx
+NodeJsContainer -- Nginx
+StaticProviderContainer -- Nginx
+....
 
 Motivation::
+The deployment with Docker environment with two containers, a React app served by Nginx and a NodeJS API with Express, is driven by the need to create a robust, scalable, and easily deployable system. The main motivation behind this deployment view is to ensure that the system can be deployed and managed with ease, and that it can deliver a high level of performance, reliability, and availability.
 
-_<explanation in text form>_
 
 Quality and/or Performance Features::
 
-_<explanation in text form>_
+* Low cost.
+* Simple deployment with docker registry.
+* Scalability -> NGINX can be easily scaled horizontally by adding more servers, making it ideal for serving large apps with many users.
+* System compatibility -> The React app and NodeJS API are kept separate from the underlying infrastructure.
+* Load balancing: NGINX can distribute traffic across multiple servers, helping to improve performance and ensure high availability. Can be used with auto-scaling.
+* Disk space saving thanks to the elimination of files related to the virtualized O.S.
+* Configuration is centralized on "nginx.conf" file.
+* Share libraries with the other containers -> Lower disk usage.
+* Ability to operate with thousands of simultaneous connections.
+
 
 Mapping of Building Blocks to Infrastructure::
-_<description of the mapping>_
+* The "Lomap" block would correspond to the environment that Docker creates
+* The "WebApp" block corresponds to the Static Provider Container, which provisions the React application "WebApp"
+* The "Rest Api" block corresponds to the NodeJs Container, which provisions the Express application "RestApi"
+
 
 
 === Infrastructure Level 2
+==== StaticProviderContainer
+[plantuml, target=deployment-nginx-diagram, format=png]
+....
+frame Docker {
+    frame nginxcont as "nginx : alpine" {
+        node WebApp {
 
-[role="arc42help"]
-****
-Here you can include the internal structure of (some) infrastructure elements from level 1.
+        }
+        file nginx.conf
+    }
+    circle port8080 as "port 3000"
+}
+nginxcont -- port8080
+....
 
-Please copy the structure from level 1 for each selected element.
-****
+Motivation::
+NGINX is a web server that provides a high-performance, scalable platform for delivering web content. It is ideal for serving React apps because of its ability to handle large amounts of traffic, efficiently serve static content, and provide robust security features.
 
-==== _<Infrastructure Element 1>_
+Quality and/or Performance Features::
 
-_<diagram + explanation>_
+* High-performance -> NGINX is designed to handle high traffic loads and can efficiently serve large files, which is important when serving a React app that may have many components and dependencies.
 
-==== _<Infrastructure Element 2>_
+* Caching -> NGINX can cache static content, which can improve performance and reduce the load on the backend servers.
 
-_<diagram + explanation>_
+* Security -> NGINX provides a range of security features, including SSL/TLS encryption, access control, and DDoS protection.
+* Easy Configuration -> Nginx has a simple configuration syntax, which makes it easy to set up and configure for serving a React app. This can save time and reduce the risk of errors or misconfigurations
 
-...
 
-==== _<Infrastructure Element n>_
+Mapping of Building Blocks to Infrastructure::
+The "WebApp" block corresponds to the Static Provider Container, which provisions the React application "WebApp"
 
-_<diagram + explanation>_
+==== NodeJsContainer
+
+[plantuml, target=deployment-node-diagram, format=png]
+....
+frame Docker {
+    frame nodeCont as  "node:10-alpine" {
+        node RestApi {
+
+        }
+    }
+    circle port as "port 3001"
+}
+port -- nodeCont
+....
+
+Motivation::
+When using NodeJS to serve an ExpressJS API, you can take advantage of the asynchronous, non-blocking I/O model of NodeJS. This means that your API can handle a large number of requests concurrently without blocking other requests. This can lead to faster response times and better performance compared to traditional server-side languages like PHP or Java.
+
+Quality and/or Performance Features::
+* Lightweight and Fast -> ExpressJS is a lightweight framework and provides a minimalist and fast development environment for building APIs. It doesn't include features that you won't use and provides only the required functionality.
+
+* Flexible and Scalable -> ExpressJS is highly flexible and allows developers to customize their API development environment. You can add or remove components easily, making it highly scalable for your business.
+
+* Easy to Learn -> ExpressJS is one of the easiest frameworks to learn and implement, even for beginners. It provides well-documented documentation, and the community support is vast.
+
+* Modular Architecture -> ExpressJS follows a modular architecture that allows developers to add third-party libraries to extend its functionality.
+
+* Provides middleware -> ExpressJS has built-in middleware that enables developers to process requests, validate data, authenticate, and more.
+
+* Efficient Routing -> With the use of ExpressJS, developers can easily manage routes for their API endpoints, making it easier to understand and debug issues.
+
+* Easy Testing -> ExpressJS provides an environment that is easy to test, making it easy for developers to run tests without incurring extra costs.
+
+* Works well with NodeJS -> As a framework built on top of NodeJS, ExpressJS is highly compatible and provides an efficient environment for building APIs.
+
+
+Mapping of Building Blocks to Infrastructure::
+The "Rest Api" block corresponds to the NodeJs Container, which provisions the Express application "RestApi"
+
+
+
+
+
+
+
+
