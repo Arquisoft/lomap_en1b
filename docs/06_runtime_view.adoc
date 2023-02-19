@@ -53,3 +53,22 @@ There are many notations for describing scenarios, e.g.
 === Changing privacy settings
 * _Alice doesn't want their friends seeing the locations she added to the map so she acesses the settings of the webapp to disable sharing them.
 * _The different settings about what information on the places and the user is accesible by their friends will be able to be changed, giving different options for each parameter.
+
+
+=== User adds a new friend
+* A user navigating the app may select the button to search and add a new friend request
+** If they are not friends already, the user will add the friend to their friend list
+** If they are friends already, it will remain the same
+
+
+=== User deletes a friend
+* A user can remove a friend from their friend list
+** If they select a friend from their list, they can choose to remove them and all places shared with them will no longer be shared
+
+
+=== User creates a friend group
+* A user can create a group of friends. This group is composed only of user friends and is managed by the user as if it was one friend.
+** The user can decide to share a location with the group and all participant will have that location shared too
+** The user can decide remove something  they shared from the group and all participants will have it removed
+** Users can add or remove friend from the group and all shared places with them will be removed
+** Users can delete a group they created. All places shared with the group will no longer be shared with any of the participants
