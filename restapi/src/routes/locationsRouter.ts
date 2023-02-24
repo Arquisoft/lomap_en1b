@@ -1,17 +1,10 @@
-import {Express} from 'express'
-import Repository from "../repo/repository";
+import express, {Router} from 'express'
+import locationsService from "../podsAccess/locationsService";
 
-module.exports = function(server:Express, _locationsRepository:Repository){
+const authenticationRouter: Router = express.Router()
 
-//list locations of specific user (own or on friends)
-    server.get("/location/{id}", (_req, res) => {
-            res.send('list locations')
-        }
-    );
+    authenticationRouter.get("/locations", locationsService.getOwnLocations);
 
-//add a location
-    server.post("/location/add", (_req, res) =>{
-            res.send("add location")
-        }
-    );
-}
+    authenticationRouter.post("/location/add", locationsService.saveLocation);
+
+export default authenticationRouter

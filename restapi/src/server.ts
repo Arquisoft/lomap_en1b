@@ -1,33 +1,32 @@
 import express from 'express'
-import * as dotenv from 'dotenv'
-import Repository from "./repo/repository";
-import {connectToDatabase} from "./repo/db";
+import expressSession from 'express-session'
+import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
+import locationsRouter from "./routes/locationsRouter";
+import authenticationRouter from "./routes/authenticationRouter";
 
-const app = express()
-
+//dotenv.config()
 const PORT = 8082
 
-app.use(express.json())
-dotenv.config()
+const app = express()
+    .use(cookieParser())
+    .use(expressSession({secret:'asdfg'}))
+    .use(bodyParser())
+    .use(express.json())
+    .use('/auth', authenticationRouter)
+    .use('/location', locationsRouter)
 
-//Get db
-connectToDatabase(process.env.CONNECTION_STRING as string).then( db =>{
 
+app.listen(PORT, ()=> {
+    console.log('Server running on port' + PORT)
+})
+
+
+//connectToDatabase(process.env.CONNECTION_STRING as string).then( db =>{
     //Repositories
-    let repoLocations = new Repository("locations", db);
-
+//    let repoLocations = new Repository("locations", db);
     //Rutas
-    //Mirar para cambiar a un import en lugar de require
-    require('./routes/locationsRouter')(app, repoLocations)
-
-    app.get('/ping', (_req, res) => {
-        console.log('pinged')
-        res.send('ok')
-    })
-
-    app.listen(PORT, ()=> {
-        console.log('Server running on port' + PORT)
-    })
-} );
+//    initLocationsRouter(app, repoLocations)
+//} );
 
 
