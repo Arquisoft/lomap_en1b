@@ -20,9 +20,10 @@ const theme = createTheme();
 export default function Login(): JSX.Element {
   const [providerValue, setProviderValue] = useState<String>("");
   
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+
+  const handleLogin =  () => {
+    var url : string = providerValue + "";
+    window.location.replace(url)
   };
   
   return (
@@ -43,7 +44,7 @@ export default function Login(): JSX.Element {
           <Typography component="h1" variant="h5">
             Log In
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box component="form" noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -60,6 +61,7 @@ export default function Login(): JSX.Element {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={handleLogin}
             >
               Log In
             </Button>
