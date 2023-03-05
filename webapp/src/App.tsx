@@ -7,6 +7,7 @@ import LoginForm from './components/Login';
 
 import Index from "./routes";
 import Error404 from "./routes/404error";
+import HomePage from './components/Home';
 
   
 const router = createBrowserRouter([
@@ -16,12 +17,17 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
+    element:<HomePage />,
+  }
+  
+  /*{
+    path: "/",
     element: <Index />,
     errorElement: <Error404 />,
     children: [
 
     ]
-  }
+  }*/
 ]);
 
 function App() {
