@@ -1,120 +1,136 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { useState } from 'react';
-import {createTheme, ThemeProvider } from '@mui/material/styles';
-
-const theme = createTheme();
-
-
-export default function Login(): JSX.Element {
-  const [providerValue, setProviderValue] = useState<String>("");
+import {
+    Button,
+    FormControl,
+    Flex,
+    Heading,
+    Input,
+    Stack,
+    Text,
+    useColorModeValue,
+    FormLabel,
+    FormHelperText,
+    FormErrorMessage,
+  } from '@chakra-ui/react';
+  import { useState } from 'react';
   
-
-  const handleLogin =  () => {
-    var url : string = providerValue + "";
-    window.location.replace(url)
-  };
   
-  return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Log In
-          </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="provider"
-              label="POD Provider URL"
-              name="provider"
-              autoFocus
+  export default function LoginForm(): JSX.Element {
+
+    const [providerValue, setProviderValue] = useState('');
+    
+    const handleInputProvider : React.ChangeEventHandler<HTMLInputElement> = (e) => setProviderValue(e.target.value);
+    
+    const handleLogin =  () => {
+      var url : string = providerValue + "";
+      window.location.replace(url)
+      //TODO conectar con la API
+    };
+
+    return (
+      <Flex
+        minH={'100vh'}
+        align={'center'}
+        justify={'center'}
+        bg={useColorModeValue('gray.50', 'gray.800')}>
+        <Stack
+          spacing={4}
+          w={'full'}
+          maxW={'md'}
+          bg={useColorModeValue('white', 'gray.700')}
+          rounded={'xl'}
+          boxShadow={'lg'}
+          p={6}
+          my={12}>
+          <Heading lineHeight={1.1} fontSize={{ base: '2xl', md: '3xl' }}>
+            Login with your SOLID POD!
+          </Heading>
+        
+
+          <FormControl isRequired id="provider">
+            <FormLabel>Type your POD provider URL</FormLabel>
+            <Input
               placeholder="https://example.com"
+              isRequired = {true}
+              _placeholder={{ color: 'gray.500' }}
+              type="url"
               value={providerValue}
+              onChange={handleInputProvider}
             />
-            
+          </FormControl>
+
+          <Stack spacing={6}>
             <Button
-              fullWidth
+              bg={'blue.400'}
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              onClick={handleLogin}
-            >
-              Log In
+              color={'white'}
+              _hover={{
+                bg: 'blue.800',
+              }}
+              onClick={handleLogin}>
+              Log in 
+            </Button>
+          </Stack>
+
+          <Stack>
+            <Text
+              fontSize={{ base: 'sm', sm: 'md' }}
+              color={useColorModeValue('gray.800', 'gray.400')}>
+              Or choose your provider:
+            </Text>
+
+            <Button
+              bg={'purple.400'}
+              variant="outlined"
+              color={'white'}
+              _hover={{
+                bg: 'purple.800',
+              }}
+              onClick={() => 
+                    setProviderValue("https://solidcommunity.net/login")
+              }>
+              Solid Community
             </Button>
 
-            <Box>
-                <Typography component="h1" variant="body1">
-                    Or choose your provider:
-                </Typography>
-                <Button
-                    color="secondary"
-                    fullWidth
-                    variant="outlined"
-                    sx={{ mt: 0.25, mb: 2 }}
-                    onClick={() => {
-                      setProviderValue("https://solidcommunity.net/login")
-                    }}
-                >
-                    Solid Community
-                </Button>
-                <Button
-                    color="secondary"
-                    fullWidth
-                    variant="outlined"
-                    sx={{ mt: 0.25, mb: 2 }}
-                    onClick={() => {
-                      setProviderValue("https://solidweb.org/login")
-                    }}
-                >
-                    Solid Web
-                </Button>
-                <Button
-                    color="secondary"
-                    fullWidth
-                    variant="outlined"
-                    sx={{ mt: 0.25, mb: 2 }}
-                    onClick={() => {
-                      setProviderValue("https://inrupt.net/login")
-                    }}
-                >
-                    Inrupt.net
-                </Button>
-                <Button
-                    color="secondary"
-                    fullWidth
-                    variant="outlined"
-                    sx={{ mt: 0.25, mb: 2 }}
-                    onClick={() => {
-                      setProviderValue("https://auth.inrupt.com/login?response_type=code&client_id=291nuca1atm91cstojs8ndsbkh&scope=openid+openid+profile&redirect_uri=https%3A%2F%2Flogin.inrupt.com%2Fcallback&state=1874cb6e-8358-4974-b916-2457141b23c4")
-                    }}
-                >
-                    pod.Inrupt.net
-                </Button>
-            </Box>
-            
-          </Box>
-        </Box>
-      </Container>
-    </ThemeProvider>
-  );
-}
+            <Button
+              bg={'purple.400'}
+              variant="outlined"
+              color={'white'}
+              _hover={{
+                bg: 'purple.800',
+              }}
+              onClick={() => 
+                setProviderValue("https://solidweb.org/login")
+              }>
+              Solid Web
+            </Button>
+
+            <Button
+              bg={'purple.400'}
+              variant="outlined"
+              color={'white'}
+              _hover={{
+                bg: 'purple.800',
+              }}
+              onClick={() => 
+                setProviderValue("https://inrupt.net/login")
+              }>
+              Inrupt.net
+            </Button>
+
+            <Button
+              bg={'purple.400'}
+              variant="outlined"
+              color={'white'}
+              _hover={{
+                bg: 'purple.800',
+              }}
+              onClick={() => 
+                setProviderValue("https://auth.inrupt.com/login?response_type=code&client_id=291nuca1atm91cstojs8ndsbkh&scope=openid+openid+profile&redirect_uri=https%3A%2F%2Flogin.inrupt.com%2Fcallback&state=1874cb6e-8358-4974-b916-2457141b23c4")
+              }>
+              pod.Inrupt.net
+            </Button>
+          </Stack>
+        </Stack>
+      </Flex>
+    );
+  }
