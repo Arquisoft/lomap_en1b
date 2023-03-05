@@ -9,12 +9,14 @@ import {
 import {RDF, SCHEMA_INRUPT} from "@inrupt/vocab-common-rdf";
 import {Location} from "../types";
 import {Request, Response} from "express";
-import {fetch} from "@inrupt/solid-client/dist/fetcher";
+import {getSessionFromStorage} from "@inrupt/solid-client-authn-node";
 
 
 export default {
 
     saveLocation: async function (req:Request, _res:Response){
+
+        const session = await getSessionFromStorage(req.session.id)
 
         let encryptedWebID:string='';
         let location :Location = req.body.location;
@@ -23,7 +25,7 @@ export default {
 
         let locationsSolidDataset = await getSolidDataset(
             locationsURL,
-            {fetch: fetch}          // fetch from authenticated session
+            {fetch: session!.fetch}          // fetch from authenticated session
         );
 
         const locationThing = buildThing(createThing({ name: "Location1" }))
@@ -44,13 +46,16 @@ export default {
 
 
 
-    getOwnLocations: async function (_req:Request, _res:Response){
+    getOwnLocations: async function (req:Request, _res:Response){
+
+        const session = await getSessionFromStorage(req.session.id)
+
         let encryptedWebID:string='';
         let locationsURL = await getLocationsURL(encryptedWebID);
 
         let myDataset =  await getSolidDataset(
             locationsURL,
-            {fetch: fetch}          // fetch from authenticated session
+            {fetch: session!.fetch}          // fetch from authenticated session
         );
         return getThingAll(myDataset)
     }

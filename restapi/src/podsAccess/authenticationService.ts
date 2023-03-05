@@ -16,7 +16,8 @@ export default {
         await session.login({
             // If login successfully, redirect here
             //CORREGIR URL !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            redirectUrl: 'localhost/home',
+            //redirectUrl: req.body.provider,
+            redirectUrl: 'localhost:8082/auth/loginconfirm',
             // Set user SOLID identity provider
             // ADDD OPTIONS FOR SEVERAL PROVIDERS !!!!!!!!!!!!!!!!!!!!!!!
             oidcIssuer: "https://login.inrupt.com",
