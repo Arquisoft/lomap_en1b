@@ -7,7 +7,7 @@ node_modules
 
 # testing
 webapp/coverage
-restapi_deprecated/coverage
+restapi/coverage
 
 # production
 webapp/build
@@ -33,3 +33,5 @@ docs/build
 /restapi/package-lock.json
 /restapi_deprecated/
 /restapi/src/.env
+#IntelliJ Configuration folder
+.idea

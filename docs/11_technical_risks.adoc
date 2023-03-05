@@ -15,3 +15,12 @@ This should be your motto for systematic detection and evaluation of risks and t
 .Form
 List of risks and/or technical debts, probably including suggested measures to minimize, mitigate or avoid risks or reduce technical debts.
 ****
+[options="header",cols="2,2"]
+|===
+|Risks/Technical debt|Description
+|Delivery time|We are limited by the deadline of the course and also by the time we'll spend working on the other courses.
+|Knowledge of SOLID|It's our first time using this technology so we have no idea of how to work with it. We will spend some time researching and practising.
+|GitHub|Some of the team members are facing pull request and branches for the first time, so it will take time to be confortable using GitHub for the team.
+|Lack of knowledge of some technologies|We have no experience working with React or Typescript.
+|Big project and big team|We are 6 people working on that project, so communication will be crucial. We must help and collaborate with everyone in order to have good developer experience among this project.
+|===

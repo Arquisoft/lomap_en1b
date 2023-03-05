@@ -30,28 +30,41 @@ There are many notations for describing scenarios, e.g.
 
 ****
 
-=== <Runtime Scenario 1>
+=== User registration
+* The user enters the system for the first time and registers their personal data to create an account and start ussing the webapp.
+** The user will be able to fill a form with their data that is saved on their private POD.
 
 
-* _<insert runtime diagram or textual description of the scenario>_
-* _<insert description of the notable aspects of the interactions between the
-building block instances depicted in this diagram.>_
+=== User Login
+* The user already registered on the system and wants to log in with their user and password to acess the webapp.
+** The user will be able to fill a form with their user and password that will be sent to the server to be authenticated and allow or deny access.
 
-It is possible to use a sequence diagram:
 
-[plantuml,"Sequence diagram",png]
-----
-actor Alice
-actor Bob
-database Pod as "Bob's Pod"
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
-Alice  --> Pod: Store route
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
-----
-=== <Runtime Scenario 2>
+=== Adding a Location
+* The user wants to add the location restaurant to the webapp and see it on the map.
+** The user will be able to select a location category and the coordinates for the location to be placed and seen on their map and it will be saved on their POD.
 
-=== ...
 
-=== <Runtime Scenario n>
+=== Reviewing information about a place
+* The user wants to select a friend's added location and see the pictures they added to it.
+** Locations made public or shared with the user will be able to be accesed by the user to review aditional information that the creator added to the place.
+
+
+=== Changing privacy settings
+* The user doesn't want their friends seeing the locations she added to the map so they acess the settings of the webapp to disable sharing them.
+** The different settings about what information on the places and the user is accesible by their friends will be able to be changed, giving different options for each parameter.
+
+
+=== Adding a new friend
+* A user navigating the app wants to search and add a concrete friend to their friend list.
+** The user will be able to write the user of a friend that, if in the database, will be added to their personal friend list and the connection stored on the database.
+
+
+=== Deleting a friend
+* A user wants to remove a friend from their friend list.
+** The user will be given the option to remove a frient from their list, if they do the system wont consider them a friend and all places shared with them will no longer be shared.
+
+
+=== Creating a friend group
+* The user wants to create a group of friends and manage privacy on the group.
+** The group of friends will be treated as a single friend, after creation it will be stored on the database and the information that is shared or not will affect the whole group.

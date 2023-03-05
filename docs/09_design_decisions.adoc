@@ -24,3 +24,52 @@ Various options:
 * more detailed in form of separate sections per decision
 * ADR (architecture decision record) for every important decision
 ****
+
+=== Technologies
+
+.Typescript
+Reason:: Typescript and JavaScript were the two main options for the language of the system. Because of the number of resources available to implement a React application with Typescript, we decided to choose it over Javascript.
+Pros::
+* Good integration with the technology stack.
+* Good option for web applications.
+Cons::
+* No member of the team is familiar with it.
+
+.React
+Reason:: React is one of the most used if not the number one option to develop the front-end of web applications. We decided to choose it over Angular due to the number of already implemented components available.
+Pros::
+* Lots of resources to learn.
+* Many libraries.
+Cons::
+* Managing states can be troublesome.
+
+.Redux
+Reason:: Redux is a pattern that facilitates state management. Since we consider this a con of React, we think it can be a good way of solving it.
+Pros::
+* Easy debugging and testing.
+* Predictability.
+Cons::
+* If we end up not using several data sources, it could add overhead for no real reason.
+
+.Node EXPRESS
+Reason:: Since we decided to use Typescript and React-Redux, using Node is mandatory and the sample project uses EXPRESS, we decided using for the final application as well to make configuration easier.
+
+.MongoDB
+Reason:: The alternative was using a MySQL server, but since the integration with a Node application is much more complicated and the newer versions of Mongo have relational operations, we decided to choose the second option.
+Pros::
+* Scalability
+* Decentralization of the application
+* Flexibility
+Cons::
+* Although relational operations are available, they are not as optimized as in a traditional database.
+
+
+
+=== Architecture
+.SOLID pods connection to the WebApp
+Reason:: The application will be divided into two big modules: WebApp (front-end) and API (back-end). We have the option of connecting the SOLID pods to any of the two modules. Our decision is to connect it to the WebApp.
+Pros::
+* More resources of integration with React.
+* It will reduce overhead.
+Cons::
+* It will add complexity to the WebApp module.
