@@ -15,15 +15,14 @@ export default {
         // redirect handler will handle sending the user to their POD Provider.
         await session.login({
             // If login successfully, redirect here
-            //redirectUrl: req.body.provider,
             redirectUrl: 'http://localhost:8082/auth/loginconfirm',
             // Set user SOLID identity provider
-            // ADD OPTIONS FOR SEVERAL PROVIDERS !!!!!!!!!!!!!!!!!!!!!!!
+            //oidcIssuer: req.body.provider,
             oidcIssuer: "https://login.inrupt.com",
             // Application name to show when requesting data
             clientName: "LoMap",
             //handler to redirect to the provider login
-            handleRedirect: redirectToSolidIdentityProvider,
+            handleRedirect: redirectToSolidIdentityProvider
         });
     },
 
@@ -33,14 +32,11 @@ export default {
         const session = await getSessionFromStorage(req.session!.id);
 
         // Complete login process using the data appended by the Solid Identity Provider
-        //CORREGIR URL !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        const url = `http://localhost:8082${req.url}`
-        console.log(url)
-        await session!.handleIncomingRedirect(url);
+        await session!.handleIncomingRedirect(`http://localhost:8082/auth${req.url}`);
 
         // Session now contains an authenticated Session instance.
         if (session!.info.isLoggedIn) {
-            return res.send('Logged in with the WebID' + session!.info.webId)
+            return res.send('Logged in with the WebID ' + session!.info.webId);
         }
         return undefined
     },
@@ -48,6 +44,6 @@ export default {
     logout : async function(req:Request, res : Response){
         const session = await getSessionFromStorage(req.session!.id);
         await session!.logout();
-        res.send('Logger out');
+        res.send('Logged out');
     }
 }

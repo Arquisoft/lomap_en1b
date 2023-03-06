@@ -18,8 +18,8 @@ export default {
 
         const session = await getSessionFromStorage(req.session!.id)
 
-        let encryptedWebID:string='';
-        let location :Location = req.body.location;
+        let encryptedWebID : string = '';
+        let location : Location = req.body.location;
 
         let locationsURL = await getLocationsURL(encryptedWebID);
 
