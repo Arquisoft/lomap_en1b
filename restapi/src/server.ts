@@ -1,7 +1,6 @@
 import express from 'express'
-import expressSession from 'express-session'
-import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
+import cookieSession from "cookie-session";
 import locationsRouter from "./routes/locationsRouter";
 import authenticationRouter from "./routes/authenticationRouter";
 
@@ -9,16 +8,23 @@ import authenticationRouter from "./routes/authenticationRouter";
 const PORT = 8082
 
 const app = express()
-    .use(cookieParser())
-    .use(expressSession({secret:'asdfg'}))
+    .use(cookieSession({
+        name: "session",
+        //  keys to sign the cookies.
+        keys: [
+            "key1",
+            "key2",
+        ],
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    }))
     .use(bodyParser())
     .use(express.json())
     .use('/auth', authenticationRouter)
-    .use('/location', locationsRouter)
+    .use('/location', locationsRouter);
 
 
 app.listen(PORT, ()=> {
-    console.log('Server running on port' + PORT)
+    console.log('Server running on port ' + PORT)
 })
 
 

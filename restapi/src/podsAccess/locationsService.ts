@@ -16,7 +16,7 @@ export default {
 
     saveLocation: async function (req:Request, _res:Response){
 
-        const session = await getSessionFromStorage(req.session.id)
+        const session = await getSessionFromStorage(req.session!.id)
 
         let encryptedWebID:string='';
         let location :Location = req.body.location;
@@ -40,7 +40,7 @@ export default {
         return await saveSolidDatasetAt(
             locationsURL,
             locationsSolidDataset,
-            {fetch: fetch}             // fetch from authenticated Session
+            {fetch: session!.fetch}             // fetch from authenticated Session
         );
     },
 
@@ -48,7 +48,7 @@ export default {
 
     getOwnLocations: async function (req:Request, _res:Response){
 
-        const session = await getSessionFromStorage(req.session.id)
+        const session = await getSessionFromStorage(req.session!.id)
 
         let encryptedWebID:string='';
         let locationsURL = await getLocationsURL(encryptedWebID);

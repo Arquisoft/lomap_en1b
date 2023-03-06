@@ -1,12 +1,12 @@
-import express, {Router} from "express";
+import express from "express";
 import authenticationService from "../podsAccess/authenticationService";
 
-const authenticationRouter: Router = express.Router()
+const authenticationRouter = express.Router()
 
-    authenticationRouter.get("/auth/login", authenticationService.initLogin);
+    authenticationRouter.get("/login", authenticationService.initLogin);
 
-    authenticationRouter.get("/auth/loginconfirm", authenticationService.confirmLogin);
+    authenticationRouter.get("/loginconfirm", authenticationService.confirmLogin);
 
-    authenticationRouter.get("/auth/logout", authenticationService.logout);
+    authenticationRouter.get("/logout", authenticationService.logout);
 
 export default authenticationRouter
