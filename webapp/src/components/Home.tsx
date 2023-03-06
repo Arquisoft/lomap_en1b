@@ -6,18 +6,12 @@ import {
   VStack,
   useBreakpointValue,
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 export default function HomePage(): JSX.Element {
 
-  const handleStart = () => {
-    var url: string = window.location + "login";
-    window.location.replace(url)
-  };
+  const navigate = useNavigate();
 
-  const handleAbout = () => {
-    var url: string = window.location + "about";
-    window.location.replace(url)
-  };
 
   return (
     <Flex
@@ -49,7 +43,7 @@ export default function HomePage(): JSX.Element {
               rounded={'full'}
               color={'white'}
               _hover={{ bg: 'blue.800' }}
-              onClick={handleStart}>
+              onClick={() => navigate('/login')}>
               Start
             </Button>
             <Button
@@ -57,7 +51,7 @@ export default function HomePage(): JSX.Element {
               rounded={'full'}
               color={'white'}
               _hover={{ bg: 'blue.800' }}
-              onClick={handleAbout}
+              onClick={() => navigate('/about')}
               variant={"outlined"}>
               About...
             </Button>
