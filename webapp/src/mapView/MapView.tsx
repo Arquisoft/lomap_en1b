@@ -4,19 +4,14 @@ import L from 'leaflet';
 import { useDispatch, useSelector } from 'react-redux'
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, useMap ,Marker,useMapEvents,Popup} from 'react-leaflet';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
 const dispatch = useDispatch();
 const markersLayer = L.featureGroup();
 
 
-class Map extends React.Component {
-  static propTypes = {
-    mapEvents: PropTypes.object,
-    dispatch: PropTypes.func.isRequired
-  }
+function MapView(){
 
-  componentDidMount() {
     var map = L.map('map', 
     {center: [-5.8447600,  43.3602900],
     zoomControl: true,
@@ -27,17 +22,11 @@ class Map extends React.Component {
         position: 'topright'
       })
       .addTo(map)
-      
-
 
     return (
       <ScreenContainer id="map"/>
     )
-    }
 }
-
-
-
 
 const ScreenContainer = styled.div`
     display: flex;
@@ -48,4 +37,4 @@ const ScreenContainer = styled.div`
     height: 100vh;
 `  
 
-export default Map;
+export default MapView;

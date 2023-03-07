@@ -1,9 +1,11 @@
 import React from 'react';
-import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import './App.css';
+
+import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 
 import Index from "./routes";
 import Error404 from "./routes/404error";
+import MapView from "./mapView/MapView"
 
 const router = createBrowserRouter([
   {
@@ -13,6 +15,14 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Index />,
+    errorElement: <Error404 />,
+    children: [
+
+    ]
+  },
+  {
+    path: "/map",
+    element: <MapView />,
     errorElement: <Error404 />,
     children: [
 
