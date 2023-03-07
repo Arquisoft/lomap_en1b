@@ -3,8 +3,8 @@ import locationsService from "../podsAccess/locationsService";
 
 const authenticationRouter: Router = express.Router()
 
-    authenticationRouter.get("/locations", locationsService.getOwnLocations);
+    authenticationRouter.get("/", locationsService.getOwnLocations);
 
-    authenticationRouter.post("/location/add", locationsService.saveLocation);
+    authenticationRouter.post("/", locationsService.saveLocation);
 
 export default authenticationRouter
