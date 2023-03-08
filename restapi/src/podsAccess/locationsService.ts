@@ -1,15 +1,13 @@
 import {
-    buildThing,
-    createThing,
     getPodUrlAll,
     getSolidDataset, getThingAll,
     saveSolidDatasetAt,
     setThing
 } from "@inrupt/solid-client";
-import {RDF, SCHEMA_INRUPT} from "@inrupt/vocab-common-rdf";
 import {Location} from "../types";
 import {Request, Response} from "express";
 import {getSessionFromStorage} from "@inrupt/solid-client-authn-node";
+import {locationToThing, thingToLocation} from "../builders/locationBuilder"
 
 
 export default {
@@ -31,12 +29,7 @@ export default {
 
 
 
-        const locationThing = buildThing(createThing({ name: "Location1" }))
-            .addStringNoLocale(SCHEMA_INRUPT.name, location.name)
-            .addDecimal(SCHEMA_INRUPT.latitude, location.latitude)
-            .addDecimal(SCHEMA_INRUPT.longitude, location.longitude)
-            .addUrl(RDF.type, "https://schema.org/Place")
-            .build();
+        const locationThing = locationToThing(location)
 
 //        const locationThing = buildThing(createThing({ name: "Location1" }))
 //            .addStringNoLocale(SCHEMA_INRUPT.name, 'nuevaLocalizacion')
@@ -68,7 +61,8 @@ export default {
             locationsURL,
             {fetch: session.fetch}          // fetch from authenticated session
         );
-        return res.send(getThingAll(myDataset))
+
+        return res.send(getThingAll(myDataset).map(locationThing=>thingToLocation(locationThing)))
     }
 }
 
