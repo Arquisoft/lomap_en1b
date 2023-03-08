@@ -1,5 +1,5 @@
 export type Location = {
-    id:string,
+    url:string,
     name:string,
     latitude:number,
     longitude:number

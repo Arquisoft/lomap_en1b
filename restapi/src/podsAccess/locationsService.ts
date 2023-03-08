@@ -40,11 +40,13 @@ export default {
 
         locationsSolidDataset = setThing(locationsSolidDataset, locationThing);
 
-        return res.send(await saveSolidDatasetAt(
+        let newDataset = await saveSolidDatasetAt(
             locationsURL,
             locationsSolidDataset,
             {fetch: session!.fetch}             // fetch from authenticated Session
-        ));
+        );
+
+        return res.send(getThingAll(newDataset).map(locationThing=>thingToLocation(locationThing)))
     },
 
 
@@ -57,12 +59,12 @@ export default {
         let locationsURL = await getLocationsURL(session.info.webId);
         if(locationsURL == undefined) return res.send("error")
 
-        let myDataset =  await getSolidDataset(
+        let locationsDataset =  await getSolidDataset(
             locationsURL,
             {fetch: session.fetch}          // fetch from authenticated session
         );
 
-        return res.send(getThingAll(myDataset).map(locationThing=>thingToLocation(locationThing)))
+        return res.send(getThingAll(locationsDataset).map(locationThing=>thingToLocation(locationThing)))
     }
 }
 

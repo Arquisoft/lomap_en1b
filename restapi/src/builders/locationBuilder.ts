@@ -1,14 +1,14 @@
-import {buildThing, createThing, Thing} from "@inrupt/solid-client";
+import {buildThing, createThing, getDecimal, getStringNoLocale, Thing} from "@inrupt/solid-client";
 import {Location} from "../types";
 import {RDF, SCHEMA_INRUPT} from "@inrupt/vocab-common-rdf";
 
 export function thingToLocation(locationThing:Thing) : Location {
     console.log(locationThing)
     return {
-        id: '',
-        name: '',
-        latitude: 0,
-        longitude: 0
+        url: locationThing.url,
+        name: getStringNoLocale(locationThing, SCHEMA_INRUPT.name)!,
+        latitude: getDecimal(locationThing, SCHEMA_INRUPT.latitude)!,
+        longitude: getDecimal(locationThing, SCHEMA_INRUPT.longitude)!
     }
 }
 
@@ -20,4 +20,3 @@ export function locationToThing(location:Location):Thing{
         .addUrl(RDF.type, "https://schema.org/Place")
         .build()
 }
-
