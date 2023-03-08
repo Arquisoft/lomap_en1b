@@ -20,9 +20,16 @@ const app = express()
     }))
     .use(bodyParser())
     .use(cors())
+    .use(function(_, res, next) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Credentials", "true");
+        res.header("Access-Control-Allow-Methods", "POST, GET, DELETE, UPDATE, PUT");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, token")
+        next();})
     .use(express.json())
     .use('/auth', authenticationRouter)
     .use('/location', locationsRouter);
+
 
 
 app.listen(PORT, ()=> {
