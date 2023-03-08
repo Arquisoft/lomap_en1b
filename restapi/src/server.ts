@@ -1,8 +1,9 @@
-import express from 'express'
+import express from "express"
 import bodyParser from "body-parser";
 import cookieSession from "cookie-session";
 import locationsRouter from "./routes/locationsRouter";
 import authenticationRouter from "./routes/authenticationRouter";
+import cors from "cors"
 
 //dotenv.config()
 const PORT = 8082
@@ -18,6 +19,7 @@ const app = express()
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
     }))
     .use(bodyParser())
+    .use(cors())
     .use(express.json())
     .use('/auth', authenticationRouter)
     .use('/location', locationsRouter);

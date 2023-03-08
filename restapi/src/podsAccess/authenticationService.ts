@@ -9,13 +9,13 @@ export default {
 
         //Redirect user to POD provider login
         const redirectToSolidIdentityProvider = (providerURL : string) => {
-            res.redirect(providerURL);
+            res.send(providerURL);
         };
 
         // redirect handler will handle sending the user to their POD Provider.
         await session.login({
             // If login successfully, redirect here
-            redirectUrl: 'http://localhost:8082/auth/loginconfirm',
+            redirectUrl: 'http://localhost:3000/auth/loginconfirm',
             // Set user SOLID identity provider
             //oidcIssuer: req.body.provider,
             oidcIssuer: "https://login.inrupt.com",
