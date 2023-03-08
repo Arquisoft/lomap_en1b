@@ -17,8 +17,8 @@ export default {
             // If login successfully, redirect here
             redirectUrl: 'http://localhost:3000/auth/loginconfirm',
             // Set user SOLID identity provider
-            //oidcIssuer: req.body.provider,
-            oidcIssuer: "https://login.inrupt.com",
+            oidcIssuer: req.body.provider,
+            //oidcIssuer: "https://login.inrupt.com",
             // Application name to show when requesting data
             clientName: "LoMap",
             //handler to redirect to the provider login
