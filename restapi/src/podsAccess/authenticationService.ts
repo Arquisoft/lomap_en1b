@@ -9,9 +9,8 @@ export default {
 
         //Redirect user to POD provider login
         const redirectToSolidIdentityProvider = (providerURL : string) => {
-            res.send(providerURL);
+            res.status(200).json(providerURL);
         };
-
         // redirect handler will handle sending the user to their POD Provider.
         await session.login({
             // If login successfully, redirect here
@@ -30,15 +29,18 @@ export default {
         // If we get here, the user has logged in successfully
         // Recover session information
         const session = await getSessionFromStorage(req.session!.id);
-
         // Complete login process using the data appended by the Solid Identity Provider
         await session!.handleIncomingRedirect(`http://localhost:8082/auth${req.url}`);
 
         // Session now contains an authenticated Session instance.
         if (session!.info.isLoggedIn) {
-            return res.send('Logged in with the WebID ' + session!.info.webId);
+            return res.sendStatus(200);
         }
-        return undefined
+        return res.sendStatus(401)
+    },
+
+    redirectConfirm : async function (req:Request, res:Response){
+        res.redirect(`http://localhost:3000/auth${req.url}`);
     },
 
     logout : async function(req:Request, res : Response){

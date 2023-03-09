@@ -14,5 +14,8 @@ export const login = async (providerURL : String) => {
 
 
 export const confirmLogin =  (params : String) => {
-    return fetch("http://127.0.0.1:8082/auth/loginconfirm"+params, {credentials: "include"})
+    return fetch("http://127.0.0.1:8082/auth/loginconfirm"+params, {
+        credentials: "include",
+        method: "POST"
+    })
 }

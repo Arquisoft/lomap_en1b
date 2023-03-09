@@ -4,15 +4,24 @@ import './App.css';
 
 import Index from "./routes";
 import Error404 from "./routes/404error";
+import LoginConfirm from "./routes/LoginConfirm";
 
 const router = createBrowserRouter([
   {
-    path: "/login",
+    path: "/auth",
     element:<>Hello Login</>,
   },
   {
     path: "/",
     element: <Index />,
+    errorElement: <Error404 />,
+    children: [
+
+    ]
+  },
+  {
+    path: "/auth/loginconfirm",
+    element: <LoginConfirm />,
     errorElement: <Error404 />,
     children: [
 
