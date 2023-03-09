@@ -8,9 +8,6 @@ export const locationApi = createApi({
         getLocations: builder.query<Location, string>({
             query: (name) => `location/`,
         }),
-        addLocation: builder.query<Location, string>({
-            query: (name) => `location/`,
-        }),
     }),
 })
 
