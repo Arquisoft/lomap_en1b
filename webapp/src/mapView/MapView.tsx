@@ -28,19 +28,20 @@ export function LocationMarker() {
             console.log(e.latlng);
         },
     });
-    return(<Marker position={[lati, lngi]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40] })}>
-        <Popup>You are here</Popup>
-    </Marker>);
-    dispatch(addMarker(new MarkerObj(lati,lngi)));
+    const marker = new MarkerObj(lati,lngi);
+    dispatch(addMarker([43.354,-5.851]));
 }
 
-function MapView() {
 
+export default function MapView() {
+    const dispatch = useAppDispatch();
     const stateMap = useAppSelector(selectMapState);
+
+    dispatch(addMarker([43.354,-5.851]));
 
     if (stateMap.markers.length > 0) {
         return (
-                <ScreenContainer>   <div>a</div>
+                <ScreenContainer>
                  <MapContainer center={stateMap.center} zoom={stateMap.zoom} scrollWheelZoom={true} style={{ height: "100vh", width: "100%"}}>
                     <TileLayer
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -76,5 +77,3 @@ const ScreenContainer = styled.div`
     width: 100%;
     height: 100vh;
 `
-
-export default MapView;
