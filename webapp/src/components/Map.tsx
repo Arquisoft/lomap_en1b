@@ -43,7 +43,7 @@ export function LocationMarkerWithStore() {
             //setLng(e.latlng.lng);
 
             //Create the type
-            const locMarker : MyLocation = {lat : e.latlng.lat, lng : e.latlng.lng};
+            const locMarker : MyLocation = {lat : e.latlng.lat, lng : e.latlng.lng, id: e.latlng.lat + " - " + e.latlng.lng};
             //Store the location
             dispatch(addLocation(locMarker));
         },
@@ -59,7 +59,7 @@ export function LocationMarkerWithStore() {
     return  (
         <div>
             {locations.map(location => (
-                <Marker position={[location.lat, location.lng]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40] })}>
+                <Marker key={location.id} position={[location.lat, location.lng]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40] })}>
                     <Popup>You are here</Popup>
                 </Marker>
             ))}
