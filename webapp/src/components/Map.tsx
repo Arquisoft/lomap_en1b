@@ -45,7 +45,7 @@ export function LocationMarkerWithStore() {
             //Create the type
             const locMarker : MyLocation = {lat : e.latlng.lat, lng : e.latlng.lng, id: e.latlng.lat + " - " + e.latlng.lng};
             //Store the location
-            dispatch(addLocation(locMarker));
+            dispatch(addLocation(locMarker)); // dispatch executes a reducer or action 
         },
 
     })
