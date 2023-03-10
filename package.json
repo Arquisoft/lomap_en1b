@@ -3,6 +3,7 @@
     "@chakra-ui/react": "^2.5.1",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
+    "@react-leaflet/core": "^2.1.0",
     "@reduxjs/toolkit": "^1.9.3",
     "framer-motion": "^10.1.0",
     "leaflet": "^1.9.3",
