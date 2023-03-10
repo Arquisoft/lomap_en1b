@@ -1,11 +1,12 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import {authApi} from "./services/Auth";
-import {locationApi} from "./services/Location";
+import {addLocation, locationApi} from "./services/Location";
 
 export const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
     [locationApi.reducerPath]: locationApi.reducer,
+    locationSlice : locationSliceReducer,
   },
   middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(

@@ -6,6 +6,9 @@ import 'leaflet/dist/leaflet.css';
 import { LatLng, LatLngExpression } from 'leaflet';
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import { Icon } from 'leaflet';
+import {useDispatch} from "react-redux";
+import type { MyLocation } from '../app/services/types';
+import {addLocation} from "../app/services/Location";
 
 export function LocationMarker() {
     // const [position, setPosition] : LatLng = {lat: 0, lng: 0};
@@ -21,6 +24,34 @@ export function LocationMarker() {
         },
     })
 
+
+    return  (
+        <Marker position={[lati, lngi]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40] })}>
+            <Popup>You are here</Popup>
+        </Marker>
+    )
+}
+
+export function LocationMarkerWithStore() {
+    // const [position, setPosition] : LatLng = {lat: 0, lng: 0};
+    const dispatch = useDispatch();
+    const [lati, setLat] = useState(0);
+    const [lngi, setLng] = useState(0);
+
+    const map = useMapEvents({
+        click: (e) => {
+            setLat(e.latlng.lat);
+            setLng(e.latlng.lng);
+
+            console.log(e.latlng);
+        },
+    })
+
+    //Create the object
+    const locMarker : MyLocation = {lat : lati , lng : lngi };
+    //Store the object
+    dispatch(addLocation(locMarker));
+    //Get all the objects and show them on the
 
     return  (
         <Marker position={[lati, lngi]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40] })}>
@@ -47,7 +78,7 @@ export default function MapElement(): JSX.Element {
                     />
                     <Marker position={escuela} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40] })}>
                         <Popup>
-                            School of Software Engineering <br /> Univrsidad de Oviedo.
+                            School of Software Engineering <br /> Universidad de Oviedo.
                         </Popup>
                     </Marker>
 
