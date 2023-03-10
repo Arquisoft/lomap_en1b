@@ -1,22 +1,27 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import {createSelector, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from "../store";
-import type { MyLocation } from './types' //TODO: Importar el tipo
+import type { MyLocation } from './types';
 
 export const locationApi = createApi({
     reducerPath: 'locationAPI',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8082/' }),
     endpoints: (builder) => ({
-        getLocations: builder.query<MyLocation, string>({
+        getLocations: builder.query<MyLocation[], void>({
             query: (name) => `location/`,
         }),
-        //TODO: Check if this makes any sense
         addLocation: builder.mutation<void, Omit<MyLocation, 'id'>>({
             query: (newLocation) => ({
                 url: `/locations`,
                 method: 'POST',
                 body: newLocation,
             })
+        }),
+        removeLocation: builder.mutation<void, MyLocation>({
+            query: (location) => ({
+                url: `/locations/${location.id}`,
+                method: 'DELETE',
+            }),
         }),
     }),
 })
@@ -39,6 +44,6 @@ export const locationSlice = createSlice({
     },
 });
 export const selectAllLocations = (state: RootState) => state.location.locations;
-export const {useGetLocationsQuery} = locationApi
+export const {useGetLocationsQuery, useAddLocationMutation} = locationApi
 export  const {addLocation} = locationSlice.actions;
 export default locationSlice.reducer;
