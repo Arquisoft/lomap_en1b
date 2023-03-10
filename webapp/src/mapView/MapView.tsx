@@ -8,7 +8,7 @@ import { MapContainer, TileLayer, useMap ,Marker,useMapEvents,Popup} from 'react
 import { LatLng, LatLngExpression } from 'leaflet';
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import {useAppDispatch, useAppSelector} from '../app/hooks';
-import type { MyLocation } from '../app/services/types/types';
+import type { MapMarker } from '../app/services/types/types';
 import { Icon } from 'leaflet';
 import {
     addMarker,selectMapState
@@ -28,33 +28,25 @@ export function LocationMarker() {
 
             console.log(e.latlng);
 
-        const locMarker : MyLocation = {lat : e.latlng.lat, lng : e.latlng.lng, id: e.latlng.lat + " - " + e.latlng.lng};
+        const locMarker : MapMarker = {lat : e.latlng.lat, lng : e.latlng.lng,name: "sdfsdf",category: "dfsdf", id: e.latlng.lat + " - " + e.latlng.lng};
         dispatch(addMarker(locMarker));
         },
     });
-    const stateMap = useAppSelector(selectMapState);
-
-    return (
-        <div>
-            {stateMap.markers.map(location => (
-                    <Marker position={[location.lat, location.lng]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40] })}>
-                        <Popup>You are here</Popup>
-                    </Marker>
-
-                ))}
-        </div>
-    )
+    return (<div></div>)
 }
 
-
 export default function MapView() {
-    const dispatch = useAppDispatch();
     const stateMap = useAppSelector(selectMapState);
 
      return (
         <ScreenContainer>
              <MapContainer center={stateMap.center} zoom={stateMap.zoom} scrollWheelZoom={true} style={{ height: "100vh", width: "100%"}}>
                  <LocationMarker/>
+                 {stateMap.markers.map(location => (
+                     <Marker key={location.id} position={[location.lat, location.lng]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40]})}>
+                         <Popup><div>{location.name}</div></Popup>
+                     </Marker>
+                 ))}
                  <TileLayer
                      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -62,7 +54,6 @@ export default function MapView() {
              </MapContainer>
         </ScreenContainer>
      );
-
 }
 
 const ScreenContainer = styled.div`

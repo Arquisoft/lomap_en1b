@@ -1,19 +1,19 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from '../app/store';
-import type { MyLocation } from '../app/services/types/types';
+import type { MapMarker } from '../app/services/types/types';
 import L from 'leaflet';
 
 export interface MapState {
     center: [number,number],
     zoomControl: boolean,
     zoom: number,
-    markers: MyLocation[],
+    markers: MapMarker[],
 }
 
 
 const initialState: MapState = {
-    markers: [],
-    center: [43.354, -5.851 ],
+    markers: [{lat : 43.354, lng : -5.851, id: "sdfsdf", name: "EII", category: "escuela"}],
+    center: [43.354, -5.851],
     zoomControl: true,
     zoom: 12
 };
@@ -23,7 +23,7 @@ export const mapSlice = createSlice({
     initialState,
     // The `reducers` field lets us define reducers and generate associated actions
     reducers: {
-        addMarker: (state, action: PayloadAction<MyLocation>) => {
+        addMarker: (state, action: PayloadAction<MapMarker>) => {
             state.markers.push(action.payload);
         }
     },
