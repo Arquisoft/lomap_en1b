@@ -40,6 +40,10 @@ export const locationSlice = createSlice({
     reducers: {
         addLocation: (state, action: PayloadAction<MyLocation>) =>{
             state.locations.push(action.payload);
+            state.locations.forEach( location =>{
+                console.log(location.lat + " - " + location.lng);
+            });
+            console.log();
         }
     },
 });

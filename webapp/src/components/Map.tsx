@@ -34,16 +34,16 @@ export function LocationMarker() {
 export function LocationMarkerWithStore() {
     // const [position, setPosition] : LatLng = {lat: 0, lng: 0};
     const dispatch = useDispatch();
-    const [lati, setLat] = useState(0);
-    const [lngi, setLng] = useState(0);
+//    const [lati, setLat] = useState(0);
+//    const [lngi, setLng] = useState(0);
 
     const map = useMapEvents({
         click: (e) => {
-            setLat(e.latlng.lat);
-            setLng(e.latlng.lng);
+            //setLat();
+            //setLng(e.latlng.lng);
 
             //Create the type
-            const locMarker : MyLocation = {lat : lati , lng : lngi };
+            const locMarker : MyLocation = {lat : e.latlng.lat, lng : e.latlng.lng};
             //Store the location
             dispatch(addLocation(locMarker));
         },
