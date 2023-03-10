@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-import type { MyLocation } from './types';
+import type { MapMarker } from './types';
 
 /**
  * Creates slices automatically and they comunicate with the API.
@@ -16,18 +16,18 @@ export const locationApi = createApi({
     endpoints: (builder) => ({
         // MyLocation: what is returned
         // void: the type of data we pass as a parameter
-        getLocations: builder.query<MyLocation[], void>({
+        getLocations: builder.query<MapMarker[], void>({
             query: (name) => `location/`,
         }),
         // Omit metemos una localización y da igual que no tenga un id asignado
-        addLocation: builder.mutation<void, Omit<MyLocation, 'id'>>({
+        addLocation: builder.mutation<void, Omit<MapMarker, 'id'>>({
             query: (newLocation) => ({
                 url: `/locations`,
                 method: 'POST',
                 body: newLocation,
             })
         }),
-        removeLocation: builder.mutation<void, MyLocation>({
+        removeLocation: builder.mutation<void, MapMarker>({
             query: (location) => ({
                 url: `/locations/${location.id}`,
                 method: 'DELETE',
@@ -38,7 +38,7 @@ export const locationApi = createApi({
 
 //I created a Slice to store the location in the store so that we can test without using the API
 interface LocationsState {
-    locations: MyLocation[];
+    locations: MapMarker[];
 }
 const initialState: LocationsState = {
     locations: [],
@@ -52,7 +52,7 @@ export const locationSlice = createSlice({
     // métodos: reducers y actions
     // reducers -> the only way to change the state of the locations, but only the part of the state u want to change
     reducers: {
-        addLocation: (state, action: PayloadAction<MyLocation>) => {
+        addLocation: (state, action: PayloadAction<MapMarker>) => {
             state.locations.push(action.payload); // payload: the param you pass 
             state.locations.forEach(location => {
                 console.log(location.lat + " - " + location.lng);

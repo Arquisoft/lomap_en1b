@@ -7,49 +7,18 @@ import { LatLng, LatLngExpression } from 'leaflet';
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import { Icon } from 'leaflet';
 import {useDispatch, useSelector} from "react-redux";
-import type { MyLocation } from '../app/services/types';
+import type { MapMarker } from '../app/services/types';
 import {addLocation, selectAllLocations} from "../app/services/Location";
 
-export function LocationMarker() {
-    // const [position, setPosition] : LatLng = {lat: 0, lng: 0};
-    const [lati, setLat] = useState(0);
-    const [lngi, setLng] = useState(0);
-    
-    const map = useMapEvents({
-        click: (e) => {
-            setLat(e.latlng.lat);
-            setLng(e.latlng.lng);
-
-
-        },
-    })
-
-    return  (
-        <Marker position={[lati, lngi]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40] })}>
-            <Popup>You are here</Popup>
-        </Marker>
-    )
-}
-
 export function LocationMarkerWithStore() {
-    // const [position, setPosition] : LatLng = {lat: 0, lng: 0};
     const dispatch = useDispatch();
-//    const [lati, setLat] = useState(0);
-//    const [lngi, setLng] = useState(0);
 
     const map = useMapEvents({
         click: (e) => {
-            //setLat();
-            //setLng(e.latlng.lng);
-
-            //Create the type
-            const locMarker : MyLocation = {lat : e.latlng.lat, lng : e.latlng.lng, id: e.latlng.lat + " - " + e.latlng.lng};
-            //Store the location
+            const locMarker : MapMarker = {name : "", lat : e.latlng.lat, lng : e.latlng.lng, id: e.latlng.lat + " - " + e.latlng.lng};
             dispatch(addLocation(locMarker)); // dispatch executes a reducer or action 
         },
-
     })
-
     //Get all the locations
     const locations = useSelector(selectAllLocations);
 
@@ -64,10 +33,8 @@ export function LocationMarkerWithStore() {
                 </Marker>
             ))}
         </div>
-
     );
 }
-
 
 export default function MapElement(): JSX.Element {
     const escuela: LatLngExpression = { lat: 43.354, lng: -5.851 };

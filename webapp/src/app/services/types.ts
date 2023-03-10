@@ -4,9 +4,10 @@
 //      in a correct way. But we will need to see the pod standards
 //      to keep it consistent
 
-export type MyLocation = {
+export type MapMarker = {
     lat : number;
     lng : number;
+    name: string;
     id : string;
 }
 
