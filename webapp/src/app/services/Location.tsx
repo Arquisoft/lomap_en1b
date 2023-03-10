@@ -4,7 +4,7 @@ import {RootState} from "../store";
 import type { MyLocation } from './types' //TODO: Importar el tipo
 
 export const locationApi = createApi({
-    reducerPath: 'location',
+    reducerPath: 'locationAPI',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8082/' }),
     endpoints: (builder) => ({
         getLocations: builder.query<MyLocation, string>({
@@ -29,8 +29,8 @@ const initialState: LocationsState = {
     locations: [],
 };
 
-export const locationsSlice = createSlice({
-    name: 'locationSlice',
+export const locationSlice = createSlice({
+    name: 'location',
     initialState,
     reducers: {
         addLocation: (state, action: PayloadAction<MyLocation>) =>{
@@ -38,11 +38,7 @@ export const locationsSlice = createSlice({
         }
     },
 });
-
-export const getLocations = createSelector(
-    (state : RootState) => state.locationSlice,
-    (locations: MyLocation[]) =>  locations,
-);
-
+export const selectAllLocations = (state: RootState) => state.location.locations;
 export const {useGetLocationsQuery} = locationApi
-export  const {addLocation} = locationsSlice.actions;
+export  const {addLocation} = locationSlice.actions;
+export default locationSlice.reducer;

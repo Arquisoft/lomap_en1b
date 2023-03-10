@@ -6,9 +6,9 @@ import 'leaflet/dist/leaflet.css';
 import { LatLng, LatLngExpression } from 'leaflet';
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import { Icon } from 'leaflet';
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import type { MyLocation } from '../app/services/types';
-import {addLocation} from "../app/services/Location";
+import {addLocation, selectAllLocations} from "../app/services/Location";
 
 export function LocationMarker() {
     // const [position, setPosition] : LatLng = {lat: 0, lng: 0};
@@ -20,10 +20,9 @@ export function LocationMarker() {
             setLat(e.latlng.lat);
             setLng(e.latlng.lng);
 
-            console.log(e.latlng);
+            //console.log(e.latlng);
         },
     })
-
 
     return  (
         <Marker position={[lati, lngi]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40] })}>
@@ -43,15 +42,12 @@ export function LocationMarkerWithStore() {
             setLat(e.latlng.lat);
             setLng(e.latlng.lng);
 
-            console.log(e.latlng);
+            const locMarker : MyLocation = {lat : lati , lng : lngi };
+            //Store the object
+            dispatch(addLocation(locMarker));
+
         },
     })
-
-    //Create the object
-    const locMarker : MyLocation = {lat : lati , lng : lngi };
-    //Store the object
-    dispatch(addLocation(locMarker));
-    //Get all the objects and show them on the
 
     return  (
         <Marker position={[lati, lngi]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40] })}>
@@ -71,7 +67,7 @@ export default function MapElement(): JSX.Element {
 
             <Stack>
                 <MapContainer center={escuela} zoom={13} scrollWheelZoom={true}>
-                    <LocationMarker/>
+                    <LocationMarkerWithStore/>
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
