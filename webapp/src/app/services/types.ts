@@ -7,7 +7,6 @@
 export type MyLocation = {
     lat : number;
     lng : number;
-    id : string;
 }
 
 export type Friend = {

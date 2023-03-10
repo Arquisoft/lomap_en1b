@@ -20,7 +20,7 @@ export function LocationMarker() {
             setLat(e.latlng.lat);
             setLng(e.latlng.lng);
 
-            //console.log(e.latlng);
+
         },
     })
 
@@ -42,18 +42,30 @@ export function LocationMarkerWithStore() {
             setLat(e.latlng.lat);
             setLng(e.latlng.lng);
 
+            //Create the type
             const locMarker : MyLocation = {lat : lati , lng : lngi };
-            //Store the object
+            //Store the location
             dispatch(addLocation(locMarker));
-
         },
+
     })
 
+    //Get all the locations
+    const locations = useSelector(selectAllLocations);
+
+    //Use .map to iterate and generate the corresponding markers
+    //This need to be optimiced because I think it generates again
+    //all the markers on top of each other
     return  (
-        <Marker position={[lati, lngi]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40] })}>
-            <Popup>You are here</Popup>
-        </Marker>
-    )
+        <div>
+            {locations.map(location => (
+                <Marker position={[location.lat, location.lng]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40] })}>
+                    <Popup>You are here</Popup>
+                </Marker>
+            ))}
+        </div>
+
+    );
 }
 
 
