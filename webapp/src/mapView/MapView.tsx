@@ -8,14 +8,15 @@ import { MapContainer, TileLayer, useMap ,Marker,useMapEvents,Popup} from 'react
 import { LatLng, LatLngExpression } from 'leaflet';
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import {useAppDispatch, useAppSelector} from '../app/hooks';
+import type { MyLocation } from '../app/services/types/types';
 import { Icon } from 'leaflet';
 import {
-    addMarker,selectMapState,MarkerObj
+    addMarker,selectMapState
 } from './MapViewSlice'
 
 
 export function LocationMarker() {
-    const dispatch = useAppDispatch();
+    const dispatch = useDispatch();
     // const [position, setPosition] : LatLng = {lat: 0, lng: 0};
     const [lati, setLat] = useState(0);
     const [lngi, setLng] = useState(0);
@@ -26,10 +27,23 @@ export function LocationMarker() {
             setLng(e.latlng.lng);
 
             console.log(e.latlng);
+
+        const locMarker : MyLocation = {lat : e.latlng.lat, lng : e.latlng.lng, id: e.latlng.lat + " - " + e.latlng.lng};
+        dispatch(addMarker(locMarker));
         },
     });
-    const marker = new MarkerObj(lati,lngi);
-    dispatch(addMarker([43.354,-5.851]));
+    const stateMap = useAppSelector(selectMapState);
+
+    return (
+        <div>
+            {stateMap.markers.map(location => (
+                    <Marker position={[location.lat, location.lng]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40] })}>
+                        <Popup>You are here</Popup>
+                    </Marker>
+
+                ))}
+        </div>
+    )
 }
 
 
@@ -37,37 +51,18 @@ export default function MapView() {
     const dispatch = useAppDispatch();
     const stateMap = useAppSelector(selectMapState);
 
-    dispatch(addMarker([43.354,-5.851]));
+     return (
+        <ScreenContainer>
+             <MapContainer center={stateMap.center} zoom={stateMap.zoom} scrollWheelZoom={true} style={{ height: "100vh", width: "100%"}}>
+                 <LocationMarker/>
+                 <TileLayer
+                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                 />
+             </MapContainer>
+        </ScreenContainer>
+     );
 
-    if (stateMap.markers.length > 0) {
-        return (
-                <ScreenContainer>
-                 <MapContainer center={stateMap.center} zoom={stateMap.zoom} scrollWheelZoom={true} style={{ height: "100vh", width: "100%"}}>
-                    <TileLayer
-                        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    {stateMap.markers.map(el => (
-                        <Marker position={[el.latitude, el.longitude]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40] })}>
-                            <Popup>You are here</Popup>
-                        </Marker>
-
-                    ))}
-                </MapContainer>
-            </ScreenContainer>
-        );
-    } else {
-         return (
-            <ScreenContainer>
-                 <MapContainer center={stateMap.center} zoom={stateMap.zoom} scrollWheelZoom={true} style={{ height: "100vh", width: "100%"}}>
-                     <TileLayer
-                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                     />
-                 </MapContainer>
-            </ScreenContainer>
-         );
-   }
 }
 
 const ScreenContainer = styled.div`
