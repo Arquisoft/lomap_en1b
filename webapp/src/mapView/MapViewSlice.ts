@@ -12,7 +12,7 @@ export interface MapState {
 
 
 const initialState: MapState = {
-    markers: [{lat : 43.354, lng : -5.851, id: "sdfsdf", name: "EII", category: "escuela"}],
+    markers: [{lat : 43.354, lng : -5.851, id: "sdfsdf", name: "EII", category: "escuela", details: "escuela de ingenieria informatica"}],
     center: [43.354, -5.851],
     zoomControl: true,
     zoom: 12

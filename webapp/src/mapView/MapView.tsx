@@ -1,18 +1,19 @@
 import styled from "@emotion/styled";
-import React, { Component,useState,useEffect } from 'react';
-import L from 'leaflet';
-import { useDispatch, useSelector } from 'react-redux'
-import { Flex, Stack } from '@chakra-ui/react';
 import 'leaflet/dist/leaflet.css';
+import React, { useState} from 'react';
+import { useDispatch, useSelector } from 'react-redux'
 import { MapContainer, TileLayer, useMap ,Marker,useMapEvents,Popup} from 'react-leaflet';
-import { LatLng, LatLngExpression } from 'leaflet';
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
-import {useAppDispatch, useAppSelector} from '../app/hooks';
 import type { MapMarker } from '../app/services/types/types';
 import { Icon } from 'leaflet';
 import {
     addMarker,selectMapState
 } from './MapViewSlice'
+import {
+    Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody,
+    ModalCloseButton, FormControl, FormLabel, FormHelperText, Input, Button, useDisclosure,
+    Card, CardHeader, CardBody, CardFooter, Stack, StackDivider, Box, Heading, Text
+} from '@chakra-ui/react'
 
 
 export function LocationMarker() {
@@ -20,23 +21,66 @@ export function LocationMarker() {
     // const [position, setPosition] : LatLng = {lat: 0, lng: 0};
     const [lati, setLat] = useState(0);
     const [lngi, setLng] = useState(0);
+    const {isOpen, onClose, onOpen} = useDisclosure();
 
     const map = useMapEvents({
         click: (e) => {
             setLat(e.latlng.lat);
             setLng(e.latlng.lng);
 
-            console.log(e.latlng);
-
-        const locMarker : MapMarker = {lat : e.latlng.lat, lng : e.latlng.lng,name: "sdfsdf",category: "dfsdf", id: e.latlng.lat + " - " + e.latlng.lng};
-        dispatch(addMarker(locMarker));
+            onOpen();
         },
     });
-    return (<div></div>)
+    const initialRef = React.useRef(null)
+    var [name, setName] = React.useState('')
+    var [category, setCategory] = React.useState('')
+    var [details, setDetails] = React.useState('')
+
+    return (
+        <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef} isCentered={true} size={'md'}>
+            <ModalOverlay>
+                <ModalContent>
+                    <ModalHeader>
+                    </ModalHeader>
+                    <ModalBody>
+                        <form id={"formMarker"} onSubmit = {
+                            (event) => {
+                                event.preventDefault();
+                                const locMarker : MapMarker = {lat : lati, lng : lngi,
+                                    name: name,category: category, details: details, id: lati + " - " + lngi};
+                                dispatch(addMarker(locMarker));
+                                setName('')
+                                setCategory('')
+                                setDetails('')
+                            }}>
+                            <FormControl isRequired={true}>
+                                <FormLabel>Name</FormLabel>
+                                <Input value={name} type={"text"} ref={initialRef}
+                                       onChange={(e)=>setName(e.currentTarget.value)}/>
+                            </FormControl>
+                            <FormControl isRequired={true}>
+                                <FormLabel>Category</FormLabel>
+                                <Input value={category} type={"text"}
+                                       onChange={(e)=>setCategory(e.currentTarget.value)}/>
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel>Details</FormLabel>
+                                <Input value={details}  type={"text"}
+                                       onChange={(e)=>setDetails(e.currentTarget.value)}/>
+                            </FormControl>
+                        </form>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button form={"formMarker"} type={"submit"} onClick={onClose}>Submit</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </ModalOverlay>
+        </Modal>
+    )
 }
 
 export default function MapView() {
-    const stateMap = useAppSelector(selectMapState);
+    const stateMap = useSelector(selectMapState);
 
      return (
         <ScreenContainer>
@@ -44,7 +88,9 @@ export default function MapView() {
                  <LocationMarker/>
                  {stateMap.markers.map(location => (
                      <Marker key={location.id} position={[location.lat, location.lng]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40]})}>
-                         <Popup><div>{location.name}</div></Popup>
+                         <Popup>
+                             <PopupContent name={location.name} category={location.category} details={location.details} id={location.id} lat={location.lat} lng={location.lng}/>
+                         </Popup>
                      </Marker>
                  ))}
                  <TileLayer
@@ -54,6 +100,41 @@ export default function MapView() {
              </MapContainer>
         </ScreenContainer>
      );
+}
+
+export function PopupContent(marker: MapMarker){
+    return(
+        <Card>
+            <CardBody>
+                <Stack divider={<StackDivider />} spacing='4'>
+                    <Box>
+                        <Heading size='xs' textTransform='uppercase'>
+                            Name:
+                        </Heading>
+                        <Text pt='2' fontSize='sm'>
+                            {marker.name}
+                        </Text>
+                    </Box>
+                    <Box>
+                        <Heading size='xs' textTransform='uppercase'>
+                            Category:
+                        </Heading>
+                        <Text pt='2' fontSize='sm'>
+                            {marker.category}
+                        </Text>
+                    </Box>
+                    <Box>
+                        <Heading size='xs' textTransform='uppercase'>
+                            Details:
+                        </Heading>
+                        <Text pt='2' fontSize='sm'>
+                            {marker.details}
+                        </Text>
+                    </Box>
+                </Stack>
+            </CardBody>
+        </Card>
+    )
 }
 
 const ScreenContainer = styled.div`

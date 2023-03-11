@@ -10,4 +10,5 @@ export type MapMarker = {
     name: string;
     category: string;
     id : string;
+    details: string;
 }
