@@ -5,7 +5,8 @@ export default {
     initLogin : async function (req:Request, res:Response){
         // create a new Session
         const session = new Session();
-        req.session!.id = session.info.sessionId;
+        req.sessionID = session.info.sessionId;
+        console.log(req.sessionID)
 
         //Redirect user to POD provider login
         const redirectToSolidIdentityProvider = (providerURL : string) => {
@@ -28,7 +29,9 @@ export default {
     confirmLogin : async function (req:Request, res:Response){
         // If we get here, the user has logged in successfully
         // Recover session information
-        const session = await getSessionFromStorage(req.session!.id);
+        console.log(req.sessionID)
+        const session = await getSessionFromStorage(req.sessionID);
+        console.log(session?.info.webId)
         // Complete login process using the data appended by the Solid Identity Provider
         await session!.handleIncomingRedirect(`http://localhost:8082/auth${req.url}`);
 
@@ -44,7 +47,7 @@ export default {
     },
 
     logout : async function(req:Request, res : Response){
-        const session = await getSessionFromStorage(req.session!.id);
+        const session = await getSessionFromStorage(req.sessionID);
         await session!.logout();
         res.send('Logged out');
     }

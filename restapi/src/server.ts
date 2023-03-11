@@ -1,21 +1,17 @@
 import express from "express"
-import cookieSession from "cookie-session";
 import locationsRouter from "./routes/locationsRouter";
 import authenticationRouter from "./routes/authenticationRouter";
 import cors from "cors"
+import session from "express-session";
 
 //dotenv.config()
 const PORT = 8082
 
 const app = express()
-    .use(cookieSession({
-        name: "session",
-        //  keys to sign the cookies.
-        keys: [
-            "key1",
-            "key2",
-        ],
-        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    .use(session({
+        secret: "ASDFG", // Secret key,
+        saveUninitialized: true,
+        resave: true
     }))
     .use(cors({origin: "http://localhost:3000", credentials: true}))
     /*.use(function(_, res, next) {
