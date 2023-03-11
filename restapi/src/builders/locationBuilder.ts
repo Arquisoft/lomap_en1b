@@ -3,7 +3,6 @@ import {Location, LocationType} from "../types";
 import {RDF, SCHEMA_INRUPT} from "@inrupt/vocab-common-rdf";
 
 export function thingToLocation(locationThing:Thing) : Location {
-    console.log(locationThing)
     return {
         url: locationThing.url,
         name: getStringNoLocale(locationThing, SCHEMA_INRUPT.name)!,

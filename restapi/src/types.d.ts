@@ -6,4 +6,4 @@ export type Location = {
     longitude:number
 };
 
-export type LocationType = 'shop' | 'bar' | 'restaurant' | 'sight' | 'monument';
+export enum LocationType {shop='shop', bar= 'bar', restaurant='restaurant', sight='sight' ,monument='monument'}
