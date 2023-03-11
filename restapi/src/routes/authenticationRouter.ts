@@ -5,7 +5,8 @@ const authenticationRouter = express.Router()
 
     authenticationRouter.post("/login", authenticationService.initLogin);
 
-    authenticationRouter.get("/loginconfirm", authenticationService.confirmLogin);
+    authenticationRouter.get("/loginconfirm", authenticationService.redirectConfirm);
+    authenticationRouter.post("/loginconfirm", authenticationService.confirmLogin);
 
     authenticationRouter.get("/logout", authenticationService.logout);
 
