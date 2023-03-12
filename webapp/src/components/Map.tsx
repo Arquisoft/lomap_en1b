@@ -19,6 +19,7 @@ import { LatLng, LatLngExpression } from 'leaflet';
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import { Icon } from 'leaflet';
 import {useSelector, useDispatch} from 'react-redux';
+import {useAddLocationMutation, useGetLocationsQuery} from "../app/services/Location";
 import type { MapMarker } from '../types';
 import {LocationType} from "../locationType";
 //import {addLocation, selectAllLocations} from "../app/services/Location";
@@ -50,7 +51,7 @@ export function LocationMarkerWithStore() {
     })
 
     //Get all the locations
-    const locations = useSelector(selectAllLocations);
+    const locations = useGetLocationsQuery();
 
     //Use .map to iterate and generate the corresponding markers
     //This need to be optimiced because I think it generates again
@@ -66,10 +67,12 @@ export function LocationMarkerWithStore() {
                         <form id={"formMarker"} onSubmit = {
                             (event) => {
                                 event.preventDefault();
-                                const locMarker : MapMarker = {id: lati + " - " + lngi, name: name,
-                                    latitude : lati, longitude : lngi,
-                                    locationType: category as LocationType};
-                                dispatch(addLocation(locMarker));
+                                const marker : MapMarker = {lat : lati, lng : lngi,
+                                    name: name,category: category, details: details, id: lati + " - " + lngi};
+
+                                const handleSubmit = (marker: MapMarker) => {
+                                    useAddLocationMutation();
+                                }
                                 setName('')
                                 setCategory('')
                                 setDetails('')
@@ -111,7 +114,7 @@ export function LocationMarkerWithStore() {
 
 export default function MapElement(): JSX.Element {
     const escuela: LatLngExpression = { lat: 43.354, lng: -5.851 };
-    const locations = useSelector(selectAllLocations);
+    const { data: locations, error, isLoading } = useGetLocationsQuery();
     return (
         <Flex
             minH={'100vh'}
