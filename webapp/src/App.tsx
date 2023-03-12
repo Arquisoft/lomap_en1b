@@ -1,15 +1,20 @@
 import React from 'react';
 
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
+
 import './App.css';
 import LoginForm from './components/Login';
 import MapElement from './components/Map';
 
+import {createBrowserRouter, RouterProvider} from 'react-router-dom';
+
 import Index from "./routes";
 import Error404 from "./routes/404error";
+
+import Map from "./components/Map"
+
 import HomePage from './components/Home';
 import AboutPage from './components/About';
-
 
 const router = createBrowserRouter([
   {
@@ -29,7 +34,7 @@ const router = createBrowserRouter([
   {
     path: "/about",
     element:<AboutPage />,
-  }
+  },
 
   /*{
     path: "/",
@@ -38,7 +43,15 @@ const router = createBrowserRouter([
     children: [
 
     ]
-  }*/
+
+  {
+    path: "/map",
+    element: <Map/>,
+    errorElement: <Error404 />,
+    children: [
+
+    ]
+  }
 ]);
 
 function App() {
