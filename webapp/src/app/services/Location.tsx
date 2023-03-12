@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 //import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 //import { RootState } from "../store";
-import type { MapMarker } from './types';
+import type { MapMarker } from '../../types';
 
 /**
  * Creates slices automatically and they comunicate with the API.

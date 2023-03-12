@@ -6,6 +6,7 @@ export default {
         // create a new Session
         const session = new Session();
         req.session.solidSessionId = session.info.sessionId;
+        console.log(req.query.providerURL)
         console.log(req.session.solidSessionId)
 
         //Redirect user to POD provider login

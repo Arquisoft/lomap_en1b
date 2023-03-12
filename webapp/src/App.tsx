@@ -30,7 +30,6 @@ const router = createBrowserRouter([
     element:<HomePage />,
     errorElement: <Error404 />,
   },
-  // TODO
   {
     path: "/about",
     element:<AboutPage />,

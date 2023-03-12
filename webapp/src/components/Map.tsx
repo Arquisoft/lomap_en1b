@@ -19,7 +19,8 @@ import { LatLng, LatLngExpression } from 'leaflet';
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import { Icon } from 'leaflet';
 import {useSelector, useDispatch} from 'react-redux';
-import type { MapMarker } from '../app/services/types';
+import type { MapMarker } from '../types';
+import {LocationType} from "../locationType";
 //import {addLocation, selectAllLocations} from "../app/services/Location";
 
 export function LocationMarkerWithStore() {
@@ -65,8 +66,9 @@ export function LocationMarkerWithStore() {
                         <form id={"formMarker"} onSubmit = {
                             (event) => {
                                 event.preventDefault();
-                                const locMarker : MapMarker = {lat : lati, lng : lngi,
-                                    name: name,category: category, details: details, id: lati + " - " + lngi};
+                                const locMarker : MapMarker = {id: lati + " - " + lngi, name: name,
+                                    latitude : lati, longitude : lngi,
+                                    locationType: category as LocationType};
                                 dispatch(addLocation(locMarker));
                                 setName('')
                                 setCategory('')
@@ -124,13 +126,12 @@ export default function MapElement(): JSX.Element {
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
                     {locations.map(location => (
-                        <Marker key={location.id} position={[location.lat, location.lng]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40]})}>
+                        <Marker key={location.id} position={[location.latitude, location.longitude]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40]})}>
                             <Popup>
-                                <PopupContent name={location.name} category={location.category} details={location.details} id={location.id} lat={location.lat} lng={location.lng}/>
+                                <PopupContent name={location.name} locationType={location.locationType} id={location.id} latitude={location.latitude} longitude={location.longitude}/>
                             </Popup>
                         </Marker>
                     ))}
-
                 </MapContainer>
             </Stack>
         </Flex>
@@ -156,15 +157,7 @@ export function PopupContent(marker: MapMarker){
                             Category
                         </Heading>
                         <Text pt='2' fontSize='sm'>
-                            {marker.category}
-                        </Text>
-                    </Box>
-                    <Box>
-                        <Heading size='sm' textTransform='uppercase'>
-                            Details
-                        </Heading>
-                        <Text pt='2' fontSize='sm'>
-                            {marker.details}
+                            {marker.locationType}
                         </Text>
                     </Box>
                 </Stack>
@@ -172,111 +165,3 @@ export function PopupContent(marker: MapMarker){
         </Card>
     )
 }
-
-
-
-/*
-type Marcador = {
-    latitude: number;
-    longitud: number;
-    texto: string;
-};
-
-
-let marcador1 : Marcador = {latitude: 43.354, longitud: -5.851, texto:"Escuela, Marcador 1"};
-let marcador2 : Marcador = {latitude: 43.36483, longitud: -5.85427, texto:"Marcador2"};
-let marcador3 : Marcador = {latitude: 43.35520, longitud: -5.85514, texto:"Marcador3"};
-
-let listaMarcadores : Marcador[] = [];  //lista de marcadores
-listaMarcadores.push(marcador1, marcador2, marcador3);
-
-export function LocationMarker() {
-    let marcador : Marcador = {
-        latitude: 0,
-        longitud: 0,
-        texto: ''
-    };
-
-    const map = useMapEvents({
-        click: (e) => {
-            marcador.latitude = e.latlng.lat;
-            marcador.longitud = e.latlng.lng;
-            marcador.texto = "Prueba click";
-            listaMarcadores.push(marcador);
-            console.log(listaMarcadores);
-            // setLat(e.latlng.lat);
-            // setLng(e.latlng.lng);
-        },
-    })
-
-    
-
-    return null;
-}
-
-export default function MapElement(): JSX.Element {
-    const escuela: LatLngExpression = { lat: 43.354, lng: -5.851 };
-
-    const AddMarker = () => {
-
-        let marcador : Marcador = {
-            latitude: 0,
-            longitud: 0,
-            texto: ''
-        };
-
-        const map = useMapEvents({
-            click: (e) => {
-                marcador.latitude = e.latlng.lat;
-                marcador.longitud = e.latlng.lng;
-                marcador.texto = "Prueba click";
-                // setLat(e.latlng.lat);
-                // setLng(e.latlng.lng);
-            },
-        })
-
-        listaMarcadores.push(marcador);
-        console.log(listaMarcadores);
-    };
-
-
-
-    return (
-        <Flex
-            minH={'100vh'}
-            align={'center'}
-            justify={'center'}>
-
-            <Stack>
-                <MapContainer center={escuela} zoom={13} scrollWheelZoom={true}>
-                    <TileLayer
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-
-                    <LocationMarker/>
-                    {/* Prints a marker per each location element stored in the list listaMarcadores.
-                        TODO must be replaced with PODS
-                        No se updatea cuando se añade un marcador :( 
-                            REDUX dispatch???
-                    */
-                   
-                   /*     }
-                    {listaMarcadores.length > 0 && (
-                        listaMarcadores.map( (marcador : Marcador) =>
-                            (
-                                <Marker position={[marcador.latitude, marcador.longitud]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40] })}>
-                                    <Popup>
-                                        {marcador.texto}
-                                    </Popup>
-                                </Marker>
-                            )
-                        )
-                    )}
-
-                </MapContainer>
-            </Stack>
-        </Flex>
-    );
-}
-*/
