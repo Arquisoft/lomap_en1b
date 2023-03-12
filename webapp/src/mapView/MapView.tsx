@@ -11,12 +11,36 @@ import {
 } from './MapViewSlice'
 import {
     Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody,
-    ModalCloseButton, FormControl, FormLabel, FormHelperText, Input, Button, useDisclosure,
-    Card, CardHeader, CardBody, CardFooter, Stack, StackDivider, Box, Heading, Text
+    ModalCloseButton, FormControl, FormLabel, Input, Button, useDisclosure,
+    Card, CardBody, Stack, StackDivider, Box, Heading, Text, Select
 } from '@chakra-ui/react'
 
 
-export function LocationMarker() {
+
+export default function MapView() {
+    const stateMap = useSelector(selectMapState);
+
+    return (
+        <ScreenContainer>
+            <MapContainer center={stateMap.center} zoom={stateMap.zoom} scrollWheelZoom={true} style={{ height: "100vh", width: "100%"}}>
+                <LocationMarker/>
+                {stateMap.markers.map(location => (
+                    <Marker key={location.id} position={[location.lat, location.lng]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40]})}>
+                        <Popup>
+                            <PopupContent name={location.name} category={location.category} details={location.details} id={location.id} lat={location.lat} lng={location.lng}/>
+                        </Popup>
+                    </Marker>
+                ))}
+                <TileLayer
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+            </MapContainer>
+        </ScreenContainer>
+    );
+}
+
+function LocationMarker() {
     const dispatch = useDispatch();
     // const [position, setPosition] : LatLng = {lat: 0, lng: 0};
     const [lati, setLat] = useState(0);
@@ -33,7 +57,7 @@ export function LocationMarker() {
     });
     const initialRef = React.useRef(null)
     var [name, setName] = React.useState('')
-    var [category, setCategory] = React.useState('')
+    var [category, setCategory] = React.useState('Bar')
     var [details, setDetails] = React.useState('')
 
     return (
@@ -41,6 +65,7 @@ export function LocationMarker() {
             <ModalOverlay>
                 <ModalContent>
                     <ModalHeader>
+                        <ModalCloseButton/>
                     </ModalHeader>
                     <ModalBody>
                         <form id={"formMarker"} onSubmit = {
@@ -60,8 +85,17 @@ export function LocationMarker() {
                             </FormControl>
                             <FormControl isRequired={true}>
                                 <FormLabel>Category</FormLabel>
-                                <Input value={category} type={"text"}
-                                       onChange={(e)=>setCategory(e.currentTarget.value)}/>
+                                <Select value={category} onChange={(e)=>setCategory(e.currentTarget.value)}>
+                                    <option>Bar</option>
+                                    <option>Building</option>
+                                    <option>House</option>
+                                    <option>Institution</option>
+                                    <option>Monument</option>
+                                    <option>Park</option>
+                                    <option>Restaurant</option>
+                                    <option>Shop</option>
+                                    <option>Sight</option>
+                                </Select>
                             </FormControl>
                             <FormControl>
                                 <FormLabel>Details</FormLabel>
@@ -79,53 +113,31 @@ export function LocationMarker() {
     )
 }
 
-export default function MapView() {
-    const stateMap = useSelector(selectMapState);
-
-     return (
-        <ScreenContainer>
-             <MapContainer center={stateMap.center} zoom={stateMap.zoom} scrollWheelZoom={true} style={{ height: "100vh", width: "100%"}}>
-                 <LocationMarker/>
-                 {stateMap.markers.map(location => (
-                     <Marker key={location.id} position={[location.lat, location.lng]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40]})}>
-                         <Popup>
-                             <PopupContent name={location.name} category={location.category} details={location.details} id={location.id} lat={location.lat} lng={location.lng}/>
-                         </Popup>
-                     </Marker>
-                 ))}
-                 <TileLayer
-                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                 />
-             </MapContainer>
-        </ScreenContainer>
-     );
-}
 
 export function PopupContent(marker: MapMarker){
     return(
-        <Card>
+        <Card size={'sm'}>
             <CardBody>
-                <Stack divider={<StackDivider />} spacing='4'>
+                <Stack divider={<StackDivider />} spacing='4' minWidth={'sm'}>
                     <Box>
-                        <Heading size='xs' textTransform='uppercase'>
-                            Name:
+                        <Heading size='sm' textTransform='uppercase'>
+                            Name
                         </Heading>
                         <Text pt='2' fontSize='sm'>
                             {marker.name}
                         </Text>
                     </Box>
                     <Box>
-                        <Heading size='xs' textTransform='uppercase'>
-                            Category:
+                        <Heading size='sm' textTransform='uppercase'>
+                            Category
                         </Heading>
                         <Text pt='2' fontSize='sm'>
                             {marker.category}
                         </Text>
                     </Box>
                     <Box>
-                        <Heading size='xs' textTransform='uppercase'>
-                            Details:
+                        <Heading size='sm' textTransform='uppercase'>
+                            Details
                         </Heading>
                         <Text pt='2' fontSize='sm'>
                             {marker.details}
