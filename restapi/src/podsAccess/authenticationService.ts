@@ -18,6 +18,7 @@ export default {
             redirectUrl: 'http://localhost:3000/auth/loginconfirm',
             // Set user SOLID identity provider
             oidcIssuer: req.body.provider,
+            //oidcIssuer: "https://login.inrupt.com",
             // Application name to show when requesting data
             clientName: "LoMap",
             //handler to redirect to the provider login
@@ -31,8 +32,15 @@ export default {
         console.log(req.session.solidSessionId)
         const session = await getSessionFromStorage(req.session.solidSessionId!);
         // Complete login process using the data appended by the Solid Identity Provider
-        await session!.handleIncomingRedirect(`http://localhost:8082/auth${req.url}`);
-        console.log(session?.info.webId)
+        try{
+            await session!.handleIncomingRedirect(`http://localhost:3000/auth${req.url}`);
+        }catch (e){
+            console.log(e)
+            return res.sendStatus(500)
+        }
+
+
+
         // Session now contains an authenticated Session instance.
         if (session!.info.isLoggedIn) {
             return res.sendStatus(200);
