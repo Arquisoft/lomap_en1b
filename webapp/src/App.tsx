@@ -6,7 +6,6 @@ import './App.css';
 import LoginForm from './components/Login';
 import MapElement from './components/Map';
 
-import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 
 import Index from "./routes";
 import Error404 from "./routes/404error";
@@ -29,20 +28,13 @@ const router = createBrowserRouter([
   {
     path: "/",
     element:<HomePage />,
+    errorElement: <Error404 />,
   },
   // TODO
   {
     path: "/about",
     element:<AboutPage />,
   },
-
-  /*{
-    path: "/",
-    element: <Index />,
-    errorElement: <Error404 />,
-    children: [
-
-    ]
 
   {
     path: "/map",
