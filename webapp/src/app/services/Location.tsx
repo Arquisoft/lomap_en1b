@@ -20,7 +20,7 @@ export const locationApi = createApi({
             query: (name) => `location`,
         }),
         // Omit metemos una localización y da igual que no tenga un id asignado
-        addLocation: builder.mutation<void, Omit<MapMarker, 'id'>>({
+        addLocation: builder.mutation<void, MapMarker>({
             query: (newLocation) => ({
                 url: `location`,
                 method: 'POST',
@@ -61,8 +61,9 @@ const initialState: LocationsState = {
 //        }
 //    },
 //});
-//export const selectAllLocations = (state: RootState) => state.location.locations;
-//export const { useGetLocationsQuery, useAddLocationMutation } = locationApi
+
+export const { useGetLocationsQuery, useAddLocationMutation} = locationApi
 //export const { addLocation } = locationSlice.actions;
 //export const { getLocations}
 //export default locationSlice.reducer;
+//export const selectAllLocations = (state: RootState) => state.location.locations;
