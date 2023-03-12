@@ -4,7 +4,7 @@ volumes:
     grafana_data: {}
 services:
   restapi:
-    build: ./restapi
+    build: restapi_deprecated
     ports:
       - "5000:5000"
   webapp:

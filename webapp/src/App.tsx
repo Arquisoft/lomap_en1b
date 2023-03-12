@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import MapElement from './components/Map';
 
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 
@@ -9,8 +10,8 @@ import MapView from "./features/mapView/MapView"
 
 const router = createBrowserRouter([
   {
-    path: "/login",
-    element:<>Hello Login</>,
+    path: "/map",
+    element:<MapElement/>,
   },
   {
     path: "/",

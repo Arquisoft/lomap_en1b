@@ -1,19 +1,26 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
-import mapReducer from '../features/mapView/MapViewSlice'
+import {authApi} from "./services/Auth";
+import {addLocation, locationApi} from "./services/Location";
+import locationReducer from "./services/Location";
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
-    map: mapReducer
+    [authApi.reducerPath]: authApi.reducer,
+    [locationApi.reducerPath]: locationApi.reducer,
+    location: locationReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(
+          authApi.middleware,
+          locationApi.middleware
+      ),
 });
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
 export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootState,
-  unknown,
-  Action<string>
+    ReturnType,
+    RootState,
+    unknown,
+    Action<string>
 >;
