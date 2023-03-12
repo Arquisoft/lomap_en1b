@@ -1,15 +1,19 @@
 import React from 'react';
 
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
+
 import './App.css';
 import LoginForm from './components/Login';
 import MapElement from './components/Map';
 
+
 import Index from "./routes";
 import Error404 from "./routes/404error";
+
+import Map from "./components/Map"
+
 import HomePage from './components/Home';
 import AboutPage from './components/About';
-
 
 const router = createBrowserRouter([
   {
@@ -24,29 +28,22 @@ const router = createBrowserRouter([
   {
     path: "/",
     element:<HomePage />,
+    errorElement: <Error404 />,
   },
   // TODO
   {
     path: "/about",
     element:<AboutPage />,
-  }
-
-  /*{
-    path: "/",
-    element: <Index />,
-    errorElement: <Error404 />,
-    children: [
-
-    ]
   },
+
   {
-    path: "/auth/loginconfirm",
-    element: <LoginConfirm />,
+    path: "/map",
+    element: <Map/>,
     errorElement: <Error404 />,
     children: [
 
     ]
-  }*/
+  }
 ]);
 
 function App() {

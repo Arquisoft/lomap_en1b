@@ -12,9 +12,3 @@ export type MapMarker = {
     id : string;
     details: string;
 }
-
-
-export type Friend = {
-    username : string;
-    podId : string;
-}
