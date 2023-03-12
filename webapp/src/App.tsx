@@ -5,7 +5,7 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 
 import Index from "./routes";
 import Error404 from "./routes/404error";
-import MapView from "./mapView/MapView"
+import MapView from "./features/mapView/MapView"
 
 const router = createBrowserRouter([
   {

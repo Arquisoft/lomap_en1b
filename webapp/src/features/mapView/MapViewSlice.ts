@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState, AppThunk } from '../app/store';
-import type { MapMarker } from '../app/services/types/types';
+import { RootState, AppThunk } from '../../app/store';
+import type { MapMarker } from '../../app/services/types/types';
 import L from 'leaflet';
 
 export interface MapState {

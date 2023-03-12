@@ -2,9 +2,9 @@ import styled from "@emotion/styled";
 import 'leaflet/dist/leaflet.css';
 import React, { useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { MapContainer, TileLayer, useMap ,Marker,useMapEvents,Popup} from 'react-leaflet';
+import { MapContainer, TileLayer ,Marker,useMapEvents, Popup} from 'react-leaflet';
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
-import type { MapMarker } from '../app/services/types/types';
+import type { MapMarker } from '../../app/services/types/types';
 import { Icon } from 'leaflet';
 import {
     addMarker,selectMapState
@@ -47,21 +47,25 @@ function LocationMarker() {
     const [lngi, setLng] = useState(0);
     const {isOpen, onClose, onOpen} = useDisclosure();
 
+    const initialRef = React.useRef(null)
+    var [name, setName] = React.useState('')
+    var [category, setCategory] = React.useState('Bar')
+    var [details, setDetails] = React.useState('')
+
     const map = useMapEvents({
         click: (e) => {
             setLat(e.latlng.lat);
             setLng(e.latlng.lng);
 
             onOpen();
+            setName('')
+            setCategory('Bar')
+            setDetails('')
         },
     });
-    const initialRef = React.useRef(null)
-    var [name, setName] = React.useState('')
-    var [category, setCategory] = React.useState('Bar')
-    var [details, setDetails] = React.useState('')
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef} isCentered={true} size={'md'}>
+        <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef} isCentered={true} size={'lg'}>
             <ModalOverlay>
                 <ModalContent>
                     <ModalHeader>
@@ -105,7 +109,7 @@ function LocationMarker() {
                         </form>
                     </ModalBody>
                     <ModalFooter>
-                        <Button form={"formMarker"} type={"submit"} onClick={onClose}>Submit</Button>
+                        <Button form={"formMarker"} type={"submit"} onClick={onClose}>Place Marker</Button>
                     </ModalFooter>
                 </ModalContent>
             </ModalOverlay>
