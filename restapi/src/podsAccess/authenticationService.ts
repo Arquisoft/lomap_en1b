@@ -30,7 +30,14 @@ export default {
         // Recover session information
         const session = await getSessionFromStorage(req.session!.id);
         // Complete login process using the data appended by the Solid Identity Provider
-        await session!.handleIncomingRedirect(`http://localhost:8082/auth${req.url}`);
+        try{
+            await session!.handleIncomingRedirect(`http://localhost:3000/auth${req.url}`);
+        }catch (e){
+            console.log(e)
+            return res.sendStatus(500)
+        }
+
+
 
         // Session now contains an authenticated Session instance.
         if (session!.info.isLoggedIn) {
