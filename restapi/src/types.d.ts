@@ -1,7 +1,7 @@
 import {LocationType} from "./locationType";
 
 export type Location = {
-    url:string,
+    id:string,
     name:string,
     locationType:LocationType,
     latitude:number,

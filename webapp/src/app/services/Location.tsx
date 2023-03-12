@@ -11,7 +11,7 @@ import type { MapMarker } from './types';
  * Two types: query for obtaining data (retrieving) [read-only] and mutation for modifying data [write]
  */
 export const locationApi = createApi({
-    reducerPath: 'locationAPI',
+    reducerPath: 'location',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8082/' }),
     endpoints: (builder) => ({
         // MyLocation: what is returned
@@ -47,7 +47,7 @@ const initialState: LocationsState = {
 // actions dont change the state
 // reducers change the state
 export const locationSlice = createSlice({
-    name: 'location',
+    name: 'locationTest',
     initialState,
     // métodos: reducers y actions
     // reducers -> the only way to change the state of the locations, but only the part of the state u want to change

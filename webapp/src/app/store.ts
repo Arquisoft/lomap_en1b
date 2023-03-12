@@ -6,8 +6,8 @@ import locationReducer from "./services/Location";
 export const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
-    [locationApi.reducerPath]: locationApi.reducer,
-    location: locationReducer,
+    [location.reducerPath]: location.reducer,
+    locationAPI: locationReducer,
   },
   middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(
