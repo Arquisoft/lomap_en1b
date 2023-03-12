@@ -20,7 +20,7 @@ import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import { Icon } from 'leaflet';
 import {useSelector, useDispatch} from 'react-redux';
 import type { MapMarker } from '../app/services/types';
-import {addLocation, selectAllLocations} from "../app/services/Location";
+//import {addLocation, selectAllLocations} from "../app/services/Location";
 
 export function LocationMarkerWithStore() {
     // const [position, setPosition] : LatLng = {lat: 0, lng: 0};

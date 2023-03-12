@@ -35,15 +35,6 @@ const router = createBrowserRouter([
     path: "/about",
     element:<AboutPage />,
   },
-
-  {
-    path: "/map",
-    element: <Map/>,
-    errorElement: <Error404 />,
-    children: [
-
-    ]
-  }
 ]);
 
 function App() {
