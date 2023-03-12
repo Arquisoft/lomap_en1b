@@ -7,7 +7,7 @@ import {
 import {Location} from "../types";
 import {Request, Response} from "express";
 import {getSessionFromStorage} from "@inrupt/solid-client-authn-node";
-import {locationToThing, thingToLocation} from "../builders/locationBuilder"
+import {buildTestLocationThing, locationToThing, thingToLocation} from "../builders/locationBuilder"
 import {validateLocation, validateLocationThing} from "../validators/locationValidator";
 
 
@@ -15,7 +15,7 @@ export default {
 
     saveLocation: async function (req:Request, res:Response){
 
-        const session = await getSessionFromStorage(req.session!.id)
+        const session = await getSessionFromStorage(req.session.solidSessionId!)
         if(session==undefined) return res.send('error')
 
         let locationsURL = await getLocationsURL(session.info.webId);
@@ -37,14 +37,14 @@ export default {
         let newDataset = await saveSolidDatasetAt(
             locationsURL,
             locationsSolidDataset,
-            {fetch: session!.fetch}             // fetch from authenticated Session
+            {fetch: session.fetch}             // fetch from authenticated Session
         );
 
         return res.send(getThingAll(newDataset).map(locationThing=>thingToLocation(locationThing)))
     },
 
     getOwnLocations: async function (req:Request, res:Response){
-        const session = await getSessionFromStorage(req.session!.id)
+        const session = await getSessionFromStorage(req.session.solidSessionId!)
         if(session==undefined)return res.send('error')
 
         let locationsURL = await getLocationsURL(session.info.webId);
@@ -61,6 +61,24 @@ export default {
                 .map(locationThing=>thingToLocation(locationThing)))
     },
 
+    saveTestLocation: async function (req:Request, res:Response){
+        const session = await getSessionFromStorage(req.session.solidSessionId!)
+        if(session==undefined) return res.send('error')
+        let locationsURL = await getLocationsURL(session.info.webId);
+        if(locationsURL == undefined) return res.send("error")
+        const locationThing = buildTestLocationThing()
+        let locationsSolidDataset = await getSolidDataset(
+            locationsURL,
+            {fetch: session.fetch}          // fetch from authenticated session
+        );
+        locationsSolidDataset = setThing(locationsSolidDataset, locationThing);
+        let newDataset = await saveSolidDatasetAt(
+            locationsURL,
+            locationsSolidDataset,
+            {fetch: session.fetch}             // fetch from authenticated Session
+        );
+        return res.send(getThingAll(newDataset).map(locationThing=>thingToLocation(locationThing)))
+    }
 
 }
 

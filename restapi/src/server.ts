@@ -7,6 +7,13 @@ import session from "express-session";
 //dotenv.config()
 const PORT = 8082
 
+// Configure attribute in webapp session to link it to solid session
+declare module 'express-session' {
+    interface SessionData {
+        solidSessionId:string;
+    }
+}
+
 const app = express()
     .use(session({
         secret: "ASDFG", // Secret key,
@@ -14,17 +21,9 @@ const app = express()
         resave: true
     }))
     .use(cors({origin: "http://localhost:3000", credentials: true}))
-    /*.use(function(_, res, next) {
-        res.header("Access-Control-Allow-Origin", "http://127.0.0.1:3000/");
-        res.header("Access-Control-Allow-Credentials", "true");
-        res.header("Access-Control-Allow-Methods", "POST, GET, DELETE, UPDATE, PUT");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, token")
-        next();})*/
-
     .use(express.json())
     .use('/auth', authenticationRouter)
     .use('/location', locationsRouter);
-
 
 
 app.listen(PORT, ()=> {

@@ -1,5 +1,6 @@
 import {buildThing, createThing, getDecimal, getStringNoLocale, Thing} from "@inrupt/solid-client";
-import {Location, LocationType} from "../types";
+import {Location} from "../types";
+import {LocationType} from "../locationType";
 import {RDF, SCHEMA_INRUPT} from "@inrupt/vocab-common-rdf";
 
 export function thingToLocation(locationThing:Thing) : Location {
@@ -20,4 +21,14 @@ export function locationToThing(location:Location):Thing{
         .addDecimal(SCHEMA_INRUPT.longitude, location.longitude)
         .addUrl(RDF.type, "https://schema.org/Place")
         .build()
+}
+
+export function buildTestLocationThing(){
+    return  buildThing(createThing({ name: "Location1" }))
+        .addStringNoLocale(SCHEMA_INRUPT.name, 'nuevaLocalizacion')
+        .addStringNoLocale(SCHEMA_INRUPT.description, "bar")
+        .addDecimal(SCHEMA_INRUPT.latitude, 1)
+        .addDecimal(SCHEMA_INRUPT.longitude, 2)
+        .addUrl(RDF.type, "https://schema.org/Place")
+        .build();
 }

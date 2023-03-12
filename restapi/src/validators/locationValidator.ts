@@ -1,5 +1,6 @@
 import {getDecimal, getStringNoLocale, Thing} from "@inrupt/solid-client";
-import {Location, LocationType} from "../types";
+import {Location} from "../types";
+import {LocationType} from "../locationType";
 import {SCHEMA_INRUPT} from "@inrupt/vocab-common-rdf";
 
 export function validateLocationThing(locationThing:Thing) : boolean {

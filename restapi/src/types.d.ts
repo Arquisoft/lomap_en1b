@@ -1,3 +1,5 @@
+import {LocationType} from "./locationType";
+
 export type Location = {
     url:string,
     name:string,
@@ -6,4 +8,3 @@ export type Location = {
     longitude:number
 };
 
-export enum LocationType {shop='shop', bar= 'bar', restaurant='restaurant', sight='sight' ,monument='monument'}
