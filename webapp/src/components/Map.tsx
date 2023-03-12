@@ -1,6 +1,18 @@
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents, useMapEvent } from 'react-leaflet';
 import React, { useState } from 'react';
-import { Flex, Stack } from '@chakra-ui/react';
+import {
+    Box, Button,
+    Card,
+    CardBody,
+    Flex, FormControl, FormLabel,
+    Heading, Input,
+    Modal, ModalBody, ModalCloseButton,
+    ModalContent, ModalFooter, ModalHeader,
+    ModalOverlay, Select,
+    Stack,
+    StackDivider,
+    Text, useDisclosure
+} from '@chakra-ui/react';
 import "../css/react_leaflet.css";
 import 'leaflet/dist/leaflet.css';
 import { LatLng, LatLngExpression } from 'leaflet';
@@ -10,26 +22,28 @@ import {useSelector, useDispatch} from 'react-redux';
 import type { MapMarker } from '../app/services/types';
 import {addLocation, selectAllLocations} from "../app/services/Location";
 
-
-
-
-
-
 export function LocationMarkerWithStore() {
     // const [position, setPosition] : LatLng = {lat: 0, lng: 0};
     const dispatch = useDispatch();
-//    const [lati, setLat] = useState(0);
-//    const [lngi, setLng] = useState(0);
+    const [lati, setLat] = useState(0);
+    const [lngi, setLng] = useState(0);
+    const {isOpen, onClose, onOpen} = useDisclosure();
+
+    const initialRef = React.useRef(null)
+    var [name, setName] = React.useState('')
+    var [category, setCategory] = React.useState('Bar')
+    var [details, setDetails] = React.useState('')
+
 
     const map = useMapEvents({
         click: (e) => {
-            //setLat();
-            //setLng(e.latlng.lng);
+            setLat(e.latlng.lat);
+            setLng(e.latlng.lng);
 
-            //Create the type
-            const locMarker : MapMarker = {name : "", lat : e.latlng.lat, lng : e.latlng.lng, id: e.latlng.lat + " - " + e.latlng.lng};
-            //Store the location
-            dispatch(addLocation(locMarker)); // dispatch executes a reducer or action 
+            onOpen();
+            setName('')
+            setCategory('Bar')
+            setDetails('')
         },
 
     })
@@ -41,22 +55,61 @@ export function LocationMarkerWithStore() {
     //This need to be optimiced because I think it generates again
     //all the markers on top of each other
     return  (
-        <div>
-            {locations.map(location => (
-                <Marker key={location.id} position={[location.lat, location.lng]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40] })}>
-                    <Popup>You are here</Popup>
-                </Marker>
-            ))}
-        </div>
-
+        <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef} isCentered={true} size={'lg'}>
+            <ModalOverlay>
+                <ModalContent>
+                    <ModalHeader>
+                        <ModalCloseButton/>
+                    </ModalHeader>
+                    <ModalBody>
+                        <form id={"formMarker"} onSubmit = {
+                            (event) => {
+                                event.preventDefault();
+                                const locMarker : MapMarker = {lat : lati, lng : lngi,
+                                    name: name,category: category, details: details, id: lati + " - " + lngi};
+                                dispatch(addLocation(locMarker));
+                                setName('')
+                                setCategory('')
+                                setDetails('')
+                            }}>
+                            <FormControl isRequired={true}>
+                                <FormLabel>Name</FormLabel>
+                                <Input value={name} type={"text"} ref={initialRef}
+                                       onChange={(e)=>setName(e.currentTarget.value)}/>
+                            </FormControl>
+                            <FormControl isRequired={true}>
+                                <FormLabel>Category</FormLabel>
+                                <Select value={category} onChange={(e)=>setCategory(e.currentTarget.value)}>
+                                    <option>Bar</option>
+                                    <option>Building</option>
+                                    <option>House</option>
+                                    <option>Institution</option>
+                                    <option>Monument</option>
+                                    <option>Park</option>
+                                    <option>Restaurant</option>
+                                    <option>Shop</option>
+                                    <option>Sight</option>
+                                </Select>
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel>Details</FormLabel>
+                                <Input value={details}  type={"text"}
+                                       onChange={(e)=>setDetails(e.currentTarget.value)}/>
+                            </FormControl>
+                        </form>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button form={"formMarker"} type={"submit"} onClick={onClose}>Place Marker</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </ModalOverlay>
+        </Modal>
     );
 }
 
-
-
-
 export default function MapElement(): JSX.Element {
     const escuela: LatLngExpression = { lat: 43.354, lng: -5.851 };
+    const locations = useSelector(selectAllLocations);
     return (
         <Flex
             minH={'100vh'}
@@ -70,11 +123,13 @@ export default function MapElement(): JSX.Element {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    <Marker position={escuela} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40] })}>
-                        <Popup>
-                            School of Software Engineering <br /> Universidad de Oviedo.
-                        </Popup>
-                    </Marker>
+                    {locations.map(location => (
+                        <Marker key={location.id} position={[location.lat, location.lng]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40]})}>
+                            <Popup>
+                                <PopupContent name={location.name} category={location.category} details={location.details} id={location.id} lat={location.lat} lng={location.lng}/>
+                            </Popup>
+                        </Marker>
+                    ))}
 
                 </MapContainer>
             </Stack>
@@ -82,6 +137,41 @@ export default function MapElement(): JSX.Element {
     );
 }
 
+
+export function PopupContent(marker: MapMarker){
+    return(
+        <Card size={'sm'}>
+            <CardBody>
+                <Stack divider={<StackDivider />} spacing='4' minWidth={'sm'}>
+                    <Box>
+                        <Heading size='sm' textTransform='uppercase'>
+                            Name
+                        </Heading>
+                        <Text pt='2' fontSize='sm'>
+                            {marker.name}
+                        </Text>
+                    </Box>
+                    <Box>
+                        <Heading size='sm' textTransform='uppercase'>
+                            Category
+                        </Heading>
+                        <Text pt='2' fontSize='sm'>
+                            {marker.category}
+                        </Text>
+                    </Box>
+                    <Box>
+                        <Heading size='sm' textTransform='uppercase'>
+                            Details
+                        </Heading>
+                        <Text pt='2' fontSize='sm'>
+                            {marker.details}
+                        </Text>
+                    </Box>
+                </Stack>
+            </CardBody>
+        </Card>
+    )
+}
 
 
 
