@@ -1,14 +1,67 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-//import type { Location } from './types' //TODO: Importar el tipo
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
+import type { MapMarker } from './types';
 
+/**
+ * Creates slices automatically and they comunicate with the API.
+ * A slice can comunicate with the API or not.
+ *
+ *
+ * Two types: query for obtaining data (retrieving) [read-only] and mutation for modifying data [write]
+ */
 export const locationApi = createApi({
-    reducerPath: 'location',
+    reducerPath: 'locationAPI',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8082/' }),
     endpoints: (builder) => ({
-        getLocations: builder.query<Location, string>({
+        // MyLocation: what is returned
+        // void: the type of data we pass as a parameter
+        getLocations: builder.query<MapMarker[], void>({
             query: (name) => `location/`,
+        }),
+        // Omit metemos una localización y da igual que no tenga un id asignado
+        addLocation: builder.mutation<void, Omit<MapMarker, 'id'>>({
+            query: (newLocation) => ({
+                url: `/locations`,
+                method: 'POST',
+                body: newLocation,
+            })
+        }),
+        removeLocation: builder.mutation<void, MapMarker>({
+            query: (location) => ({
+                url: `/locations/${location.id}`,
+                method: 'DELETE',
+            }),
         }),
     }),
 })
 
-export const {useGetLocationsQuery} = locationApi
+//I created a Slice to store the location in the store so that we can test without using the API
+interface LocationsState {
+    locations: MapMarker[];
+}
+const initialState: LocationsState = {
+    locations: [],
+};
+
+// actions dont change the state
+// reducers change the state
+export const locationSlice = createSlice({
+    name: 'location',
+    initialState,
+    // métodos: reducers y actions
+    // reducers -> the only way to change the state of the locations, but only the part of the state u want to change
+    reducers: {
+        addLocation: (state, action: PayloadAction<MapMarker>) => {
+            state.locations.push(action.payload); // payload: the param you pass
+            state.locations.forEach(location => {
+                console.log(location.lat + " - " + location.lng);
+            }); // just for printing console
+            console.log();
+        }
+    },
+});
+export const selectAllLocations = (state: RootState) => state.location.locations;
+export const { useGetLocationsQuery, useAddLocationMutation } = locationApi
+export const { addLocation } = locationSlice.actions;
+export default locationSlice.reducer;
