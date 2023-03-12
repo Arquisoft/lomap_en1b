@@ -16,7 +16,6 @@ import {
 } from '@chakra-ui/react'
 
 
-
 export default function MapView() {
     const stateMap = useSelector(selectMapState);
 
