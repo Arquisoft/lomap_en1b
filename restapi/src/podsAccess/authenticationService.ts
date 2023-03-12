@@ -10,14 +10,14 @@ export default {
 
         //Redirect user to POD provider login
         const redirectToSolidIdentityProvider = (providerURL : string) => {
-            res.status(200).json(providerURL);
+            res.redirect(providerURL)
         };
         // redirect handler will handle sending the user to their POD Provider.
         await session.login({
             // If login successfully, redirect here
-            redirectUrl: 'http://localhost:3000/auth/loginconfirm',
+            redirectUrl: 'http://localhost:8082/auth/loginconfirm',
             // Set user SOLID identity provider
-            oidcIssuer: req.body.provider,
+            oidcIssuer: req.query.providerURL as string,
             //oidcIssuer: "https://login.inrupt.com",
             // Application name to show when requesting data
             clientName: "LoMap",
@@ -33,24 +33,18 @@ export default {
         const session = await getSessionFromStorage(req.session.solidSessionId!);
         // Complete login process using the data appended by the Solid Identity Provider
         try{
-            await session!.handleIncomingRedirect(`http://localhost:3000/auth${req.url}`);
+            await session!.handleIncomingRedirect(`http://localhost:8082/auth${req.url}`);
         }catch (e){
             console.log(e)
-            return res.sendStatus(500)
+            return res.sendStatus(500);
         }
-
-
-
         // Session now contains an authenticated Session instance.
         if (session!.info.isLoggedIn) {
-            return res.sendStatus(200);
+            return res.redirect("http://localhost:3000/map")
         }
         return res.sendStatus(401)
     },
 
-    redirectConfirm : async function (req:Request, res:Response){
-        res.redirect(`http://localhost:3000/auth${req.url}`);
-    },
 
     logout : async function(req:Request, res : Response){
         const session = await getSessionFromStorage(req.session.solidSessionId!);
@@ -92,7 +86,7 @@ export default {
 
         // Session now contains an authenticated Session instance.
         if (session!.info.isLoggedIn) {
-            return res.send("User logged in with WebID " + session!.info.webId);
+            return res.redirect("http://localhost:3000")
         }
 
         return res.send("Not able to log in")
