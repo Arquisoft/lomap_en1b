@@ -61,7 +61,7 @@ export const locationSlice = createSlice({
         }
     },
 });
-export const selectAllLocations = (state: RootState) => state.location.locations;
+//export const selectAllLocations = (state: RootState) => state.location.locations;
 export const { useGetLocationsQuery, useAddLocationMutation } = locationApi
 export const { addLocation } = locationSlice.actions;
 export default locationSlice.reducer;
