@@ -3,7 +3,7 @@ import authenticationService from "../podsAccess/authenticationService";
 
 const authenticationRouter = express.Router()
 
-    authenticationRouter.get("/login", authenticationService.initLogin);
+    authenticationRouter.post("/login", authenticationService.initLogin);
 
     authenticationRouter.get("/loginconfirm", authenticationService.confirmLogin);
 
