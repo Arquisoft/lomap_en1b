@@ -17,14 +17,23 @@ export const locationApi = createApi({
         // MyLocation: what is returned
         // void: the type of data we pass as a parameter
         getLocations: builder.query<MapMarker[], void>({
-            query: (name) => `location`,
+            query: (name) => ({
+                url:`location`,
+                credentials:"include"
+            })
         }),
         // Omit metemos una localización y da igual que no tenga un id asignado
         addLocation: builder.mutation<void, MapMarker>({
             query: (newLocation) => ({
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
                 url: `location`,
+                credentials:"include",
                 method: 'POST',
-                body: newLocation,
+                mode:"cors",
+                body: JSON.stringify({location: newLocation })
             })
         }),
         removeLocation: builder.mutation<void, MapMarker>({

@@ -30,6 +30,8 @@ export function LocationMarkerWithStore() {
     const [lati, setLat] = useState(0);
     const [lngi, setLng] = useState(0);
     const {isOpen, onClose, onOpen} = useDisclosure();
+    const [addLocationMutation, { isLoading, isError, error }] = useAddLocationMutation();
+    
 
     const initialRef = React.useRef(null)
     var [name, setName] = React.useState('')
@@ -50,9 +52,6 @@ export function LocationMarkerWithStore() {
 
     })
 
-    //Get all the locations
-    const locations = useGetLocationsQuery();
-
     //Use .map to iterate and generate the corresponding markers
     //This need to be optimiced because I think it generates again
     //all the markers on top of each other
@@ -67,12 +66,14 @@ export function LocationMarkerWithStore() {
                         <form id={"formMarker"} onSubmit = {
                             (event) => {
                                 event.preventDefault();
-                                const marker : MapMarker = {lat : lati, lng : lngi,
-                                    name: name,category: category, details: details, id: lati + " - " + lngi};
+                                const marker : MapMarker = {latitude : lati, longitude : lngi,
+                                    name: name,locationType: category as LocationType, id: lati + " - " + lngi};
 
-                                const handleSubmit = (marker: MapMarker) => {
-                                    useAddLocationMutation();
-                                }
+                                const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+                                    event.preventDefault();
+                                    addLocationMutation(marker);
+                                };
+                                handleSubmit(event)
                                 setName('')
                                 setCategory('')
                                 setDetails('')
@@ -85,21 +86,12 @@ export function LocationMarkerWithStore() {
                             <FormControl isRequired={true}>
                                 <FormLabel>Category</FormLabel>
                                 <Select value={category} onChange={(e)=>setCategory(e.currentTarget.value)}>
-                                    <option>Bar</option>
-                                    <option>Building</option>
-                                    <option>House</option>
-                                    <option>Institution</option>
-                                    <option>Monument</option>
-                                    <option>Park</option>
-                                    <option>Restaurant</option>
-                                    <option>Shop</option>
-                                    <option>Sight</option>
+                                    <option>bar</option>
+                                    <option>restaurant</option>
+                                    <option>shop</option>
+                                    <option>sight</option>
+                                    <option>monument</option>
                                 </Select>
-                            </FormControl>
-                            <FormControl>
-                                <FormLabel>Details</FormLabel>
-                                <Input value={details}  type={"text"}
-                                       onChange={(e)=>setDetails(e.currentTarget.value)}/>
                             </FormControl>
                         </form>
                     </ModalBody>
@@ -128,10 +120,16 @@ export default function MapElement(): JSX.Element {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    {locations.map(location => (
-                        <Marker key={location.id} position={[location.latitude, location.longitude]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40]})}>
+                    {locations?.map((location: MapMarker) => (
+                        <Marker key={location.id}
+                                position={[location.latitude, location.longitude]}
+                                icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40]})}>
                             <Popup>
-                                <PopupContent name={location.name} locationType={location.locationType} id={location.id} latitude={location.latitude} longitude={location.longitude}/>
+                                <PopupContent name={location.name}
+                                              locationType={location.locationType}
+                                              id={location.id}
+                                              latitude={location.latitude}
+                                              longitude={location.longitude}/>
                             </Popup>
                         </Marker>
                     ))}

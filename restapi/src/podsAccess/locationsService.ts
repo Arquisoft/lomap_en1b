@@ -15,14 +15,25 @@ export default {
 
     saveLocation: async function (req:Request, res:Response){
 
+        console.log("saving location")
+        console.log(req.session.solidSessionId)
         const session = await getSessionFromStorage(req.session.solidSessionId!)
-        if(session==undefined) return res.send('error')
+        if(session==undefined){
+            console.log("not valid session")
+            return res.send('error')
+        }
 
         let locationsURL = await getLocationsURL(session.info.webId);
-        if(locationsURL == undefined) return res.send("error")
+        if(locationsURL == undefined){
+          console.log("error accessing the pod")
+            return res.send("error")
+        }
 
         let location : Location = req.body.location;
+        console.log(req.body)
         if(!validateLocation(location)){
+            console.log("not valid location")
+            console.log(location)
             res.send('error')
         }
 
@@ -39,6 +50,8 @@ export default {
             locationsSolidDataset,
             {fetch: session.fetch}             // fetch from authenticated Session
         );
+
+        console.log("location saved")
 
         return res.send(getThingAll(newDataset).map(locationThing=>thingToLocation(locationThing)))
     },
