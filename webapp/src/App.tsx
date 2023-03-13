@@ -1,27 +1,44 @@
 import React from 'react';
+
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
+
 import './App.css';
+import LoginForm from './components/Login';
+import MapElement from './components/Map';
+
 
 import Index from "./routes";
 import Error404 from "./routes/404error";
-import LoginConfirm from "./routes/LoginConfirm";
+
+import Map from "./components/Map"
+
+import HomePage from './components/Home';
+import AboutPage from './components/About';
 
 const router = createBrowserRouter([
   {
-    path: "/auth",
-    element:<>Hello Login</>,
+    path: "/login",
+    element:<LoginForm />,
+    errorElement: <Error404 />,
+  },
+  {
+    path: "/map",
+    element:<MapElement/>,
   },
   {
     path: "/",
-    element: <Index />,
+    element:<HomePage />,
     errorElement: <Error404 />,
-    children: [
-
-    ]
   },
+  // TODO
   {
-    path: "/auth/loginconfirm",
-    element: <LoginConfirm />,
+    path: "/about",
+    element:<AboutPage />,
+  },
+
+  {
+    path: "/map",
+    element: <Map/>,
     errorElement: <Error404 />,
     children: [
 
