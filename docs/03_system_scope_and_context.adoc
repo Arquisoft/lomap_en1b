@@ -26,6 +26,6 @@ image:3-Context/TechnicalView.png["Technical context diagram"]
 
 The frontend of the application is made with React, Redux and has a Map API wich provides the application with visual maps. The frontend will communicate with the Solid POD by means of a library that is not determined yet.
 
-The Map will be used to search for an API and it will make HTTP requests. It will also communicate with the backend of the application using a technology that is not determined yet.
+The Map will be used to search for an API and it will make HTTPS requests. It will also communicate with the backend of the application using a technology that is not determined yet.
 
 The user will access the frontend of the application by using different devices such as a PC or a smartphone. 

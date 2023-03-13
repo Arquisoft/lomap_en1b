@@ -106,7 +106,7 @@ The "WebApp" block corresponds to the Static Provider Container, which provision
 [plantuml, target=deployment-node-diagram, format=png]
 ....
 frame Docker {
-    frame nodeCont as  "node:10-alpine" {
+    frame nodeCont as  "node" {
         node RestApi {
 
         }
