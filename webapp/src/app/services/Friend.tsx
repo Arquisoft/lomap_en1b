@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import type { Friend } from './types'
+import type { Friend } from '../../types'
 
 export const friendApi = createApi({
     reducerPath: 'friends',

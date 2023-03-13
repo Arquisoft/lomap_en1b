@@ -1,6 +1,6 @@
 import {LocationType} from "./locationType";
 
-export type Location = {
+export type MapMarker = {
     id:string,
     name:string,
     locationType:LocationType,
@@ -8,3 +8,8 @@ export type Location = {
     longitude:number
 };
 
+
+export type Friend = {
+    username : string;
+    podId : string;
+}

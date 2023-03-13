@@ -1,10 +1,12 @@
 import express, {Router} from 'express'
 import locationsService from "../podsAccess/locationsService";
 
-const authenticationRouter: Router = express.Router()
+const locationsRouter: Router = express.Router()
 
-    authenticationRouter.get("/", locationsService.getOwnLocations);
+    locationsRouter.get("/", locationsService.getOwnLocations);
 
-    authenticationRouter.post("/", locationsService.saveLocation);
+    locationsRouter.post("/", locationsService.saveLocation);
 
-export default authenticationRouter
+    locationsRouter.get("/addlocationtest", locationsService.saveTestLocation)
+
+export default locationsRouter
