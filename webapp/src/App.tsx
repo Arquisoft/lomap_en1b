@@ -17,7 +17,6 @@ import HomePage from './components/Home';
 import AboutPage from './components/About';
 
 import NavBar from './components/NavBar';
-import Bar from './components/Bar';
 
 
 const router = createBrowserRouter([
@@ -46,16 +45,6 @@ const router = createBrowserRouter([
 ]);
 
 
-// without navigation bar
-// function App() {
-//   return (
-//       <RouterProvider router={router} />
-//     );
-// }
-
-// export default App;
-
-
 
 function App() {
   <RouterProvider router={router} />;
@@ -67,9 +56,6 @@ function App() {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/map" element={<Map />} />
         <Route path="/about" element={<AboutPage />} />
-      
-        {/* for testing purposes */}
-        <Route path="/navbar" element={<NavBar />} />
       </Routes>
     </BrowserRouter>
   );
