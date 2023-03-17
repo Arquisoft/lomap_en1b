@@ -1,6 +1,7 @@
 import React from 'react';
 
-import {createBrowserRouter, RouterProvider} from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 
 import './App.css';
 import LoginForm from './components/Login';
@@ -15,29 +16,63 @@ import Map from "./components/Map"
 import HomePage from './components/Home';
 import AboutPage from './components/About';
 
+import NavBar from './components/NavBar';
+import Bar from './components/Bar';
+
+
 const router = createBrowserRouter([
   {
     path: "/login",
-    element:<LoginForm />,
+    element: <LoginForm />,
     errorElement: <Error404 />,
   },
   {
     path: "/map",
-    element:<MapElement/>,
+    element: <MapElement />,
   },
   {
     path: "/",
-    element:<HomePage />,
-    errorElement: <Error404 />,
+    element: <HomePage />,
+    errorElement: <HomePage />,
   },
   {
     path: "/about",
-    element:<AboutPage />,
+    element: <AboutPage />,
+  },
+  {
+    path: "/navbar",
+    element: <NavBar />,
   },
 ]);
 
+
+// without navigation bar
+// function App() {
+//   return (
+//       <RouterProvider router={router} />
+//     );
+// }
+
+// export default App;
+
+
+
 function App() {
-  return <RouterProvider router={router}/>;
+  <RouterProvider router={router} />;
+  return (
+    <BrowserRouter>
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/map" element={<Map />} />
+        <Route path="/about" element={<AboutPage />} />
+      
+        {/* for testing purposes */}
+        <Route path="/navbar" element={<NavBar />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
