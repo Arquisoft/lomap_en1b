@@ -11,7 +11,7 @@ import {
     FormHelperText,
     FormErrorMessage,
   } from '@chakra-ui/react';
-  import { useState } from 'react';
+  import { SetStateAction, useState } from 'react';
   
   
   export default function LoginForm(): JSX.Element {
@@ -26,6 +26,11 @@ import {
       //TODO conectar con la API
     };
 
+    const handleButton = (prov: SetStateAction<string>)=>{
+      setProviderValue(prov)
+      handleLogin()
+      
+    }
     return (
       <Flex
         minH={'100vh'}
@@ -85,9 +90,7 @@ import {
               _hover={{
                 bg: 'purple.800',
               }}
-              onClick={() => 
-                    setProviderValue("https://solidcommunity.net/login")
-              }>
+              onClick={() => handleButton("https://solidcommunity.net/login")}>
               Solid Community
             </Button>
 
@@ -98,8 +101,7 @@ import {
               _hover={{
                 bg: 'purple.800',
               }}
-              onClick={() => 
-                setProviderValue("https://solidweb.org/login")
+              onClick={() => handleButton("https://solidweb.org/login")
               }>
               Solid Web
             </Button>
@@ -111,8 +113,7 @@ import {
               _hover={{
                 bg: 'purple.800',
               }}
-              onClick={() => 
-                setProviderValue("https://inrupt.net/login")
+              onClick={() => handleButton("https://inrupt.net/login")
               }>
               Inrupt.net
             </Button>
@@ -124,8 +125,7 @@ import {
               _hover={{
                 bg: 'purple.800',
               }}
-              onClick={() => 
-                setProviderValue("https://auth.inrupt.com/login?response_type=code&client_id=291nuca1atm91cstojs8ndsbkh&scope=openid+openid+profile&redirect_uri=https%3A%2F%2Flogin.inrupt.com%2Fcallback&state=1874cb6e-8358-4974-b916-2457141b23c4")
+              onClick={() => handleButton("https://auth.inrupt.com/login?response_type=code&client_id=291nuca1atm91cstojs8ndsbkh&scope=openid+openid+profile&redirect_uri=https%3A%2F%2Flogin.inrupt.com%2Fcallback&state=1874cb6e-8358-4974-b916-2457141b23c4")
               }>
               pod.Inrupt.net
             </Button>
