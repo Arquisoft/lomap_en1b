@@ -3,6 +3,7 @@ import locationsRouter from "./routes/locationsRouter";
 import authenticationRouter from "./routes/authenticationRouter";
 import cors from "cors"
 import session from "express-session";
+import frienshipsRouter from "./routes/friendshipsRouter";
 
 //dotenv.config()
 const PORT = 8082
@@ -23,7 +24,8 @@ const app = express()
     .use(cors({origin: "http://localhost:3000", credentials: true}))
     .use(express.json())
     .use('/auth', authenticationRouter)
-    .use('/location', locationsRouter);
+    .use('/location', locationsRouter)
+    .use('/frienship', frienshipsRouter);
 
 
 app.listen(PORT, ()=> {

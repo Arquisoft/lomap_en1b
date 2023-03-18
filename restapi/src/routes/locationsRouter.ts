@@ -1,5 +1,5 @@
 import express, {Router} from 'express'
-import locationsService from "../podsAccess/locationsService";
+import locationsService from "../services/locationsService";
 
 const locationsRouter: Router = express.Router()
 
