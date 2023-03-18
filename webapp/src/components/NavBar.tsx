@@ -20,7 +20,7 @@ import {
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 
 import  { NavLink } from 'react-router-dom';
-
+import '../css/nav.css';
 
 // const NavLink = ({ children }: { children: ReactNode }) => (
 //     <Link
@@ -57,13 +57,15 @@ export default function NavBar() {
                         />
                         <HStack
                             as={'nav'}
-                            spacing={6}
-                            display={{ base: 'none', md: 'flex' }}>
+                            spacing={5}
+                            display={{ base: '0em', md: '42em' 
+                                    //TODO resposinve design
+                                }}>
 
-                            <NavLink to="/" >Home</NavLink>
-                            <NavLink to="/login">Login</NavLink>
-                            <NavLink to="/map">Map</NavLink>
-                            <NavLink to="/about">About</NavLink>
+                            <NavLink to="/" className="nav_link">Home</NavLink>
+                            <NavLink to="/login" className="nav_link">Login</NavLink>
+                            <NavLink to="/map" className="nav_link">Map</NavLink>
+                            <NavLink to="/about" className="nav_link">About</NavLink>
                         </HStack>
                     </HStack>
                     <Flex alignItems={'center'}>
