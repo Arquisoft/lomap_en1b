@@ -23,6 +23,7 @@ import {login} from "../app/services/Auth";
       login(providerValue)
     };
 
+    //TODO need to fix
     const handleButton = (prov: SetStateAction<string>)=>{
       setProviderValue(prov)
       handleLogin() 
@@ -86,7 +87,7 @@ import {login} from "../app/services/Auth";
               _hover={{
                 bg: 'purple.800',
               }}
-              onClick={() => handleButton("https://solidcommunity.net/login")}>
+              onClick={() => setProviderValue("https://login.solidcommunity.net")}>
               Solid Community
             </Button>
 
@@ -97,7 +98,7 @@ import {login} from "../app/services/Auth";
               _hover={{
                 bg: 'purple.800',
               }}
-              onClick={() => handleButton("https://solidweb.org/login")
+              onClick={() => setProviderValue("https://login.solidweb.org")
               }>
               Solid Web
             </Button>
@@ -110,7 +111,7 @@ import {login} from "../app/services/Auth";
                 bg: 'purple.800',
               }}
               onClick={() => 
-                setProviderValue("https://inrupt.net/login")
+                setProviderValue("https://login.inrupt.net")
               }>
               Inrupt.net
             </Button>
@@ -122,7 +123,7 @@ import {login} from "../app/services/Auth";
               _hover={{
                 bg: 'purple.800',
               }}
-              onClick={() => handleButton("https://auth.inrupt.com/login?response_type=code&client_id=291nuca1atm91cstojs8ndsbkh&scope=openid+openid+profile&redirect_uri=https%3A%2F%2Flogin.inrupt.com%2Fcallback&state=1874cb6e-8358-4974-b916-2457141b23c4")
+              onClick={() => setProviderValue("https://login.inrupt.com")
               }>
               pod.Inrupt.net
             </Button>
