@@ -96,7 +96,7 @@ export default function NavBar() {
                         <Stack as={'nav'} spacing={4}>
                             // TODO links of my profile page and log out
                             <NavLink to="">My profile</NavLink>
-                            <NavLink to="./components/HomePage">Log out</NavLink>
+                            <NavLink to="/">Log out</NavLink>
                         </Stack>
                     </Box>
                 ) : null}
