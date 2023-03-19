@@ -28,8 +28,7 @@ import {
 
     const handleButton = (prov: SetStateAction<string>)=>{
       setProviderValue(prov)
-      handleLogin()
-      
+      handleLogin() 
     }
     return (
       <Flex
