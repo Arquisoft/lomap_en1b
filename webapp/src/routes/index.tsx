@@ -1,7 +1,10 @@
+import {login} from "../app/services/Auth";
+import {Button} from "@chakra-ui/react";
 
 
 function Index(){
-    return(<><h1>INDEX TEST</h1></>);
+
+    return (<Button onClick={() => login("https://login.inrupt.com")}>Test login</Button>)
 }
 
 

@@ -1,0 +1,1 @@
+export enum LocationType {shop='shop', bar= 'bar', restaurant='restaurant', sight='sight' ,monument='monument'}

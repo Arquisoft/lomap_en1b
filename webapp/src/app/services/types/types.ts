@@ -8,10 +8,7 @@ export type MapMarker = {
     lat : number;
     lng : number;
     name: string;
+    category: string;
     id : string;
-}
-
-export type Friend = {
-    username : string;
-    podId : string;
+    details: string;
 }

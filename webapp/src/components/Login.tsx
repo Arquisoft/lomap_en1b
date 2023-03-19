@@ -8,10 +8,9 @@ import {
     Text,
     useColorModeValue,
     FormLabel,
-    FormHelperText,
-    FormErrorMessage,
   } from '@chakra-ui/react';
-  import { SetStateAction, useState } from 'react';
+import { SetStateAction, useState } from 'react';
+import {login} from "../app/services/Auth";
   
   
   export default function LoginForm(): JSX.Element {
@@ -21,9 +20,7 @@ import {
     const handleInputProvider : React.ChangeEventHandler<HTMLInputElement> = (e) => setProviderValue(e.target.value);
     
     const handleLogin =  () => {
-      var url : string = providerValue + "";
-      window.location.replace(url)
-      //TODO conectar con la API
+      login(providerValue)
     };
 
     const handleButton = (prov: SetStateAction<string>)=>{
@@ -112,7 +109,8 @@ import {
               _hover={{
                 bg: 'purple.800',
               }}
-              onClick={() => handleButton("https://inrupt.net/login")
+              onClick={() => 
+                setProviderValue("https://inrupt.net/login")
               }>
               Inrupt.net
             </Button>
