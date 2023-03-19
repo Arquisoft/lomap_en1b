@@ -8,7 +8,6 @@ import LoginForm from './components/Login';
 import MapElement from './components/Map';
 
 
-import Index from "./routes";
 import Error404 from "./routes/404error";
 
 import Map from "./components/Map"
@@ -46,8 +45,19 @@ const router = createBrowserRouter([
 
 
 
+
+
+// function App() {
+//   return (
+//     <Router>
+//       <NavBar />
+//       <RouterProvider router={router} />;
+//     </Router>
+//   );
+// }
+
+
 function App() {
-  <RouterProvider router={router} />;
   return (
     <BrowserRouter>
       <NavBar />
