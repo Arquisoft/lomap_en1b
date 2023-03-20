@@ -6,3 +6,8 @@
 .nav_link {
   padding: 0.25em;
 }
+
+#headerBar {
+  height: 10vh;
+  z-index: 99999;
+}

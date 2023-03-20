@@ -57,7 +57,7 @@ export default function NavBar() {
 
     return (
         <>
-            <Box bg={useColorModeValue('white.100', 'blue.900')} px={4}>
+            <Box bg={useColorModeValue('white.100', 'blue.900')} px={4} id="headerBar">
                 <Flex fontSize={16} h={16} alignItems={'center'} justifyContent={'space-between'}>
                     <HStack spacing={8} alignItems={'center'}>
                         <Avatar
