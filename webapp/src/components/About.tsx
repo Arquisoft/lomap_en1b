@@ -9,7 +9,7 @@ import {
   SimpleGrid,
 } from '@chakra-ui/react';
 
-export default function AboutPage() : JSX.Element {
+export default function AboutPage(): JSX.Element {
   return (
     <Box bg={'gray.800'} position={'relative'}>
       <Flex
@@ -36,7 +36,7 @@ export default function AboutPage() : JSX.Element {
             flex={1}
             color={'gray.400'}
             justify={{ lg: 'center' }}
-            py={{ base: 4, md: 20, xl: 60 }}>
+            py={{ base: 4, md: 20, xl: 40 }}>
             <Box mb={{ base: 8, md: 20 }}>
               <Text
                 fontFamily={'heading'}
@@ -53,12 +53,12 @@ export default function AboutPage() : JSX.Element {
                 fontSize={{ base: '3xl', md: '5xl' }}>
                 LoMap project
               </Heading>
-              <Text fontSize={'xl'} color={'gray.400'}>
-                Queremos llorar
+              <Text fontSize={'2xl'} color={'gray.300'}>
+              LoMap intends to be an easy-to-use tool for people to create, customize, and share personal maps filling them with the places they live.
               </Text>
             </Box>
 
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
+            <SimpleGrid columns={{ base: 1, md: 1 }} spacing={5}>
               {stats.map((stat) => (
                 <Box key={stat.title}>
                   <Text
@@ -93,38 +93,20 @@ const stats = [
     title: 'Team members',
     content: (
       <>
-        <StatsText>Sara María Ramírez Perez</StatsText> alias motosara <br/>
+        {/* <StatsText>Sara María Ramírez Perez</StatsText> alias motosara <br/>
         <StatsText>Iván Vega García</StatsText> alias señor iván <br/>
         <StatsText>Mario Pérez</StatsText> alias (...)<br/>
         <StatsText>Elías Llera García-Riaño</StatsText> alias eli <br/>
         <StatsText>Silvia Suárez Prendes</StatsText> alias laquellora <br/>
-        <StatsText>Dana</StatsText> alias cuac <br/>
-      </>
-      
-      
-    ),
-  },
-  {
-    title: '24/7',
-    content: (
-      <>
-        <StatsText>quejándonos</StatsText> 
-      </>
-    ),
-  },
-  {
-    title: '13%',
-    content: (
-      <>
-        <StatsText>nota de silvia</StatsText> 
-      </>
-    ),
-  },
-  {
-    title: '250M+',
-    content: (
-      <>
-        <StatsText>de tiros q me voy a meter como siga haciendo esta basurA</StatsText>
+        <StatsText>Dana</StatsText> alias cuac <br/> */}
+
+        Sara María Ramírez Perez UO276188 <br />
+        Iván Vega García UO276670 <br />
+        Mario Pérez Fernández UO283720 <br />
+        Elías Llera García-Riaño  UO271407 <br />
+        Silvia Suárez Prendes UO277412 <br />
+        Andrés Álvarez Murillo UO278249 <br />
+
       </>
     ),
   },
