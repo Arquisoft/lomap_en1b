@@ -59,7 +59,7 @@ export default function NavBar() {
                             as={'nav'}
                             spacing={5}
                             display={{ base: '0em', md: '42em' 
-                                    //TODO resposinve design
+                                    //TODO responsive design
                                 }}>
 
                             <NavLink to="/" className="nav_link">Home</NavLink>
@@ -98,7 +98,8 @@ export default function NavBar() {
                         <Stack as={'nav'} spacing={4}>
                             // TODO links of my profile page and log out
                             <NavLink to="">My profile</NavLink>
-                            <NavLink to="./components/HomePage">Log out</NavLink>
+                            // logout not implemented yet 
+                            <NavLink to="/">Log out</NavLink>
                         </Stack>
                     </Box>
                 ) : null}
