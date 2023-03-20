@@ -1,12 +1,9 @@
-import { ReactNode } from 'react';
 import {
     Avatar,
     Box,
     Flex,
     Stack,
     HStack,
-    Link,
-    IconButton,
     Menu,
     MenuButton,
     MenuList,
@@ -14,10 +11,9 @@ import {
     MenuDivider,
     useColorModeValue,
     useDisclosure,
-    Button,
-    background
+    Button
 } from '@chakra-ui/react';
-import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+//import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 
 import  { NavLink } from 'react-router-dom';
 import '../css/nav.css';
@@ -44,8 +40,7 @@ export default function NavBar() {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
-        <>
-            <Box bg={useColorModeValue('white.100', 'blue.900')} px={4}>
+            <Box id={"navBar"} bg={useColorModeValue('white', 'blue')} px={4}>
                 <Flex fontSize={16} h={16} alignItems={'center'} justifyContent={'space-between'}>
                     <HStack spacing={8} alignItems={'center'}>
                         <Avatar
@@ -104,7 +99,6 @@ export default function NavBar() {
                     </Box>
                 ) : null}
             </Box>
-        </>
     );
 }
 
