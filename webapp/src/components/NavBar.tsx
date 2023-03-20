@@ -1,9 +1,12 @@
+import { ReactNode } from 'react';
 import {
     Avatar,
     Box,
     Flex,
     Stack,
     HStack,
+    Link,
+    IconButton,
     Menu,
     MenuButton,
     MenuList,
@@ -17,6 +20,7 @@ import {
 
 import  { NavLink } from 'react-router-dom';
 import '../css/nav.css';
+import { logout } from '../app/services/Auth';
 
 // const NavLink = ({ children }: { children: ReactNode }) => (
 //     <Link
@@ -31,6 +35,17 @@ import '../css/nav.css';
 //         {children}
 //     </Link>
 // );
+
+/* {isOpen ? (
+    <Box pb={4} display={{ md: 'none' }}>
+        <Stack as={'nav'} spacing={4}>
+            // TODO links of my profile page and log out
+            <NavLink to="">My profile</NavLink>
+            // logout not implemented yet
+            <NavLink to="" onClick={logout}>Log out</NavLink>
+        </Stack>
+    </Box>
+) : null} */
 
 
 
@@ -82,7 +97,7 @@ export default function NavBar() {
                             <MenuList fontSize={20} >
                                 <MenuItem>My profile</MenuItem>
                                 <MenuDivider />
-                                <MenuItem>Log out</MenuItem>
+                                <MenuItem onClick={logout}>Log out</MenuItem>
                             </MenuList>
                         </Menu>
                     </Flex>
@@ -99,6 +114,7 @@ export default function NavBar() {
                     </Box>
                 ) : null}
             </Box>
+        </>
     );
 }
 
