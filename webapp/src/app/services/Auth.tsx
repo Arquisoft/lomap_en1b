@@ -3,5 +3,5 @@ export const login = async (providerURL : String) => {
 }
 
 export const logout = async () => {
-    window.location.href = "http://localhost:8082/auth/logout";
+    window.location.href = "http://localhost:8082/auth/logout"
 }
