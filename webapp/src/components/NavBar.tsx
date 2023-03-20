@@ -21,6 +21,7 @@ import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 
 import  { NavLink } from 'react-router-dom';
 import '../css/nav.css';
+import { logout } from '../app/services/Auth';
 
 // const NavLink = ({ children }: { children: ReactNode }) => (
 //     <Link
@@ -36,12 +37,23 @@ import '../css/nav.css';
 //     </Link>
 // );
 
+/* {isOpen ? (
+    <Box pb={4} display={{ md: 'none' }}>
+        <Stack as={'nav'} spacing={4}>
+            // TODO links of my profile page and log out
+            <NavLink to="">My profile</NavLink>
+            // logout not implemented yet 
+            <NavLink to="" onClick={logout}>Log out</NavLink>
+        </Stack>
+    </Box>
+) : null} */
+
 
 
 
 
 export default function NavBar() {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    //const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
         <>
@@ -87,22 +99,11 @@ export default function NavBar() {
                             <MenuList fontSize={20} >
                                 <MenuItem>My profile</MenuItem>
                                 <MenuDivider />
-                                <MenuItem>Log out</MenuItem>
+                                <MenuItem onClick={logout}>Log out</MenuItem>
                             </MenuList>
                         </Menu>
                     </Flex>
                 </Flex>
-
-                {isOpen ? (
-                    <Box pb={4} display={{ md: 'none' }}>
-                        <Stack as={'nav'} spacing={4}>
-                            // TODO links of my profile page and log out
-                            <NavLink to="">My profile</NavLink>
-                            // logout not implemented yet 
-                            <NavLink to="/">Log out</NavLink>
-                        </Stack>
-                    </Box>
-                ) : null}
             </Box>
         </>
     );
