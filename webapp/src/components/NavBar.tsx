@@ -15,7 +15,8 @@ import {
     useColorModeValue,
     useDisclosure,
     Button,
-    background
+    background,
+    position
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 
@@ -57,7 +58,7 @@ export default function NavBar() {
 
     return (
         <>
-            <Box bg={useColorModeValue('white.100', 'blue.900')} px={4} id="headerBar">
+            <Box bg={useColorModeValue('white.100', 'blue.900')} px={4} id="headerBar" style={{position: "absolute" , top:"0", left:"0"}}>
                 <Flex fontSize={16} h={16} alignItems={'center'} justifyContent={'space-between'}>
                     <HStack spacing={8} alignItems={'center'}>
                         <Avatar
