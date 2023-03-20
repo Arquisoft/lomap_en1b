@@ -1,12 +1,9 @@
-import { ReactNode } from 'react';
 import {
     Avatar,
     Box,
     Flex,
     Stack,
     HStack,
-    Link,
-    IconButton,
     Menu,
     MenuButton,
     MenuList,
@@ -114,7 +111,6 @@ export default function NavBar() {
                     </Box>
                 ) : null}
             </Box>
-        </>
     );
 }
 
