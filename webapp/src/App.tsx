@@ -17,6 +17,7 @@ import HomePage from './components/Home';
 import AboutPage from './components/About';
 
 import NavBar from './components/NavBar';
+import CheckLogin from "./components/CheckLogin";
 
 
 const router = createBrowserRouter([
@@ -28,6 +29,8 @@ const router = createBrowserRouter([
         path: "/map",
         element: <MapElement />,
       },
+
+        // vvv Public routes vvv
       {
         path: "/login",
         element: <LoginForm />,
