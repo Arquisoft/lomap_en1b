@@ -8,3 +8,8 @@ export type Location = {
     longitude:number
 };
 
+export type Friend = {
+    username : string;
+    podId : string;
+}
+
