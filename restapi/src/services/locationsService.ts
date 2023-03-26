@@ -7,7 +7,7 @@ import {
 import {Location} from "../types";
 import {Request, Response} from "express";
 import {getSessionFromStorage} from "@inrupt/solid-client-authn-node";
-import {buildTestLocationThing, locationToThing, thingToLocation} from "../builders/locationBuilder"
+import {locationToThing, thingToLocation} from "../builders/locationBuilder"
 import {validateLocation, validateLocationThing} from "../validators/locationValidator";
 
 
@@ -64,25 +64,6 @@ export default {
                 .filter(locationThing=>validateLocationThing(locationThing))
                 .map(locationThing=>thingToLocation(locationThing)))
     },
-
-    saveTestLocation: async function (req:Request, res:Response){
-        const session = await getSessionFromStorage(req.session.solidSessionId!)
-        if(session==undefined) return res.send('error')
-        let locationsURL = await getLocationsURL(session.info.webId);
-        if(locationsURL == undefined) return res.send("error")
-        const locationThing = buildTestLocationThing()
-        let locationsSolidDataset = await getSolidDataset(
-            locationsURL,
-            {fetch: session.fetch}          // fetch from authenticated session
-        );
-        locationsSolidDataset = setThing(locationsSolidDataset, locationThing);
-        let newDataset = await saveSolidDatasetAt(
-            locationsURL,
-            locationsSolidDataset,
-            {fetch: session.fetch}             // fetch from authenticated Session
-        );
-        return res.send(getThingAll(newDataset).map(locationThing=>thingToLocation(locationThing)))
-    }
 
 }
 
