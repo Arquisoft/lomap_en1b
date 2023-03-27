@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import {
     Box, Button,
     Card,
-    CardBody,
+    CardBody, Checkbox,
     Flex, FormControl, FormLabel,
     Heading, Input,
     Modal, ModalBody, ModalCloseButton,
@@ -41,6 +41,7 @@ export function LocationMarkerWithStore() {
 
     const map = useMapEvents({
         click: (e) => {
+            e.target.
             setLat(e.latlng.lat);
             setLng(e.latlng.lng);
 
@@ -114,8 +115,9 @@ export default function MapElement(): JSX.Element {
             justify={'center'}>
 
             <Stack>
-                <MapContainer center={escuela} zoom={13} scrollWheelZoom={true}>
-                    <LocationMarkerWithStore/>
+                <MapContainer center={escuela} zoom={13} scrollWheelZoom={true}>        <LocationMarkerWithStore/>
+                    <Button colorScheme='blue' zIndex={'1300'} float={'right'} width={'10rem'} onClick={FilterModal}>Filter</Button>
+
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -139,6 +141,49 @@ export default function MapElement(): JSX.Element {
     );
 }
 
+export function FilterModal() {
+    const {isOpen, onClose, onOpen} = useDisclosure();
+    onOpen();
+    const [checkedItems, setCheckedItems] = React.useState([true,true,true,true,true,true,true])
+
+    const allChecked = checkedItems.every(Boolean)
+
+    return(<Modal isOpen={isOpen} onClose={onClose} isCentered={true} size={'lg'}>
+        <ModalOverlay>
+            <ModalContent>
+                <ModalHeader>
+                    <ModalCloseButton/>
+                </ModalHeader>
+                <ModalBody>
+                    <Checkbox isChecked={checkedItems[0]}onChange={(e) => setCheckedItems([e.target.checked, checkedItems[0]])}
+                    >Bars
+                    </Checkbox>
+                    <Checkbox isChecked={checkedItems[1]} onChange={(e) => setCheckedItems([e.target.checked, checkedItems[1]])}
+                    >Restaurants
+                    </Checkbox>
+                    <Checkbox isChecked={checkedItems[2]} onChange={(e) => setCheckedItems([e.target.checked, checkedItems[2]])}
+                    >Shops
+                    </Checkbox>
+                    <Checkbox isChecked={checkedItems[3]} onChange={(e) => setCheckedItems([e.target.checked, checkedItems[3]])}
+                    >Sights
+                    </Checkbox>
+                    <Checkbox isChecked={checkedItems[4]} onChange={(e) => setCheckedItems([e.target.checked, checkedItems[4]])}
+                    >Monuments
+                    </Checkbox>
+                    <Checkbox isChecked={checkedItems[5]} onChange={(e) => setCheckedItems([e.target.checked, checkedItems[5]])}
+                    >My Locations
+                    </Checkbox>
+                    <Checkbox isChecked={checkedItems[6]} onChange={(e) => setCheckedItems([e.target.checked, checkedItems[6]])}
+                    >Shared Locations
+                    </Checkbox>
+                </ModalBody>
+                <ModalFooter>
+                </ModalFooter>
+            </ModalContent>
+        </ModalOverlay>
+    </Modal>);
+}
+
 
 export function PopupContent(marker: MapMarker){
     return(
@@ -159,6 +204,14 @@ export function PopupContent(marker: MapMarker){
                         </Heading>
                         <Text pt='2' fontSize='sm'>
                             {marker.locationType}
+                        </Text>
+                    </Box>
+                    <Box>
+                        <Heading size='sm' textTransform='uppercase'>
+                            Address
+                        </Heading>
+                        <Text pt='2' fontSize='sm'>
+                            https://nominatim.openstreetmap.org/reverse?format=geojson&lat= {marker.latitude}&lon={marker.longitude}.["features"].["display_name"]
                         </Text>
                     </Box>
                 </Stack>
