@@ -9,7 +9,10 @@ export type Location = {
 };
 
 export type Friend = {
-    username : string;
+    nickName : string;
     podId : string;
+    webId : string;
+    profilePic : string;
+    loMapOnly : boolean;
 }
 

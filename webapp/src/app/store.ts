@@ -1,9 +1,11 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import {locationApi} from "./services/Location";
+import {friendApi} from "./services/Friend";
 
 export const store = configureStore({
   reducer: {
     [locationApi.reducerPath]: locationApi.reducer,
+      [friendApi.reducerPath]: friendApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(
