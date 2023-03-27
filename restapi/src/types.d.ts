@@ -10,9 +10,8 @@ export type Location = {
 
 export type Friend = {
     nickName : string;
-    podId : string;
+    name: string;
     webId : string;
     profilePic : string;
     loMapOnly : boolean;
 }
-
