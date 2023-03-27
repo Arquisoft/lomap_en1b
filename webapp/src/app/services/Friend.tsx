@@ -1,22 +1,38 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import type { Friend } from '../../types'
+import {MapMarker} from "../../types";
 
 export const friendApi = createApi({
-    reducerPath: 'friends',
+    reducerPath: 'friendship',
     baseQuery: fetchBaseQuery({ baseUrl: 'https://4255db99-902a-464f-aa3a-e89ffa1a77fe.mock.pstmn.io' }),
-    endpoints: (builder) => ({
-        addFriend: builder.mutation<void, Omit<Friend, 'id'>>({
-            query: (newFriend) => ({
-                url: `/locations`,
-                method: 'POST',
-                body: newFriend,
+    endpoints: (builder ) => ({
+        getFriends: builder.query<Friend[], void>({
+            query: (name) => ({
+                url:`friendship`,
+                credentials:"include"
             })
         }),
-        getFriends: builder.query<Friend[], void>({
-            query: (name) => `friends/`,
+        addFriend: builder.mutation<void , Friend>({
+            query: (newFriend) => ({
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                url: `friendship`,
+                credentials:"include",
+                method: 'POST',
+                mode:"cors",
+                body: JSON.stringify({friend: newFriend })
+              }),
+        }),
+        removeFriend: builder.mutation<void, Friend>({
+            query: (friend) => ({
+                url: `location/${friend.podId}`,
+                method: 'DELETE',
+            }),
         }),
     }),
 })
 
 
-export const {useAddFriendMutation, useGetFriendsQuery} = friendApi
+export const {useAddFriendMutation, useRemoveFriendMutation, useGetFriendsQuery} = friendApi

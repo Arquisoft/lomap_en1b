@@ -22,6 +22,18 @@ export const locationApi = createApi({
                 credentials:"include"
             })
         }),
+        filterLocations: builder.query<MapMarker[], void>({
+            query: (name) => ({
+                url:`location`,
+                credentials:"include"
+                //TODO:
+                /*
+                I have to check how to do this, I could use a query, but it makes more sense to filter
+                the list that we have cached. But in that case I need to see how to do that from a method
+                created by createAPI
+                 */
+            })
+        }),
         // Omit metemos una localización y da igual que no tenga un id asignado
         addLocation: builder.mutation<void, MapMarker>({
             query: (newLocation) => ({
