@@ -9,7 +9,8 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(
-          locationApi.middleware
+          locationApi.middleware,
+          friendApi.middleware
       ),
 });
 

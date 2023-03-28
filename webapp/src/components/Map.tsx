@@ -20,8 +20,9 @@ import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import { Icon } from 'leaflet';
 import {useSelector, useDispatch} from 'react-redux';
 import {useAddLocationMutation, useGetLocationsQuery} from "../app/services/Location";
-import type { MapMarker } from '../types';
+import type {Friend, MapMarker} from '../types';
 import {LocationType} from "../locationType";
+import {useGetFriendsQuery} from "../app/services/Friend";
 //import {addLocation, selectAllLocations} from "../app/services/Location";
 
 export function LocationMarkerWithStore() {
@@ -30,20 +31,18 @@ export function LocationMarkerWithStore() {
     const [lati, setLat] = useState(0);
     const [lngi, setLng] = useState(0);
     const {isOpen, onClose, onOpen} = useDisclosure();
-    const [addLocationMutation, { isLoading, isError, error }] = useAddLocationMutation();
-    
+    let [addLocationMutation, { isLoading, isError, error }] = useAddLocationMutation();
+    GetFriends();
 
     const initialRef = React.useRef(null)
     var [name, setName] = React.useState('')
     var [category, setCategory] = React.useState('Bar')
     var [details, setDetails] = React.useState('')
 
-
     const map = useMapEvents({
         click: (e) => {
             setLat(e.latlng.lat);
             setLng(e.latlng.lng);
-
             onOpen();
             setName('')
             setCategory('Bar')
@@ -102,6 +101,14 @@ export function LocationMarkerWithStore() {
             </ModalOverlay>
         </Modal>
     );
+}
+
+export function GetFriends(){
+    const { data: locations, error, isLoading } = useGetFriendsQuery();
+    locations?.forEach(location =>{
+        console.log(location.nickName)
+    });
+
 }
 
 export default function MapElement(): JSX.Element {
