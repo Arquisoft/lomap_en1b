@@ -1,11 +1,11 @@
 version: '3.5'
 services:
   restapi:
-    build: ./restapi
+    image: restapi
     ports:
       - "8082:8082"
   webapp:
-    build: ./webapp
+    image: webapp
     ports:
       - "3000:3000"
     depends_on: 
