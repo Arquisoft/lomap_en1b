@@ -14,6 +14,7 @@ import Map from "./components/Map"
 
 import HomePage from './components/Home';
 import AboutPage from './components/About';
+import ProfileView from './components/ProfileView';
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,11 @@ const router = createBrowserRouter([
     path: "/about",
     element:<AboutPage />,
   },
+  {
+    path: "/profile",
+    element:<ProfileView />,
+  },
+
 ]);
 
 function App() {
