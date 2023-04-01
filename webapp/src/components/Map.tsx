@@ -1,5 +1,5 @@
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents, useMapEvent } from 'react-leaflet';
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Box, Button,
     Card,
@@ -23,6 +23,10 @@ import {useAddLocationMutation, useGetLocationsQuery} from "../app/services/Loca
 import type { MapMarker } from '../types';
 import {LocationType} from "../locationType";
 //import {addLocation, selectAllLocations} from "../app/services/Location";
+export enum FilterEnum {
+    Bars, Restaurants, Shops, Sights,
+    Monuments, MyLocations, SharedLocations,
+}
 
 export function LocationMarkerWithStore() {
     // const [position, setPosition] : LatLng = {lat: 0, lng: 0};
@@ -106,8 +110,9 @@ export function LocationMarkerWithStore() {
 }
 
 export default function MapElement(): JSX.Element {
-    const escuela: LatLngExpression = { lat: 43.354, lng: -5.851 };
-    const { data: locations, error, isLoading } = useGetLocationsQuery();
+    const escuela: LatLngExpression = {lat: 43.354, lng: -5.851};
+    const {data: locations, error, isLoading} = useGetLocationsQuery();
+    const [displayedLocations, setDisplayed] = React.useState(locations);
     return (
         <Flex
             minH={'100vh'}
@@ -115,14 +120,14 @@ export default function MapElement(): JSX.Element {
             justify={'center'}>
 
             <Stack>
-                <MapContainer center={escuela} zoom={13} scrollWheelZoom={true}>        <LocationMarkerWithStore/>
+                <MapContainer center={escuela} zoom={13} scrollWheelZoom={true}>
                     <Button colorScheme='blue' zIndex={'1300'} float={'right'} width={'10rem'} onClick={FilterModal}>Filter</Button>
-
+                    <LocationMarkerWithStore/>
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    {locations?.map((location: MapMarker) => (
+                    {displayedLocations?.map((location: MapMarker) => (
                         <Marker key={location.id}
                                 position={[location.latitude, location.longitude]}
                                 icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40]})}>
@@ -130,6 +135,7 @@ export default function MapElement(): JSX.Element {
                                 <PopupContent name={location.name}
                                               locationType={location.locationType}
                                               id={location.id}
+
                                               latitude={location.latitude}
                                               longitude={location.longitude}/>
                             </Popup>
@@ -146,8 +152,6 @@ export function FilterModal() {
     onOpen();
     const [checkedItems, setCheckedItems] = React.useState([true,true,true,true,true,true,true])
 
-    const allChecked = checkedItems.every(Boolean)
-
     return(<Modal isOpen={isOpen} onClose={onClose} isCentered={true} size={'lg'}>
         <ModalOverlay>
             <ModalContent>
@@ -155,25 +159,25 @@ export function FilterModal() {
                     <ModalCloseButton/>
                 </ModalHeader>
                 <ModalBody>
-                    <Checkbox isChecked={checkedItems[0]}onChange={(e) => setCheckedItems([e.target.checked, checkedItems[0]])}
+                    <Checkbox isChecked={checkedItems[FilterEnum.Bars]}onChange={(e) => [e.target.checked,filterLocations(checkedItems)]}
                     >Bars
                     </Checkbox>
-                    <Checkbox isChecked={checkedItems[1]} onChange={(e) => setCheckedItems([e.target.checked, checkedItems[1]])}
+                    <Checkbox isChecked={checkedItems[FilterEnum.Restaurants]} onChange={(e) => [e.target.checked,filterLocations(checkedItems)]}
                     >Restaurants
                     </Checkbox>
-                    <Checkbox isChecked={checkedItems[2]} onChange={(e) => setCheckedItems([e.target.checked, checkedItems[2]])}
+                    <Checkbox isChecked={checkedItems[FilterEnum.Shops]} onChange={(e) => [e.target.checked,filterLocations(checkedItems)]}
                     >Shops
                     </Checkbox>
-                    <Checkbox isChecked={checkedItems[3]} onChange={(e) => setCheckedItems([e.target.checked, checkedItems[3]])}
+                    <Checkbox isChecked={checkedItems[FilterEnum.Sights]} onChange={(e) =>  [e.target.checked,filterLocations(checkedItems)]}
                     >Sights
                     </Checkbox>
-                    <Checkbox isChecked={checkedItems[4]} onChange={(e) => setCheckedItems([e.target.checked, checkedItems[4]])}
+                    <Checkbox isChecked={checkedItems[FilterEnum.Monuments]} onChange={(e) => [e.target.checked,filterLocations(checkedItems)]}
                     >Monuments
                     </Checkbox>
-                    <Checkbox isChecked={checkedItems[5]} onChange={(e) => setCheckedItems([e.target.checked, checkedItems[5]])}
+                    <Checkbox isChecked={checkedItems[FilterEnum.MyLocations]} onChange={(e) =>  [e.target.checked,filterLocations(checkedItems)]}
                     >My Locations
                     </Checkbox>
-                    <Checkbox isChecked={checkedItems[6]} onChange={(e) => setCheckedItems([e.target.checked, checkedItems[6]])}
+                    <Checkbox isChecked={checkedItems[FilterEnum.SharedLocations]} onChange={(e) =>  [e.target.checked,filterLocations(checkedItems)]}
                     >Shared Locations
                     </Checkbox>
                 </ModalBody>
@@ -182,6 +186,17 @@ export function FilterModal() {
             </ModalContent>
         </ModalOverlay>
     </Modal>);
+}
+
+function filterLocations(checkedItems: boolean[]) {
+
+    if(checkedItems[FilterEnum.MyLocations]) {
+
+    }
+    if(checkedItems[FilterEnum.SharedLocations]) {
+
+    }
+
 }
 
 
