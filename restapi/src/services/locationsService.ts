@@ -71,6 +71,5 @@ async function getLocationsURL(webId: string | undefined){
     if(webId == undefined) return undefined
     let webID = decodeURIComponent(webId)
     const podURL = await getPodUrlAll(webID);
-    console.log(podURL)
     return  podURL + "private/";
 }

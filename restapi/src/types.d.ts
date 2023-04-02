@@ -8,6 +8,13 @@ export type Location = {
     longitude:number
 };
 
+export type Review = {
+    id:string,
+    author:string,
+    body:string,
+    media:string
+}
+
 export type Friend = {
     username : string;
     podId : string;
