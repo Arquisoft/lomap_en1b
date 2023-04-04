@@ -19,7 +19,7 @@ import { LatLng, LatLngExpression } from 'leaflet';
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import { Icon } from 'leaflet';
 import {useSelector, useDispatch} from 'react-redux';
-import {useAddLocationMutation, useGetLocationsQuery} from "../app/services/Location";
+import {useAddLocationMutation, useGetLocationsQuery, setDisplayedLocations, selectDisplayedLocations} from "../app/services/Location";
 import type { MapMarker } from '../types';
 import {LocationType} from "../locationType";
 //import {addLocation, selectAllLocations} from "../app/services/Location";
@@ -54,7 +54,6 @@ export function LocationMarkerWithStore() {
             setCategory('Bar')
             setDetails('')
         },
-
     })
 
     //Use .map to iterate and generate the corresponding markers
@@ -112,7 +111,9 @@ export function LocationMarkerWithStore() {
 export default function MapElement(): JSX.Element {
     const escuela: LatLngExpression = {lat: 43.354, lng: -5.851};
     const {data: locations, error, isLoading} = useGetLocationsQuery();
-    const [displayedLocations, setDisplayed] = React.useState(locations);
+    setDisplayedLocations(locations);
+    const displayedLocations = useSelector(selectDisplayedLocations);
+
     return (
         <Flex
             minH={'100vh'}
@@ -121,7 +122,7 @@ export default function MapElement(): JSX.Element {
 
             <Stack>
                 <MapContainer center={escuela} zoom={13} scrollWheelZoom={true}>
-                    <Button colorScheme='blue' zIndex={'1300'} float={'right'} width={'10rem'} onClick={FilterModal}>Filter</Button>
+                    <FilterModal/>
                     <LocationMarkerWithStore/>
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a> contributors'
@@ -149,54 +150,77 @@ export default function MapElement(): JSX.Element {
 
 export function FilterModal() {
     const {isOpen, onClose, onOpen} = useDisclosure();
-    onOpen();
     const [checkedItems, setCheckedItems] = React.useState([true,true,true,true,true,true,true])
+    return(
+      <>
+        <Button colorScheme='blue' zIndex={'1300'} float={'right'} width={'10rem'} onClick={onOpen}>Filter Locations</Button>
 
-    return(<Modal isOpen={isOpen} onClose={onClose} isCentered={true} size={'lg'}>
+        <Modal isOpen={isOpen} onClose={onClose} isCentered={true} size={'md'}>
         <ModalOverlay>
             <ModalContent>
                 <ModalHeader>
                     <ModalCloseButton/>
                 </ModalHeader>
                 <ModalBody>
-                    <Checkbox isChecked={checkedItems[FilterEnum.Bars]}onChange={(e) => [e.target.checked,filterLocations(checkedItems)]}
-                    >Bars
-                    </Checkbox>
-                    <Checkbox isChecked={checkedItems[FilterEnum.Restaurants]} onChange={(e) => [e.target.checked,filterLocations(checkedItems)]}
-                    >Restaurants
-                    </Checkbox>
-                    <Checkbox isChecked={checkedItems[FilterEnum.Shops]} onChange={(e) => [e.target.checked,filterLocations(checkedItems)]}
-                    >Shops
-                    </Checkbox>
-                    <Checkbox isChecked={checkedItems[FilterEnum.Sights]} onChange={(e) =>  [e.target.checked,filterLocations(checkedItems)]}
-                    >Sights
-                    </Checkbox>
-                    <Checkbox isChecked={checkedItems[FilterEnum.Monuments]} onChange={(e) => [e.target.checked,filterLocations(checkedItems)]}
-                    >Monuments
-                    </Checkbox>
-                    <Checkbox isChecked={checkedItems[FilterEnum.MyLocations]} onChange={(e) =>  [e.target.checked,filterLocations(checkedItems)]}
-                    >My Locations
-                    </Checkbox>
-                    <Checkbox isChecked={checkedItems[FilterEnum.SharedLocations]} onChange={(e) =>  [e.target.checked,filterLocations(checkedItems)]}
-                    >Shared Locations
-                    </Checkbox>
+                    <Stack spacing={2} direction='column'>
+                        <Checkbox isChecked={checkedItems[FilterEnum.Bars]}onChange={(e) =>
+                            [e.target.checked,filterLocations(checkedItems)]}>Bars</Checkbox>
+
+                        <Checkbox isChecked={checkedItems[FilterEnum.Restaurants]} onChange={(e) =>
+                            [e.target.checked,filterLocations(checkedItems)]}>Restaurants</Checkbox>
+
+                        <Checkbox isChecked={checkedItems[FilterEnum.Shops]} onChange={(e) =>
+                            [e.target.checked,filterLocations(checkedItems)]}>Shops</Checkbox>
+
+                        <Checkbox isChecked={checkedItems[FilterEnum.Sights]} onChange={(e) =>
+                            [e.target.checked,filterLocations(checkedItems)]}>Sights</Checkbox>
+
+                        <Checkbox isChecked={checkedItems[FilterEnum.Monuments]} onChange={(e) =>
+                            [e.target.checked,filterLocations(checkedItems)]}>Monuments</Checkbox>
+
+                        <Checkbox isChecked={checkedItems[FilterEnum.MyLocations]} onChange={(e) =>
+                            [e.target.checked,filterLocations(checkedItems)]}>My Locations</Checkbox>
+
+                        <Checkbox isChecked={checkedItems[FilterEnum.SharedLocations]} onChange={(e) =>
+                            [e.target.checked,filterLocations(checkedItems)]}>Shared Locations</Checkbox>
+                    </Stack>
                 </ModalBody>
                 <ModalFooter>
                 </ModalFooter>
-            </ModalContent>
-        </ModalOverlay>
-    </Modal>);
+                </ModalContent>
+            </ModalOverlay>
+        </Modal>
+    </>
+    )
 }
 
 function filterLocations(checkedItems: boolean[]) {
+    let filteredLoc: MapMarker[] = [];
+    let finalLoc : MapMarker[] = [];
+    const {data: locations, error, isLoading} = useGetLocationsQuery();
 
-    if(checkedItems[FilterEnum.MyLocations]) {
-
+    //if(checkedItems[FilterEnum.MyLocations]) {
+    //    filteredLoc.concat(locations?.filter((loc) => loc.locationType === LocationType.bar)!);
+    //}
+    //if(checkedItems[FilterEnum.SharedLocations]) {
+    //    filteredLoc.concat(locations?.filter((loc) => loc.locationType === LocationType.bar)!);
+    //}
+    if(checkedItems[FilterEnum.Bars]) {
+        finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.bar));
     }
-    if(checkedItems[FilterEnum.SharedLocations]) {
-
+    if(checkedItems[FilterEnum.Restaurants]) {
+        finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.restaurant));
     }
-
+    if(checkedItems[FilterEnum.Shops]) {
+        finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.shop));
+    }
+    if(checkedItems[FilterEnum.Sights]) {
+        finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.sight));
+    }
+    if(checkedItems[FilterEnum.Monuments]) {
+        finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.monument));
+    }
+    setDisplayedLocations(finalLoc);
 }
 
 
@@ -226,7 +250,7 @@ export function PopupContent(marker: MapMarker){
                             Address
                         </Heading>
                         <Text pt='2' fontSize='sm'>
-                            https://nominatim.openstreetmap.org/reverse?format=geojson&lat= {marker.latitude}&lon={marker.longitude}.["features"].["display_name"]
+                           https://nominatim.openstreetmap.org/reverse?format=geojson&lat= {marker.latitude}&lon={marker.longitude}.["features"].["display_name"]
                         </Text>
                     </Box>
                 </Stack>

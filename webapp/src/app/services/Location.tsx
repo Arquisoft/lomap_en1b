@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-//import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 //import { RootState } from "../store";
 import type { MapMarker } from '../../types';
+import {RootState} from "../store";
 /**
  * Creates slices automatically and they comunicate with the API.
  * A slice can comunicate with the API or not.
@@ -43,35 +44,33 @@ export const locationApi = createApi({
         }),
     }),
 })
+export const { useGetLocationsQuery, useAddLocationMutation} = locationApi
 
 //I created a Slice to store the location in the store so that we can test without using the API
-interface LocationsState {
-    locations: MapMarker[];
+interface DisplayedLocationsState {
+    displayedLocations: MapMarker[];
 }
-const initialState: LocationsState = {
-    locations: [],
+const initialState: DisplayedLocationsState = {
+    displayedLocations: [],
 };
 
 // actions dont change the state
 // reducers change the state
-//export const locationSlice = createSlice({
-//    name: 'locationTest',
-//    initialState,
-    // métodos: reducers y actions
-    // reducers -> the only way to change the state of the locations, but only the part of the state u want to change
-//    reducers: {
-//        addLocation: (state, action: PayloadAction<MapMarker>) => {
-//            state.locations.push(action.payload); // payload: the param you pass
-//            state.locations.forEach(location => {
-//                console.log(location.lat + " - " + location.lng);
-//            }); // just for printing console
-//            console.log();
-//        }
-//    },
-//});
 
-export const { useGetLocationsQuery, useAddLocationMutation} = locationApi
-//export const { addLocation } = locationSlice.actions;
+export const displayedLocationsSlice = createSlice({
+    name: 'displayedLocationsSlice',
+    initialState: initialState,
+    reducers: {
+        setDisplayedLocations: (state, action) => {
+            initialState.displayedLocations = action.payload;
+        },
+    },
+})
+
+// Action creators are generated for each case reducer function
+export const { setDisplayedLocations } = displayedLocationsSlice.actions
+export const selectDisplayedLocations = (state: RootState) => state.displayedLocations.displayedLocations;
+
 //export const { getLocations}
 //export default locationSlice.reducer;
 //export const selectAllLocations = (state: RootState) => state.location.locations;
