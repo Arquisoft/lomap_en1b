@@ -1,5 +1,3 @@
-import {logout} from "../app/services/Auth";
-import {Button} from "@chakra-ui/react";
 import {Outlet, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
 import {useSelector} from "react-redux";
@@ -7,9 +5,11 @@ import {useSelector} from "react-redux";
 
 function CheckLogin(){
     const navigate = useNavigate()
+    // @ts-ignore
+    const loggedIn = useSelector(state  => state.auth.isLoggedIn );
+
 
     useEffect(() => {
-        const loggedIn = /*useSelector((state) => state.loggedin )*/ true;
         if(!loggedIn) navigate("/login");
     }, [])
 
