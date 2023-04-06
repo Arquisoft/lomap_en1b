@@ -21,61 +21,18 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import { friendApi } from "../../app/services/Friend";
+//import {useGetFriendsQuery} from "../../app/services/Friend";
+import {useGetFriendsQuery} from "../../app/services/Location";
 import { Friend } from '../../types';
 import { Entry } from './Entry';
 
-const friendsMock: Friend[] = [{
-  "nickName": "nickname1",
-  "name": "name1",
-  "webId": "webId1",
-  "profilePic": "profilePic1",
-  "loMapOnly": true
-},
-{
-  "nickName": "nickname2",
-  "name": "name2",
-  "webId": "webId2",
-  "profilePic": "profilePic2",
-  "loMapOnly": true
-},
-{
-  "nickName": "nickname3",
-  "name": "name3",
-  "webId": "webId3",
-  "profilePic": "profilePic3",
-  "loMapOnly": true
-},
-{
-  "nickName": "nickname4",
-  "name": "name4",
-  "webId": "webId4",
-  "profilePic": "profilePic4",
-  "loMapOnly": false
-},
-{
-  "nickName": "nickname5",
-  "name": "name5",
-  "webId": "webId5",
-  "profilePic": "profilePic5",
-  "loMapOnly": true
-},
-{
-  "nickName": "nickname6",
-  "name": "name6",
-  "webId": "webId6",
-  "profilePic": "profilePic6",
-  "loMapOnly": true
-},
-{
-  "nickName": "nickname7",
-  "name": "name7",
-  "webId": "webId7",
-  "profilePic": "profilePic7",
-  "loMapOnly": false
-}];
-
 
 export default function FriendsView(): JSX.Element {
+  const { data: friends, error, isLoading } = useGetFriendsQuery();
+
+  friends?.forEach((friend) => {
+    console.log(friend);
+  });
 
   return (
     <Container maxW={'100vw'} >
@@ -126,33 +83,30 @@ export default function FriendsView(): JSX.Element {
           </HStack>
         </Stack>
 
-
-
         {/* Tabla amigos */}
         <Grid>
           <Heading lineHeight={1.1} fontSize={{ base: '1xl', md: '3xl' }} color={'orange.400'} paddingTop={'1.5'}>
             Your friends
           </Heading>
-          {friendsMock.length > 0 ? (
-            <Table variant="striped" colorScheme="black" size="sm">
-              <Thead>
-                <Tr>
-                  <Th scope="col">Photo</Th>
-                  <Th scope="col">WebID</Th>
-                  <Th scope="col">NickName</Th>
-                  <Th scope="col">Name</Th>
-                  <Th scope="col">Actions</Th>
-                </Tr>
-              </Thead>
+          {isLoading
+              ? (<h2>Cargando amigos... </h2>)
+              : (<Table variant="striped" colorScheme="black" size="sm">
+                            <Thead>
+                              <Tr>
+                                <Th scope="col">Photo</Th>
+                                <Th scope="col">WebID</Th>
+                                <Th scope="col">NickName</Th>
+                                <Th scope="col">Name</Th>
+                                <Th scope="col">Actions</Th>
+                              </Tr>
+                            </Thead>
 
-              <Tbody>
-                {friendsMock.map((friend, index) => (
-                  <Entry {...friend} key={index} />
-                ))}
-              </Tbody>
-            </Table>
-          ) : (
-            <h2>No tienes amigos... </h2>
+                            <Tbody>
+                              {friends?.map((friend, index) => (
+                                  <Entry {...friend} key={index} />
+                              ))}
+                            </Tbody>
+                          </Table>
           )}
         </Grid>
 

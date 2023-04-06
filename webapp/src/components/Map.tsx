@@ -22,7 +22,6 @@ import {useSelector, useDispatch} from 'react-redux';
 import {useAddLocationMutation, useGetLocationsQuery} from "../app/services/Location";
 import type {Friend, MapMarker} from '../types';
 import {LocationType} from "../locationType";
-import {useGetFriendsQuery} from "../app/services/Friend";
 //import {addLocation, selectAllLocations} from "../app/services/Location";
 
 export function LocationMarkerWithStore() {
@@ -31,8 +30,7 @@ export function LocationMarkerWithStore() {
     const [lati, setLat] = useState(0);
     const [lngi, setLng] = useState(0);
     const {isOpen, onClose, onOpen} = useDisclosure();
-    let [addLocationMutation, { isLoading, isError, error }] = useAddLocationMutation();
-    GetFriends();
+    let [addLocationMutation, {isLoading, isError, error}] = useAddLocationMutation();
 
     const initialRef = React.useRef(null)
     var [name, setName] = React.useState('')
@@ -54,7 +52,7 @@ export function LocationMarkerWithStore() {
     //Use .map to iterate and generate the corresponding markers
     //This need to be optimiced because I think it generates again
     //all the markers on top of each other
-    return  (
+    return (
         <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef} isCentered={true} size={'lg'}>
             <ModalOverlay>
                 <ModalContent>
@@ -62,11 +60,13 @@ export function LocationMarkerWithStore() {
                         <ModalCloseButton/>
                     </ModalHeader>
                     <ModalBody>
-                        <form id={"formMarker"} onSubmit = {
+                        <form id={"formMarker"} onSubmit={
                             (event) => {
                                 event.preventDefault();
-                                const marker : MapMarker = {latitude : lati, longitude : lngi,
-                                    name: name,locationType: category as LocationType, id: lati + " - " + lngi};
+                                const marker: MapMarker = {
+                                    latitude: lati, longitude: lngi,
+                                    name: name, locationType: category as LocationType, id: lati + " - " + lngi
+                                };
 
                                 const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
                                     event.preventDefault();
@@ -80,11 +80,11 @@ export function LocationMarkerWithStore() {
                             <FormControl isRequired={true}>
                                 <FormLabel>Name</FormLabel>
                                 <Input value={name} type={"text"} ref={initialRef}
-                                       onChange={(e)=>setName(e.currentTarget.value)}/>
+                                       onChange={(e) => setName(e.currentTarget.value)}/>
                             </FormControl>
                             <FormControl isRequired={true}>
                                 <FormLabel>Category</FormLabel>
-                                <Select value={category} onChange={(e)=>setCategory(e.currentTarget.value)}>
+                                <Select value={category} onChange={(e) => setCategory(e.currentTarget.value)}>
                                     <option>bar</option>
                                     <option>restaurant</option>
                                     <option>shop</option>
@@ -101,14 +101,6 @@ export function LocationMarkerWithStore() {
             </ModalOverlay>
         </Modal>
     );
-}
-
-export function GetFriends(){
-    const { data: locations, error, isLoading } = useGetFriendsQuery();
-    locations?.forEach(location =>{
-        console.log(location.nickName)
-    });
-
 }
 
 export default function MapElement(): JSX.Element {
