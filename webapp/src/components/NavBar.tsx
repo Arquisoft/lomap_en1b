@@ -1,27 +1,21 @@
-import { ReactNode } from 'react';
 import {
     Avatar,
     Box,
     Flex,
-    Stack,
     HStack,
-    Link,
-    IconButton,
     Menu,
     MenuButton,
     MenuList,
     MenuItem,
     MenuDivider,
     useColorModeValue,
-    useDisclosure,
-    Button,
-    background
+    Button
 } from '@chakra-ui/react';
-import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 
 import  { NavLink } from 'react-router-dom';
 import '../css/nav.css';
 import { logout } from '../app/services/Auth';
+import {useSelector} from "react-redux";
 
 // const NavLink = ({ children }: { children: ReactNode }) => (
 //     <Link
@@ -54,10 +48,13 @@ import { logout } from '../app/services/Auth';
 
 export default function NavBar() {
     //const { isOpen, onOpen, onClose } = useDisclosure();
-
+    // @ts-ignore
+    const loggedIn = useSelector(state  => state.auth.isLoggedIn );
+    const colorModeValue = useColorModeValue('white.100', 'blue.900')
     return (
         <>
-            <Box bg={useColorModeValue('white.100', 'blue.900')} px={4} id="headerBar">
+
+            <Box bg={colorModeValue} px={4} id="headerBar">
                 <Flex fontSize={16} h={16} alignItems={'center'} justifyContent={'space-between'}>
                     <HStack spacing={8} alignItems={'center'}>
                         <Avatar
@@ -76,12 +73,12 @@ export default function NavBar() {
 
                             <NavLink to="/" className="nav_link">Home</NavLink>
                             <NavLink to="/login" className="nav_link">Login</NavLink>
-                            <NavLink to="/map" className="nav_link">Map</NavLink>
+                            {loggedIn ? <NavLink to="/map" className="nav_link">Map</NavLink> : <></> }
                             <NavLink to="/about" className="nav_link">About</NavLink>
                         </HStack>
                     </HStack>
                     <Flex alignItems={'center'}>
-                        <Menu>
+                        {loggedIn ?<Menu>
                             <MenuButton
                                 as={Button}
                                 rounded={'full'}
@@ -101,7 +98,7 @@ export default function NavBar() {
                                 <MenuDivider />
                                 <MenuItem onClick={logout}>Log out</MenuItem>
                             </MenuList>
-                        </Menu>
+                        </Menu> : <></>}
                     </Flex>
                 </Flex>
             </Box>
