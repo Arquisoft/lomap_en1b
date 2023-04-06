@@ -2,6 +2,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 //import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 //import { RootState } from "../store";
 import type { MapMarker } from '../../types';
+import {query, response} from "express";
+import {LocationType} from "../../locationType";
 
 /**
  * Creates slices automatically and they comunicate with the API.
@@ -22,17 +24,25 @@ export const locationApi = createApi({
                 credentials:"include"
             })
         }),
-        filterLocations: builder.query<MapMarker[], void>({
-            query: (name) => ({
+        //TODO: not working
+        filterLocations: builder.query<MapMarker[], LocationType>({
+            query: (locationType) => ({
                 url:`location`,
-                credentials:"include"
-                //TODO:
-                /*
-                I have to check how to do this, I could use a query, but it makes more sense to filter
-                the list that we have cached. But in that case I need to see how to do that from a method
-                created by createAPI
-                 */
-            })
+                credentials:"include",
+                params:{
+                    locationType : locationType,
+                }
+            }),
+            transformResponse: (response) => {
+                const data = JSON.parse(response as string);
+
+                // Filter the MapMarker using the filter location they use as parameter
+                const locationType = null;//query.params.locationType;
+                const filteredData = data.filter((marker : MapMarker) => marker.locationType === locationType);
+
+                // Return the filtered list
+                return filteredData;
+            }
         }),
         // Omit metemos una localización y da igual que no tenga un id asignado
         addLocation: builder.mutation<void, MapMarker>({
