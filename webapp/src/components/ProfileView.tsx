@@ -10,10 +10,12 @@ import {
     Badge,
     useColorModeValue,
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 export default function SocialProfileSimple() {
+    const navigate = useNavigate();
     return (
-        <Center style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}>
+        <Center style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <Box
                 maxW={'100vh'}
                 maxH={'800vh'}
@@ -25,8 +27,7 @@ export default function SocialProfileSimple() {
                 textAlign={'center'}>
                 <Avatar
                     size={'xl'}
-                    src={
-                        'https://img.freepik.com/foto-gratis/retrato-hermoso-mujer-joven-posicion-pared-gris_231208-10760.jpg?w=2000'
+                    src={'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
                     }
                     mb={4}
                     pos={'relative'}
@@ -45,17 +46,18 @@ export default function SocialProfileSimple() {
                     }
                 />
                 <Heading fontSize={'2xl'} fontFamily={'body'}>
-                    Lucía Pérez Sánchez 
+                    // TODO user name
+                    User user
                 </Heading>
                 <Text fontWeight={600} color={'gray.500'} mb={4}>
-                    @luciaps
+                    @user123456789
                 </Text>
                 <Text
                     textAlign={'center'}
                     color={useColorModeValue('gray.700', 'gray.400')}
                     px={3}>
                     [Insertar biografía aquí jaja]
-                    
+
                     {/* {' '}
                     <Link href={'#'} color={'blue.400'}>
                         #tag
@@ -90,6 +92,7 @@ export default function SocialProfileSimple() {
 
                 <Stack mt={8} direction={'row'} spacing={4}>
                     <Button
+                        onClick={() => navigate('/map')}
                         flex={1}
                         fontSize={'md'}
                         rounded={'full'}
@@ -100,16 +103,14 @@ export default function SocialProfileSimple() {
                         _focus={{
                             bg: 'gray.600',
                         }}>
-                        Locations
+                        Map
                     </Button>
                     <Button
+                        onClick={() => navigate('/friends')}
                         flex={1}
                         fontSize={'md'}
                         rounded={'full'}
                         bg={'gray.300'}
-                        // boxShadow={
-                        //     '0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)'
-                        // }
                         _hover={{
                             bg: 'gray.400',
                         }}

@@ -23,6 +23,8 @@ import  { NavLink } from 'react-router-dom';
 import '../css/nav.css';
 import { logout } from '../app/services/Auth';
 
+import { useNavigate } from 'react-router-dom';
+
 // const NavLink = ({ children }: { children: ReactNode }) => (
 //     <Link
 //         px={2}
@@ -54,6 +56,7 @@ import { logout } from '../app/services/Auth';
 
 export default function NavBar() {
     //const { isOpen, onOpen, onClose } = useDisclosure();
+    const navigate = useNavigate();
 
     return (
         <>
@@ -97,7 +100,7 @@ export default function NavBar() {
                                 />
                             </MenuButton>
                             <MenuList fontSize={20} >
-                                <MenuItem>My profile</MenuItem>
+                                <MenuItem onClick={() => navigate('/profile')}>My profile</MenuItem>
                                 <MenuDivider />
                                 <MenuItem onClick={logout}>Log out</MenuItem>
                             </MenuList>
