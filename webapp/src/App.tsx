@@ -17,6 +17,7 @@ import HomePage from './components/Home';
 import AboutPage from './components/About';
 
 import NavBar from './components/NavBar';
+import FriendsView from './components/FriendsPage/Friends';
 
 
 const router = createBrowserRouter([
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: "/about",
         element: <AboutPage />,
+      },
+      {
+        path: "/friends",
+        element: <FriendsView />,
       },
     ]
   },
