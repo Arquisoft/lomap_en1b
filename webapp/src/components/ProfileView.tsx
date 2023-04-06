@@ -46,17 +46,15 @@ export default function SocialProfileSimple() {
                     }
                 />
                 <Heading fontSize={'2xl'} fontFamily={'body'}>
-                    // TODO user name
-                    User user
+                    User name
                 </Heading>
                 <Text fontWeight={600} color={'gray.500'} mb={4}>
-                    @user123456789
+                    webId
                 </Text>
                 <Text
                     textAlign={'center'}
                     color={useColorModeValue('gray.700', 'gray.400')}
                     px={3}>
-                    [Insertar biografía aquí jaja]
 
                     {/* {' '}
                     <Link href={'#'} color={'blue.400'}>
