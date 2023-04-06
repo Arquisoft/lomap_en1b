@@ -9,6 +9,7 @@ export type MapMarker = {
 };
 
 
+
 export type Friend = {
     nickName : string;
     name: string;
