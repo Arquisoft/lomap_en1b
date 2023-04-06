@@ -17,7 +17,7 @@ import HomePage from './components/Home';
 import AboutPage from './components/About';
 
 import NavBar from './components/NavBar';
-import FriendsView from './components/FriendsPage/Friends';
+import FriendsView from './components/FriendsPage/FriendsView';
 
 
 const router = createBrowserRouter([
