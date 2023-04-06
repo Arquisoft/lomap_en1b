@@ -12,6 +12,7 @@ import Error404 from "./routes/404error";
 
 import HomePage from './components/Home';
 import AboutPage from './components/About';
+import ProfileView from './components/ProfileView';
 
 import NavBar from './components/NavBar';
 import CheckLogin from "./components/CheckLogin";
@@ -58,6 +59,11 @@ const router = createBrowserRouter([
       },
     ]
   },
+  {
+    path: "/profile",
+    element:<ProfileView />,
+  },
+
 ]);
 
 

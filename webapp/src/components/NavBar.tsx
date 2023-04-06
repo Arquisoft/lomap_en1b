@@ -1,7 +1,9 @@
+
 import {
     Avatar,
     Box,
     Flex,
+    Stack,
     HStack,
     Menu,
     MenuButton,
@@ -9,8 +11,10 @@ import {
     MenuItem,
     MenuDivider,
     useColorModeValue,
+    useDisclosure,
     Button
 } from '@chakra-ui/react';
+//import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 
 import  { NavLink } from 'react-router-dom';
 import '../css/nav.css';
@@ -47,14 +51,13 @@ import {useSelector} from "react-redux";
 
 
 export default function NavBar() {
-    //const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen } = useDisclosure();
     // @ts-ignore
     const loggedIn = useSelector(state  => state.auth.isLoggedIn );
-    const colorModeValue = useColorModeValue('white.100', 'blue.900')
+    const colorModeValue = useColorModeValue('white', 'blue')
     return (
         <>
-
-            <Box bg={colorModeValue} px={4} id="headerBar">
+            <Box id={"navBar"} bg={colorModeValue} px={4}>
                 <Flex fontSize={16} h={16} alignItems={'center'} justifyContent={'space-between'}>
                     <HStack spacing={8} alignItems={'center'}>
                         <Avatar
@@ -101,6 +104,17 @@ export default function NavBar() {
                         </Menu> : <></>}
                     </Flex>
                 </Flex>
+
+                {isOpen ? (
+                    <Box pb={4} display={{ md: 'none' }}>
+                        <Stack as={'nav'} spacing={4}>
+                            // TODO links of my profile page and log out
+                            <NavLink to="">My profile</NavLink>
+                            // logout not implemented yet
+                            <NavLink to="/">Log out</NavLink>
+                        </Stack>
+                    </Box>
+                ) : null}
             </Box>
         </>
     );
