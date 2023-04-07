@@ -35,72 +35,110 @@ export function AddFriendsView(){
   let [nickName, setNickName] = React.useState('');
 
   return (
-      <HStack maxW={'100vw'}>
-          <Form id={"addFriend"} onSubmit={
-              (event) => {
-                  event.preventDefault();
-                  const newFriend: Friend = {
-                      webId: webId, nickName: nickName,
-                      loMapOnly: false, name: "", profilePic: "",
-                  };
-                  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+      <Stack spacing={4} bg={useColorModeValue('gray.50', 'gray.800')} paddingBottom={'1'} paddingTop={'1'}>
+          <Heading lineHeight={1.1} fontSize={{ base: '1xl', md: '3xl' }}>
+              Add a new friend
+          </Heading>
+          <HStack maxW={'100vw'}>
+              <Form id={"addFriend"} onSubmit={
+                  (event) => {
                       event.preventDefault();
-                      //TODO: Remove this after testing it all works correctly
-                      console.log("webid: " + newFriend.webId);
-                      console.log("nickname: " + newFriend.nickName);
+                      const newFriend: Friend = {
+                          webId: webId, nickName: nickName,
+                          loMapOnly: false, name: "", profilePic: "",
+                      };
+                      const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+                          event.preventDefault();
+                          //TODO: Remove this after testing it all works correctly
+                          console.log("webid: " + newFriend.webId);
+                          console.log("nickname: " + newFriend.nickName);
 
-                      addFriendMutation(newFriend);
-                  };
-                  handleSubmit(event)
-                  /* TODO:
+                          addFriendMutation(newFriend);
+                      };
+                      handleSubmit(event)
+                      /* TODO:
 
-                  Right now when we do this, the textfield is not restored so:
-                   - visually there is something written
-                   - You can submit the form because the is something written
-                   - But the field that is sent is empty
-                   - We need to restore the textfield someway or dont erase the content here
+                      Right now when we do this, the textfield is not restored so:
+                       - visually there is something written
+                       - You can submit the form because the is something written
+                       - But the field that is sent is empty
+                       - We need to restore the textfield someway or dont erase the content here
 
-                  setWebId("");
-                  setNickName("");
-                   */
+                      setWebId("");
+                      setNickName("");
+                       */
 
-              }}>
-              <Box>
-                  <FormControl isRequired>
-                      <FormLabel>Introduce your friend's WebId:</FormLabel>
-                      <Input id="friendWbId"
-                             placeholder="asdfghjkl123456"
-                             _placeholder={{color: 'gray.500'}}
-                             type="text"
-                             onChange={(e) => setWebId(e.currentTarget.value)}
-                      />
-                  </FormControl>
-              </Box>
-              <Box>
-                  <FormControl isRequired>
-                      <FormLabel>Nickname:</FormLabel>
-                      <Input id="nickname"
-                             placeholder="Motosarius"
-                             _placeholder={{color: 'gray.500'}}
-                             type="text"
-                             onChange={(e) => setNickName(e.currentTarget.value)}
-                      />
-                  </FormControl>
-              </Box>
-          </Form>
-          <Button form={"addFriend"} type={"submit"}
-              bg={'orange.400'}
-              color={'white'}
-              _hover={{
-                  bg: 'orange.500',
-              }}>
-              Add
-          </Button>
+                  }}></Form>
+                  <Box>
+                      <FormControl isRequired>
+                          <FormLabel>Introduce your friend's WebId:</FormLabel>
+                          <Input id="friendWbId"
+                                 placeholder="asdfghjkl123456"
+                                 _placeholder={{color: 'gray.500'}}
+                                 type="text"
+                                 onChange={(e) => setWebId(e.currentTarget.value)}
+                          />
+                      </FormControl>
+                  </Box>
+                  <Box>
+                      <FormControl isRequired>
+                          <FormLabel>Nickname:</FormLabel>
+                          <Input id="nickname"
+                                 placeholder="Motosarius"
+                                 _placeholder={{color: 'gray.500'}}
+                                 type="text"
+                                 onChange={(e) => setNickName(e.currentTarget.value)}
+                          />
+                      </FormControl>
+                  </Box>
 
-      </HStack>
+              <Button form={"addFriend"} type={"submit"}
+                  bg={'orange.400'}
+                  color={'white'}
+                  _hover={{
+                      bg: 'orange.500',
+                  }}>
+                  Add
+              </Button>
+
+          </HStack>
+      </Stack>
 
   );
 }
+/*
+<HStack maxW={'100vw'}>
+    <Box>
+        <FormControl isRequired>
+            <FormLabel>Introduce your friend's WebId:</FormLabel>
+            <Input id="friendWbId"
+                   placeholder="asdfghjkl123456"
+                   _placeholder={{ color: 'gray.500' }}
+                   type="text" />
+        </FormControl>
+    </Box>
+    <Box>
+        <FormControl isRequired>
+            <FormLabel>Nickname:</FormLabel>
+            <Input id="nickname"
+                   placeholder="Motosarius"
+                   _placeholder={{ color: 'gray.500' }}
+                   type="text"
+            />
+        </FormControl>
+    </Box>
+    <Button
+        bg={'orange.400'}
+        color={'white'}
+        _hover={{
+            bg: 'orange.500',
+        }}>
+        Add
+    </Button>
+</HStack>
+
+ */
+
 
 export default function FriendsView(): JSX.Element {
   let { data: friends, error, isLoading } = useGetFriendsQuery();
@@ -119,12 +157,7 @@ export default function FriendsView(): JSX.Element {
           </Text>
         </Heading>
 
-        <Stack spacing={4} bg={useColorModeValue('gray.50', 'gray.800')} paddingBottom={'1'} paddingTop={'1'}>
-          <Heading lineHeight={1.1} fontSize={{ base: '1xl', md: '3xl' }}>
-            Add a new friend
-          </Heading>
           <AddFriendsView/>
-        </Stack>
 
         {/* Tabla amigos */}
         <Grid>

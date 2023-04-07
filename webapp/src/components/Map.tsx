@@ -72,6 +72,7 @@ export function LocationMarkerWithStore() {
                                     event.preventDefault();
                                     addLocationMutation(marker);
                                 };
+
                                 handleSubmit(event)
                                 setName('')
                                 setCategory('')

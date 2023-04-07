@@ -8,7 +8,6 @@ import {LocationType} from "../../locationType";
 export const Entry = (friend: Friend) => {
     let [removeFriendMutation, {isLoading, isError, error}] = useRemoveFriendMutation();
 
-
     return (
         <Tr>
             {/* <Td>{friend.profilePic}</Td> */}

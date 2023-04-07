@@ -6,6 +6,7 @@ export const friendApi = createApi({
     reducerPath: 'friendship',
     baseQuery: fetchBaseQuery({ baseUrl: 'https://4255db99-902a-464f-aa3a-e89ffa1a77fe.mock.pstmn.io' }),
     endpoints: (builder ) => ({
+
         getFriends: builder.query<Friend[], void>({
             query: (name) => ({
                 url:`friendship`,
