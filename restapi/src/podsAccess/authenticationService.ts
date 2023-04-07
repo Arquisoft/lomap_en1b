@@ -30,7 +30,6 @@ export default {
     confirmLogin : async function (req:Request, res:Response){
         // If we get here, the user has logged in successfully
         // Recover session information
-        console.log(req.session.solidSessionId)
         const session = await getSessionFromStorage(req.session.solidSessionId!);
         // Complete login process using the data appended by the Solid Identity Provider
         try{
@@ -41,7 +40,7 @@ export default {
         }
         // Session now contains an authenticated Session instance.
         if (session!.info.isLoggedIn) {
-            return res.redirect("http://localhost:3000/map")
+            return res.redirect("http://localhost:3000/login/confirm")
         }
         return res.sendStatus(401)
     },
@@ -50,7 +49,7 @@ export default {
     logout : async function(req:Request, res : Response){
         const session = await getSessionFromStorage(req.session.solidSessionId!);
         await session!.logout();
-        res.send('Logged out');
+        res.redirect("http://localhost:3000")
     },
 
 

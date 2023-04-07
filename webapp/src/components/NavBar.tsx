@@ -1,3 +1,4 @@
+
 import {
     Avatar,
     Box,
@@ -18,6 +19,7 @@ import {
 import  { NavLink } from 'react-router-dom';
 import '../css/nav.css';
 import { logout } from '../app/services/Auth';
+import {useSelector} from "react-redux";
 
 // const NavLink = ({ children }: { children: ReactNode }) => (
 //     <Link
@@ -38,7 +40,7 @@ import { logout } from '../app/services/Auth';
         <Stack as={'nav'} spacing={4}>
             // TODO links of my profile page and log out
             <NavLink to="">My profile</NavLink>
-            // logout not implemented yet
+            // logout not implemented yet 
             <NavLink to="" onClick={logout}>Log out</NavLink>
         </Stack>
     </Box>
@@ -49,10 +51,13 @@ import { logout } from '../app/services/Auth';
 
 
 export default function NavBar() {
-    const { isOpen, onOpen, onClose } = useDisclosure();
-
+    const { isOpen } = useDisclosure();
+    // @ts-ignore
+    const loggedIn = useSelector(state  => state.auth.isLoggedIn );
+    const colorModeValue = useColorModeValue('white', 'blue')
     return (
-            <Box id={"navBar"} bg={useColorModeValue('white', 'blue')} px={4}>
+        <>
+            <Box id={"navBar"} bg={colorModeValue} px={4}>
                 <Flex fontSize={16} h={16} alignItems={'center'} justifyContent={'space-between'}>
                     <HStack spacing={8} alignItems={'center'}>
                         <Avatar
@@ -71,12 +76,12 @@ export default function NavBar() {
 
                             <NavLink to="/" className="nav_link">Home</NavLink>
                             <NavLink to="/login" className="nav_link">Login</NavLink>
-                            <NavLink to="/map" className="nav_link">Map</NavLink>
+                            {loggedIn ? <NavLink to="/map" className="nav_link">Map</NavLink> : <></> }
                             <NavLink to="/about" className="nav_link">About</NavLink>
                         </HStack>
                     </HStack>
                     <Flex alignItems={'center'}>
-                        <Menu>
+                        {loggedIn ?<Menu>
                             <MenuButton
                                 as={Button}
                                 rounded={'full'}
@@ -96,7 +101,7 @@ export default function NavBar() {
                                 <MenuDivider />
                                 <MenuItem onClick={logout}>Log out</MenuItem>
                             </MenuList>
-                        </Menu>
+                        </Menu> : <></>}
                     </Flex>
                 </Flex>
 
@@ -105,12 +110,13 @@ export default function NavBar() {
                         <Stack as={'nav'} spacing={4}>
                             // TODO links of my profile page and log out
                             <NavLink to="">My profile</NavLink>
-                            // logout not implemented yet 
+                            // logout not implemented yet
                             <NavLink to="/">Log out</NavLink>
                         </Stack>
                     </Box>
                 ) : null}
             </Box>
+        </>
     );
 }
 
