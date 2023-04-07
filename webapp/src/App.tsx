@@ -2,7 +2,6 @@ import React from 'react';
 import { Outlet } from 'react-router-dom'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { BrowserRouter, Route, Routes } from "react-router-dom"
 
 import './App.css';
 import LoginForm from './components/Login';
@@ -11,23 +10,24 @@ import MapElement from './components/Map';
 
 import Error404 from "./routes/404error";
 
-import Map from "./components/Map"
-
 import HomePage from './components/Home';
 import AboutPage from './components/About';
+import ProfileView from './components/ProfileView';
 
 import NavBar from './components/NavBar';
-import FriendsView from './components/FriendsPage/FriendsView';
 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <> <NavBar></NavBar><Outlet /> </>,
+    element: <> <NavBar /><Outlet /> </>,
     children: [
+
+        // vvv Public routes vvv
       {
-        path: "/map",
-        element: <MapElement />,
+        path: "/login/confirm",
+        element: <ConfirmLogin />,
+        errorElement: <Error404 />,
       },
       {
         path: "/login",
@@ -43,12 +43,29 @@ const router = createBrowserRouter([
         path: "/about",
         element: <AboutPage />,
       },
+
+
+      {
+        path: "/",
+        element: <CheckLogin />,
+        children: [
+          {
+            path: "/map",
+            element: <MapElement />,
+          }
+        ]
+      },
       {
         path: "/friends",
         element: <FriendsView />,
       },
     ]
   },
+  {
+    path: "/profile",
+    element:<ProfileView />,
+  },
+
 ]);
 
 
