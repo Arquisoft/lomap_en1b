@@ -75,9 +75,10 @@ export default function NavBar() {
                                 }}>
 
                             <NavLink to="/" className="nav_link">Home</NavLink>
-                            <NavLink to="/login" className="nav_link">Login</NavLink>                            <NavLink to="/map" className="nav_link">Map</NavLink>
-                            <NavLink to="/friends" className="nav_link">Friends</NavLink>
+                            {loggedIn ? <></> :  <NavLink to="/login" className="nav_link">Login</NavLink>}
                             {loggedIn ? <NavLink to="/map" className="nav_link">Map</NavLink> : <></> }
+                            {loggedIn ? <NavLink to="/friends" className="nav_link">Friends</NavLink> : <></> }
+                            
 
                             <NavLink to="/about" className="nav_link">About</NavLink>
                         </HStack>
