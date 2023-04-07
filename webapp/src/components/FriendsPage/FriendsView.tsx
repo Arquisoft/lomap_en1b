@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import {
   Stack,
   Container,
@@ -19,20 +19,91 @@ import {
   FormLabel,
   Button,
   HStack,
+  Spinner,
 } from '@chakra-ui/react';
-import { friendApi } from "../../app/services/Friend";
 //import {useGetFriendsQuery} from "../../app/services/Friend";
-import {useGetFriendsQuery} from "../../app/services/Location";
-import { Friend } from '../../types';
+import {useAddLocationMutation, useGetFriendsQuery} from "../../app/services/Location";
+import {useAddFriendMutation} from "../../app/services/Friend";
+import {Friend, MapMarker} from '../../types';
 import { Entry } from './Entry';
+import {Form} from "react-router-dom";
+import {LocationType} from "../../locationType";
 
+export function AddFriendsView(){
+  let [addFriendMutation, {isLoading, isError, error}] = useAddFriendMutation();
+  let [webId, setWebId] = React.useState('');
+  let [nickName, setNickName] = React.useState('');
+
+  return (
+      <HStack maxW={'100vw'}>
+          <Form id={"addFriend"} onSubmit={
+              (event) => {
+                  event.preventDefault();
+                  const newFriend: Friend = {
+                      webId: webId, nickName: nickName,
+                      loMapOnly: false, name: "", profilePic: "",
+                  };
+                  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+                      event.preventDefault();
+                      //TODO: Remove this after testing it all works correctly
+                      console.log("webid: " + newFriend.webId);
+                      console.log("nickname: " + newFriend.nickName);
+
+                      addFriendMutation(newFriend);
+                  };
+                  handleSubmit(event)
+                  /* TODO:
+
+                  Right now when we do this, the textfield is not restored so:
+                   - visually there is something written
+                   - You can submit the form because the is something written
+                   - But the field that is sent is empty
+                   - We need to restore the textfield someway or dont erase the content here
+
+                  setWebId("");
+                  setNickName("");
+                   */
+
+              }}>
+              <Box>
+                  <FormControl isRequired>
+                      <FormLabel>Introduce your friend's WebId:</FormLabel>
+                      <Input id="friendWbId"
+                             placeholder="asdfghjkl123456"
+                             _placeholder={{color: 'gray.500'}}
+                             type="text"
+                             onChange={(e) => setWebId(e.currentTarget.value)}
+                      />
+                  </FormControl>
+              </Box>
+              <Box>
+                  <FormControl isRequired>
+                      <FormLabel>Nickname:</FormLabel>
+                      <Input id="nickname"
+                             placeholder="Motosarius"
+                             _placeholder={{color: 'gray.500'}}
+                             type="text"
+                             onChange={(e) => setNickName(e.currentTarget.value)}
+                      />
+                  </FormControl>
+              </Box>
+          </Form>
+          <Button form={"addFriend"} type={"submit"}
+              bg={'orange.400'}
+              color={'white'}
+              _hover={{
+                  bg: 'orange.500',
+              }}>
+              Add
+          </Button>
+
+      </HStack>
+
+  );
+}
 
 export default function FriendsView(): JSX.Element {
-  const { data: friends, error, isLoading } = useGetFriendsQuery();
-
-  friends?.forEach((friend) => {
-    console.log(friend);
-  });
+  let { data: friends, error, isLoading } = useGetFriendsQuery();
 
   return (
     <Container maxW={'100vw'} >
@@ -52,35 +123,7 @@ export default function FriendsView(): JSX.Element {
           <Heading lineHeight={1.1} fontSize={{ base: '1xl', md: '3xl' }}>
             Add a new friend
           </Heading>
-          <HStack maxW={'100vw'}>
-            <Box>
-              <FormControl isRequired>
-                <FormLabel>Introduce your friend's WebId:</FormLabel>
-                <Input id="friendWbId"
-                  placeholder="asdfghjkl123456"
-                  _placeholder={{ color: 'gray.500' }}
-                  type="text" />
-              </FormControl>
-            </Box>
-            <Box>
-              <FormControl isRequired>
-                <FormLabel>Nickname:</FormLabel>
-                <Input id="nickname"
-                  placeholder="Motosarius"
-                  _placeholder={{ color: 'gray.500' }}
-                  type="text"
-                />
-              </FormControl>
-            </Box>
-            <Button
-              bg={'orange.400'}
-              color={'white'}
-              _hover={{
-                bg: 'orange.500',
-              }}>
-              Add
-            </Button>
-          </HStack>
+          <AddFriendsView/>
         </Stack>
 
         {/* Tabla amigos */}
@@ -89,7 +132,7 @@ export default function FriendsView(): JSX.Element {
             Your friends
           </Heading>
           {isLoading
-              ? (<h2>Cargando amigos... </h2>)
+              ? (<h2>Cargando amigos <Spinner></Spinner> </h2>)
               : (<Table variant="striped" colorScheme="black" size="sm">
                             <Thead>
                               <Tr>

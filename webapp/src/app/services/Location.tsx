@@ -25,6 +25,7 @@ export const locationApi = createApi({
                 credentials:"include"
             })
         }),
+        //TODO: THIS IS A MOCK. Delete once friends api is completely functional
         getFriends: builder.query<Friend[], void>({
             query: (name) => ({
                 url:`location`,

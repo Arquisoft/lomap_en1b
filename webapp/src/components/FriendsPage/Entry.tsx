@@ -1,9 +1,14 @@
 import React from "react";
 import { Tr, Td, Avatar, Button } from "@chakra-ui/react";
-import { Friend } from "../../types";
+import {Friend, MapMarker} from "../../types";
 import { friendApi } from "../../app/services/Friend";
+import {useRemoveFriendMutation} from "../../app/services/Friend";
+import {LocationType} from "../../locationType";
 
 export const Entry = (friend: Friend) => {
+    let [removeFriendMutation, {isLoading, isError, error}] = useRemoveFriendMutation();
+
+
     return (
         <Tr>
             {/* <Td>{friend.profilePic}</Td> */}
@@ -27,6 +32,17 @@ export const Entry = (friend: Friend) => {
                    
                         border="2px"
                         borderColor="gray.300"
+                        onSubmit={
+                            (event) => {
+                                event.preventDefault();
+                                const handleSubmit = (event: React.FormEvent<HTMLButtonElement>) => {
+                                    event.preventDefault();
+                                    removeFriendMutation(friend);
+                                };
+                                handleSubmit(event)
+                            }
+
+                        }
                     >
                         Remove
                     </Button>

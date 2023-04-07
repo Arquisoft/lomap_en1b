@@ -12,6 +12,7 @@ export const friendApi = createApi({
                 credentials:"include"
             })
         }),
+        /*
         addFriend: builder.mutation<void , Friend>({
             query: (newFriend) => ({
                 headers: {
@@ -24,6 +25,20 @@ export const friendApi = createApi({
                 mode:"cors",
                 body: JSON.stringify({friend: newFriend })
               }),
+        }),
+         */
+        addFriend: builder.mutation<void , Friend>({
+            query: (newFriend) => ({
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                url: `friendship`,
+                credentials:"include",
+                method: 'POST',
+                mode:"cors",
+                body: JSON.stringify({friend: newFriend })
+            }),
         }),
         //TODO: Once restapi implementation is done, use the correct URL. This is just a placeholder
         removeFriend: builder.mutation<void, Friend>({
