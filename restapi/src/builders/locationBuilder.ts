@@ -22,13 +22,3 @@ export function locationToThing(location:Location):Thing{
         .addUrl(RDF.type, "https://schema.org/Place")
         .build()
 }
-
-export function buildTestLocationThing(){
-    return  buildThing(createThing({ name: "Location2" }))
-        .addStringNoLocale(SCHEMA_INRUPT.name, 'nuevaLocalizacion2')
-        .addStringNoLocale(SCHEMA_INRUPT.description, "bar")
-        .addDecimal(SCHEMA_INRUPT.latitude, 1)
-        .addDecimal(SCHEMA_INRUPT.longitude, 2)
-        .addUrl(RDF.type, "https://schema.org/Place")
-        .build();
-}
