@@ -27,7 +27,6 @@ import {useAddFriendMutation} from "../../app/services/Friend";
 import {Friend, MapMarker} from '../../types';
 import { Entry } from './Entry';
 import {Form} from "react-router-dom";
-import {LocationType} from "../../locationType";
 
 export function AddFriendsView(){
   let [addFriendMutation, {isLoading, isError, error}] = useAddFriendMutation();
