@@ -12,15 +12,9 @@ export const authSlice = createSlice({
 })
 
 export const store = configureStore({
-<<<<<<< HEAD
-    reducer: {
-        [locationApi.reducerPath]: locationApi.reducer,
-        "auth": authSlice.reducer
-=======
   reducer: {
     [locationApi.reducerPath]: locationApi.reducer,
       [friendApi.reducerPath]: friendApi.reducer,
->>>>>>> bd24d27d8c0abe58ea1bdbe1a7bd81549a0237a9
   },
   middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(

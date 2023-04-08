@@ -92,6 +92,7 @@ export function AddFriendsView(){
                       </FormControl>
                   </Box>
 
+              {/* Applies the action "submit" to the form with id "addFriend" */}
               <Button form={"addFriend"} type={"submit"}
                   bg={'orange.400'}
                   color={'white'}
