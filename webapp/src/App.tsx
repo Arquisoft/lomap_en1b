@@ -17,17 +17,22 @@ import HomePage from './components/Home';
 import AboutPage from './components/About';
 
 import NavBar from './components/NavBar';
+import CheckLogin from "./components/CheckLogin";
+import ConfirmLogin from "./components/ConfirmLogin";
 import FriendsView from './components/FriendsPage/FriendsView';
 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <> <NavBar></NavBar><Outlet /> </>,
+    element: <> <NavBar /><Outlet /> </>,
     children: [
+
+        // vvv Public routes vvv
       {
-        path: "/map",
-        element: <MapElement />,
+        path: "/login/confirm",
+        element: <ConfirmLogin />,
+        errorElement: <Error404 />,
       },
       {
         path: "/login",
@@ -44,8 +49,24 @@ const router = createBrowserRouter([
         element: <AboutPage />,
       },
       {
-        path: "/friends",
-        element: <FriendsView />,
+        path: "/",
+        element: <CheckLogin />,
+        children: [
+          {
+            path: "/friends",
+            element: <FriendsView />,
+          }
+        ]
+      },
+      {
+        path: "/",
+        element: <CheckLogin />,
+        children: [
+          {
+            path: "/map",
+            element: <MapElement />,
+          }
+        ]
       },
     ]
   },
