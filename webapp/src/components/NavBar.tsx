@@ -21,39 +21,14 @@ import '../css/nav.css';
 import { logout } from '../app/services/Auth';
 import {useSelector} from "react-redux";
 
-// const NavLink = ({ children }: { children: ReactNode }) => (
-//     <Link
-//         px={2}
-//         py={1}
-//         rounded={'md'}
-//         _hover={{
-//             textDecoration: 'none',
-//             bg: useColorModeValue('blue.200', 'blue.700'),
-//         }}
-//         href={'#'}>
-//         {children}
-//     </Link>
-// );
-
-/* {isOpen ? (
-    <Box pb={4} display={{ md: 'none' }}>
-        <Stack as={'nav'} spacing={4}>
-            // TODO links of my profile page and log out
-            <NavLink to="">My profile</NavLink>
-            // logout not implemented yet 
-            <NavLink to="" onClick={logout}>Log out</NavLink>
-        </Stack>
-    </Box>
-) : null} */
-
 
 
 
 
 export default function NavBar() {
     const { isOpen } = useDisclosure();
-    // @ts-ignore
-    const loggedIn = useSelector(state  => state.auth.isLoggedIn );
+//    @ts-ignore
+    const loggedIn = useSelector(state => state.auth.isLoggedIn );
     const colorModeValue = useColorModeValue('white', 'blue')
     return (
         <>
@@ -122,5 +97,4 @@ export default function NavBar() {
         </>
     );
 }
-
 
