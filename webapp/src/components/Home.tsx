@@ -11,7 +11,8 @@ import { useNavigate } from 'react-router-dom';
 export default function HomePage(): JSX.Element {
 
   const navigate = useNavigate();
-
+  // @ts-ignore
+  const loggedIn = useSelector(state  => state.auth.isLoggedIn );
 
   return (
     <Flex
@@ -43,7 +44,7 @@ export default function HomePage(): JSX.Element {
               rounded={'full'}
               color={'white'}
               _hover={{ bg: 'blue.800' }}
-              onClick={() => navigate('/login')}>
+              onClick={loggedIn ? () => navigate('/map') :() => navigate('/login')}>
               Start
             </Button>
             <Button
