@@ -38,8 +38,9 @@ This are the technologies that we have decided to use, some of them may vary in 
 === Design decisions:
 The general design of our project has two main parts, connected using a facade:
 
- * Webapp (frontend): with views and connections to the SOLID PODs and to the RestAPI facade
- * RestAPI (backend): controls the acess to the database and works as a microservice
+ * Webapp (frontend): It has different views, it connects to the SOLID PODs to acess user's data in an secure way, and it communicates with the backend using a facade
+ * RestAPI (backend): controls the acess to the database and communicates with the frontend using the facade
+
 
 
 === Quality decisions
