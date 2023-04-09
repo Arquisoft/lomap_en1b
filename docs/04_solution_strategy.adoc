@@ -26,12 +26,13 @@ Refer to details in the following sections.
 === Technology decisions
 This are the technologies that we have decided to use, some of them may vary in future iterations of the poyect:
 
-* SOLID Pods for security
+* SOLID PODs for security
 * TypeScript as programming language
 * MongoDb as our DMBS
 * Redux using React as UI
 * Axios
 * Postman
+* Chakra UI (for the implementation of the views)
 
 
 === Design decisions:
