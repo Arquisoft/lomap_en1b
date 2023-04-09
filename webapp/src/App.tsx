@@ -53,18 +53,13 @@ const router = createBrowserRouter([
         element: <CheckLogin />,
         children: [
           {
-            path: "/friends",
-            element: <FriendsView />,
-          }
-        ]
-      },
-      {
-        path: "/",
-        element: <CheckLogin />,
-        children: [
-          {
             path: "/map",
             element: <MapElement />,
+
+          },
+          {
+            path: "/friends",
+            element: <FriendsView />,
           }
         ]
       },
