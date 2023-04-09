@@ -37,8 +37,8 @@ This are the technologies that we have decided to use, some of them may vary in 
 === Design decisions:
 The general design of our project has two main parts, connected using a facade:
 
-* Webapp (frontend): It has different views, it connects to the SOLID pods to acess user's data in an secure way, and it communicates with the backend using a facade
-* RestAPI (backend): controls the acess to the database and communicates with the frontend using the facade
+* Webapp (frontend): It has different views, it communicates with the user with different views, and with the backend using redux hooks
+* RestAPI (backend): controls the access to the data. This data can be stored in the user's POD or in our database
 
 
 === Quality decisions
