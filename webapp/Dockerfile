@@ -16,7 +16,7 @@
 
 
 #Build environment
-FROM node:18.15.0
+FROM node:18.15.0 as build
 WORKDIR /app
 ARG API_URI="http://localhost:8082/api"
 ENV REACT_APP_API_URI=$API_URI
