@@ -37,7 +37,7 @@ export default {
         }
         // Session now contains an authenticated Session instance.
         if (session!.info.isLoggedIn) {
-            return res.redirect("http://localhost:3000/map")
+            return res.redirect("http://localhost:3000/login/confirm")
         }
         return res.sendStatus(401)
     },
@@ -46,7 +46,7 @@ export default {
     logout : async function(req:Request, res : Response){
         const session = await getSessionFromStorage(req.session.solidSessionId!);
         await session!.logout();
-        res.send('Logged out');
+        res.redirect("http://localhost:3000")
     },
 
 

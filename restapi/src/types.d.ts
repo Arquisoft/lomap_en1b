@@ -16,7 +16,9 @@ export type Review = {
 }
 
 export type Friend = {
-    username : string;
-    podId : string;
+    nickName : string;
+    name: string;
+    webId : string;
+    profilePic : string;
+    loMapOnly : boolean;
 }
-

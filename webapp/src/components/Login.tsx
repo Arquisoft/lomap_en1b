@@ -7,20 +7,22 @@ import {
     Stack,
     Text,
     useColorModeValue,
-    FormLabel,
-  } from '@chakra-ui/react';
-  import { useState } from 'react';
+    FormLabel, Spinner,
+} from '@chakra-ui/react';
+import { SetStateAction, useState } from 'react';
 import {login} from "../app/services/Auth";
   
   
   export default function LoginForm(): JSX.Element {
 
     const [providerValue, setProviderValue] = useState('');
+    const [loading, setLoading] = useState(false)
     
     const handleInputProvider : React.ChangeEventHandler<HTMLInputElement> = (e) => setProviderValue(e.target.value);
-    
-    const handleLogin =  () => {
-      login(providerValue)
+
+    const handleLogin =  (providerURI : string) => {
+        setLoading(true)
+      login(providerURI).catch(() => setLoading(false))
     };
 
     return (
@@ -63,8 +65,8 @@ import {login} from "../app/services/Auth";
               _hover={{
                 bg: 'blue.800',
               }}
-              onClick={handleLogin}>
-              Log in 
+              onClick={() => handleLogin(providerValue)}>
+                {loading? <Spinner /> : <span>Login</span>}
             </Button>
           </Stack>
 
@@ -82,9 +84,7 @@ import {login} from "../app/services/Auth";
               _hover={{
                 bg: 'purple.800',
               }}
-              onClick={() => 
-                    setProviderValue("https://solidcommunity.net/login")
-              }>
+              onClick={() => handleLogin("https://login.solidcommunity.net")}>
               Solid Community
             </Button>
 
@@ -95,8 +95,7 @@ import {login} from "../app/services/Auth";
               _hover={{
                 bg: 'purple.800',
               }}
-              onClick={() => 
-                setProviderValue("https://solidweb.org/login")
+              onClick={() => handleLogin("https://login.solidweb.org")
               }>
               Solid Web
             </Button>
@@ -108,8 +107,8 @@ import {login} from "../app/services/Auth";
               _hover={{
                 bg: 'purple.800',
               }}
-              onClick={() => 
-                setProviderValue("https://login.inrupt.com")
+              onClick={() =>
+                  handleLogin("https://login.inrupt.net")
               }>
               Inrupt.net
             </Button>
@@ -121,8 +120,7 @@ import {login} from "../app/services/Auth";
               _hover={{
                 bg: 'purple.800',
               }}
-              onClick={() => 
-                setProviderValue("https://auth.inrupt.com/login?response_type=code&client_id=291nuca1atm91cstojs8ndsbkh&scope=openid+openid+profile&redirect_uri=https%3A%2F%2Flogin.inrupt.com%2Fcallback&state=1874cb6e-8358-4974-b916-2457141b23c4")
+              onClick={() => handleLogin("https://login.inrupt.com")
               }>
               pod.Inrupt.net
             </Button>

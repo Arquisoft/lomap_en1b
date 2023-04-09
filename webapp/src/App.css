@@ -13,3 +13,36 @@
   --warning-color: #e8d462;
   --success-color: #a3e05c;
 }
+
+
+
+
+
+/* Specificity 100 */
+#logo_img {
+  max-height: 2em;
+  max-width: 100%;
+  height: auto;
+  width: auto;
+}
+
+
+/* Specificity 002 */
+.menu ul {
+  background-color: #4299e1;
+  color: #000000;
+  text-align: start;
+
+  font-size: 1.75em;
+  font-family: sans-serif;
+  padding: 0;
+
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+
+}
+
+nav {
+  font-size: 1.75em;
+}
