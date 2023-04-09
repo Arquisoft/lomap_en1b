@@ -58,8 +58,6 @@ export default function SocialProfileSimple() {
 
                 </Text>
 
-    
-
                 <Stack mt={8} direction={'row'} spacing={4}>
                     <Button
                         onClick={() => navigate('/map')}
