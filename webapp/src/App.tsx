@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 
 import './App.css';
 import LoginForm from './components/Login';
@@ -10,12 +11,15 @@ import MapElement from './components/Map';
 
 import Error404 from "./routes/404error";
 
+import Map from "./components/Map"
+
 import HomePage from './components/Home';
 import AboutPage from './components/About';
 
 import NavBar from './components/NavBar';
 import CheckLogin from "./components/CheckLogin";
 import ConfirmLogin from "./components/ConfirmLogin";
+import FriendsView from './components/FriendsPage/FriendsView';
 
 
 const router = createBrowserRouter([
@@ -44,8 +48,6 @@ const router = createBrowserRouter([
         path: "/about",
         element: <AboutPage />,
       },
-
-
       {
         path: "/",
         element: <CheckLogin />,
@@ -53,11 +55,16 @@ const router = createBrowserRouter([
           {
             path: "/map",
             element: <MapElement />,
+
+          },
+          {
+            path: "/friends",
+            element: <FriendsView />,
           }
         ]
       },
     ]
-  }
+  },
 ]);
 
 
