@@ -4,17 +4,20 @@ import {FOAF, RDF, RDFS} from "@inrupt/vocab-common-rdf";
 
 export function thingToFriend(friendThing:Thing): Friend {
     return {
-        podId: getStringNoLocale(friendThing, FOAF.nick)!,
-        username: getUrl(friendThing, RDFS.seeAlso)!,
+        nickName: getStringNoLocale(friendThing, FOAF.nick)!,
+        webId: getUrl(friendThing, RDFS.seeAlso)!,
+        loMapOnly: true,
+        name: "test",
+        profilePic: ""
     }
 }
 
 export function friendToThing(friend:Friend): Thing{
     //Check how to work with knows
     //TODO
-    return buildThing(createThing({name:friend.podId}))
-        .addStringNoLocale(FOAF.nick, friend.username)
-        .addUrl(RDFS.seeAlso, friend.podId)
+    return buildThing(createThing({name:friend.webId}))
+        .addStringNoLocale(FOAF.nick, friend.nickName)
+        .addUrl(RDFS.seeAlso, friend.webId)
         .addUrl(RDF.type, "http://xmlns.com/foaf/0.1/#term_Person")
         .build()
 }
