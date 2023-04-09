@@ -10,8 +10,6 @@ export function thingToFriend(friendThing:Thing): Friend {
 }
 
 export function friendToThing(friend:Friend): Thing{
-    //Check how to work with knows
-    //TODO
     return buildThing(createThing({name:friend.podId}))
         .addStringNoLocale(FOAF.nick, friend.username)
         .addUrl(RDFS.seeAlso, friend.podId)

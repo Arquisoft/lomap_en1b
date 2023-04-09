@@ -2,7 +2,7 @@ import {Request, Response} from "express";
 import {
     setThing,
     saveSolidDatasetAt,
-    getPodUrlAll, getSolidDataset, getThingAll
+    getPodUrlAll, getSolidDataset, getThingAll, createSolidDataset
 } from "@inrupt/solid-client";
 import {getSessionFromStorage} from "@inrupt/solid-client-authn-node";
 import {friendToThing, thingToFriend} from "../builders/friendBuilder";
@@ -19,19 +19,29 @@ export default {
             if(friendsURL == undefined) return res.send("error");
 
             //Get friends from contacts
-            let friendsDataset =  await getSolidDataset(
-                friendsURL,
-                {fetch: session.fetch}          // fetch from authenticated session
-            );
+            let friendsDataset;
+            try{
+                friendsDataset =  await getSolidDataset(
+                    friendsURL,
+                    {fetch: session.fetch}          // fetch from authenticated session
+                );
+            } catch (error:any) {
+                if(typeof error.statusCode === "number" && error.statusCode === 404){
+                    friendsDataset = createSolidDataset();
+                } else {
+                    return res.send("error")
+                }
+            }
 
             //Get friends from profile
-            //TODO
-            //Get friends from extended profile
             //TODO
             //const profiles = await getProfileAll(webId,{ fetch:session!.fetch });
             //const webIDProfileSolidDataset = profiles.webIdProfile;
             //const webIdThing = getThing(webIDProfileSolidDataset, webId);
             //const friends = getUrlAll(webIdThing as Thing, FOAF.knows);
+            //Get friends from extended profile
+            //TODO
+
 
             return res.send(
                 getThingAll(friendsDataset)
@@ -48,20 +58,29 @@ export default {
             res.send('error')
         }
 
-        let locationsURL = await getFriendsURL(session.info.webId);
-        if(locationsURL == undefined) return res.send("error")
+        let friendsURL = await getFriendsURL(session.info.webId);
+        if(friendsURL == undefined) return res.send("error")
 
+        let friendsDataset;
+        try{
+            friendsDataset =  await getSolidDataset(
+                friendsURL,
+                {fetch: session.fetch}          // fetch from authenticated session
+            );
+        } catch (error:any) {
+            if(typeof error.statusCode === "number" && error.statusCode === 404){
+                friendsDataset = createSolidDataset();
+            } else {
+                return res.send("error")
+            }
+        }
 
         const friendThing = friendToThing(friend)
-        let friendsSolidDataset = await getSolidDataset(
-            locationsURL,
-            {fetch: session.fetch}
-        );
+        friendsDataset = setThing(friendsDataset, friendThing);
 
-        friendsSolidDataset = setThing(friendsSolidDataset, friendThing);
         let newDataset = await saveSolidDatasetAt(
-            locationsURL,
-            friendsSolidDataset,
+            friendsURL,
+            friendsDataset,
             {fetch: session.fetch}             // fetch from authenticated Session
         );
 
@@ -78,6 +97,5 @@ async function getFriendsURL(webId:string | undefined){
     if(webId == undefined) return undefined
     let webID = decodeURIComponent(webId)
     const podURL = await getPodUrlAll(webID);
-    console.log(podURL)
-    return  podURL + "contacts/";
+    return  podURL + "contacts/friends";
 }

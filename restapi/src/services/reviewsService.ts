@@ -1,7 +1,14 @@
 import {Request, Response} from "express";
 import {getSessionFromStorage} from "@inrupt/solid-client-authn-node";
 import {Review} from "../types";
-import {getPodUrlAll, getSolidDataset, getThingAll, saveSolidDatasetAt, setThing} from "@inrupt/solid-client";
+import {
+    createSolidDataset,
+    getPodUrlAll,
+    getSolidDataset,
+    getThingAll,
+    saveSolidDatasetAt,
+    setThing
+} from "@inrupt/solid-client";
 import {validateReview, validateReviewThing} from "../validators/reviewValidator";
 import {reviewToThing, thingToReview} from "../builders/reviewBuilder";
 
@@ -22,20 +29,28 @@ export default {
         let reviewsURL = await getReviewsURL(session.info.webId);
         if(reviewsURL == undefined){
             return res.send("error")
-
         }
 
-        let reviewsSolidDataset = await getSolidDataset(
-            reviewsURL,
-            {fetch: session.fetch}          // fetch from authenticated session
-        );
+        let reviewsDataset;
+        try{
+            reviewsDataset =  await getSolidDataset(
+                reviewsURL,
+                {fetch: session.fetch}          // fetch from authenticated session
+            );
+        } catch (error:any) {
+            if(typeof error.statusCode === "number" && error.statusCode === 404){
+                reviewsDataset = createSolidDataset();
+            } else {
+                return res.send("error")
+            }
+        }
 
         const reviewThing = reviewToThing(review)
-        reviewsSolidDataset = setThing(reviewsSolidDataset, reviewThing);
+        reviewsDataset = setThing(reviewsDataset, reviewThing);
 
         let newDataset = await saveSolidDatasetAt(
             reviewsURL,
-            reviewsSolidDataset,
+            reviewsDataset,
             {fetch: session.fetch}             // fetch from authenticated Session
         );
 
@@ -47,16 +62,25 @@ export default {
         const session = await getSessionFromStorage(req.session.solidSessionId!)
         if(session==undefined)return res.send('error')
 
-        let locationsURL = await getReviewsURL(session.info.webId);
-        if(locationsURL == undefined) return res.send("error")
+        let reviewsURL = await getReviewsURL(session.info.webId);
+        if(reviewsURL == undefined) return res.send("error")
 
-        let reviewDataset =  await getSolidDataset(
-            locationsURL,
-            {fetch: session.fetch}          // fetch from authenticated session
-        );
+        let reviewsDataset;
+        try{
+            reviewsDataset =  await getSolidDataset(
+                reviewsURL,
+                {fetch: session.fetch}          // fetch from authenticated session
+            );
+        } catch (error:any) {
+            if(typeof error.statusCode === "number" && error.statusCode === 404){
+                reviewsDataset = createSolidDataset();
+            } else {
+                return res.send("error")
+            }
+        }
 
         return res.send(
-            getThingAll(reviewDataset)
+            getThingAll(reviewsDataset)
                 .filter(reviewThing=>validateReviewThing(reviewThing))
                 .map(reviewThing=>thingToReview(reviewThing)))
     },
