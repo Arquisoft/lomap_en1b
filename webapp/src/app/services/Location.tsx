@@ -1,9 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-//import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
-//import { RootState } from "../store";
 import type { MapMarker } from '../../types';
-import {query, response} from "express";
-import {LocationType} from "../../locationType";
 import {Friend} from "../../types";
 
 /**
@@ -16,6 +12,7 @@ import {Friend} from "../../types";
 export const locationApi = createApi({
     reducerPath: 'location',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8082/' }),
+    tagTypes: ['Locations'],
     endpoints: (builder) => ({
         // MyLocation: what is returned
         // void: the type of data we pass as a parameter
@@ -23,7 +20,8 @@ export const locationApi = createApi({
             query: (name) => ({
                 url:`location`,
                 credentials:"include"
-            })
+            }),
+            providesTags:['Locations']
         }),
         //TODO: THIS IS A MOCK. Delete once friends api is completely functional
         getFriends: builder.query<Friend[], void>({
@@ -85,26 +83,8 @@ export const locationApi = createApi({
                 return copy;
             },
         }),
-        //TODO: not working
-        filterLocations: builder.query<MapMarker[], LocationType>({
-            query: (locationType) => ({
-                url:`location`,
-                credentials:"include",
-                params:{
-                    locationType : locationType,
-                }
-            }),
-            transformResponse: (response) => {
-                const data = JSON.parse(response as string);
 
-                // Filter the MapMarker using the filter location they use as parameter
-                const locationType = null;//query.params.locationType;
-                const filteredData = data.filter((marker : MapMarker) => marker.locationType === locationType);
 
-                // Return the filtered list
-                return filteredData;
-            }
-        }),
         // Omit metemos una localización y da igual que no tenga un id asignado
         addLocation: builder.mutation<void, MapMarker>({
             query: (newLocation) => ({
@@ -117,7 +97,8 @@ export const locationApi = createApi({
                 method: 'POST',
                 mode:"cors",
                 body: JSON.stringify({location: newLocation })
-            })
+            }),
+            invalidatesTags: ['Locations']
         }),
         removeLocation: builder.mutation<void, MapMarker>({
             query: (location) => ({

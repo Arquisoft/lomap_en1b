@@ -1,5 +1,5 @@
 import {MapContainer, Marker, Popup, TileLayer, useMapEvents} from 'react-leaflet';
-import React, {FC, MutableRefObject, useEffect, useRef, useState} from 'react';
+import React, {FC, useState} from 'react';
 import {
     Box,
     Button,
@@ -41,11 +41,7 @@ export enum FilterEnum {
     Monuments, MyLocations, SharedLocations,
 }
 
-interface LocationMarkerProps {
-    refetchData : () => void
-}
-
-export function LocationMarkerWithStore( props : LocationMarkerProps ) {
+export function LocationMarkerWithStore() {
     // const [position, setPosition] : LatLng = {lat: 0, lng: 0};
     const dispatch = useDispatch();
     const [lati, setLat] = useState(0);
@@ -95,7 +91,6 @@ export function LocationMarkerWithStore( props : LocationMarkerProps ) {
                                 const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
                                     event.preventDefault();
                                     addLocationMutation(marker);
-                                    props.refetchData()
                                 };
                                 handleSubmit(event)
                                 setName('')
@@ -139,7 +134,7 @@ export function LocationMarkerWithStore( props : LocationMarkerProps ) {
 
 export default function MapElement(): JSX.Element {
     const escuela: LatLngExpression = {lat: 43.354, lng: -5.851};
-    const {data: locations, error, isLoading, refetch} = useGetLocationsQuery();
+    const {data: locations, error, isLoading} = useGetLocationsQuery();
     const dispatch = useDispatch()
 
     const [showBars, setShowBars] = useState(true)
@@ -159,7 +154,7 @@ export default function MapElement(): JSX.Element {
                     />
                 </Flex>
                 <MapContainer center={escuela} zoom={13} scrollWheelZoom={true}>
-                    <LocationMarkerWithStore refetchData={() => {refetch();}}/>
+                    <LocationMarkerWithStore />
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
