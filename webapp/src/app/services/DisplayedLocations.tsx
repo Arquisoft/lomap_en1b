@@ -1,14 +1,15 @@
 import {MapMarker} from "../../types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from "../store";
+import {LocationType} from "../../locationType";
 
 
 interface DisplayedLocationsState {
     displayedLocations: MapMarker[];
 }
 const initialState: DisplayedLocationsState = {
-    displayedLocations: [],
-};
+    displayedLocations: []
+}
 
 // actions dont change the state
 // reducers change the state
@@ -27,6 +28,5 @@ export const displayedLocationsSlice = createSlice({
 export const { setDisplayedLocations } = displayedLocationsSlice.actions
 export const selectDisplayedLocations = (state: RootState) => state.displayedLocationsSlice.displayedLocations;
 
-export default displayedLocationsSlice.reducer;
 
 

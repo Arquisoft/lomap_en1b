@@ -121,7 +121,12 @@ export function LocationMarkerWithStore() {
 
 export default function MapElement(): JSX.Element {
     const escuela: LatLngExpression = {lat: 43.354, lng: -5.851};
-    const {data: locations, error, isLoading} = useGetLocationsQuery();
+    //const {data: locations, error, isLoading} = useGetLocationsQuery();
+    let locations : MapMarker[] = [
+        { id:"asdasdasdfh", name:"Bar", locationType: LocationType.bar, latitude:43.354, longitude:-5.851,shared:false},
+        { id:"asdasasdadj", name:"Restaurant", locationType: LocationType.restaurant, latitude:43.374, longitude:-5.871,shared:false},
+        { id:"asdagfgsdfg", name:"Shop", locationType: LocationType.shop, latitude:43.314, longitude:-5.811,shared:false},
+        { id:"asdagfggdfl", name:"Sight", locationType: LocationType.sight, latitude:43.334, longitude:-5.831,shared:false}];
     setDisplayedLocations(locations!);
     let disLocations = useSelector(selectDisplayedLocations);
 
@@ -177,6 +182,8 @@ export function FilterModal() {
             { id: "sharedLocations", name: "Shared Locations" }
         ]
     };
+    let finalLoc : MapMarker[] = [];
+
     const {data: locations, error, isLoading} = useGetLocationsQuery();
     const filterLocations = function (checked: boolean, index: number) {
         let items = checkedItems;
@@ -187,7 +194,6 @@ export function FilterModal() {
         ]
         setCheckedItems(items)
         let filteredLoc: MapMarker[] = [];
-        let finalLoc : MapMarker[] = [];
 
         filteredLoc = filteredLoc.concat(locations!);
         //if(items[FilterEnum.MyLocations]) {
@@ -211,12 +217,8 @@ export function FilterModal() {
         if(items[FilterEnum.Monuments]) {
             finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.monument));
         }
-        console.log(finalLoc);
         setDisplayedLocations(finalLoc);
     };
-    const displayedLoc = useSelector(selectDisplayedLocations);
-    console.log(displayedLoc);
-
 
     return (
         <>
