@@ -41,7 +41,11 @@ export enum FilterEnum {
     Monuments, MyLocations, SharedLocations,
 }
 
-export function LocationMarkerWithStore() {
+interface LocationMarkerProps {
+    refetchData : () => void
+}
+
+export function LocationMarkerWithStore( props : LocationMarkerProps ) {
     // const [position, setPosition] : LatLng = {lat: 0, lng: 0};
     const dispatch = useDispatch();
     const [lati, setLat] = useState(0);
@@ -70,6 +74,7 @@ export function LocationMarkerWithStore() {
 
     })
 
+
     //Use .map to iterate and generate the corresponding markers
     //This need to be optimiced because I think it generates again
     //all the markers on top of each other
@@ -90,6 +95,7 @@ export function LocationMarkerWithStore() {
                                 const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
                                     event.preventDefault();
                                     addLocationMutation(marker);
+                                    props.refetchData()
                                 };
                                 handleSubmit(event)
                                 setName('')
@@ -133,27 +139,11 @@ export function LocationMarkerWithStore() {
 
 export default function MapElement(): JSX.Element {
     const escuela: LatLngExpression = {lat: 43.354, lng: -5.851};
-    const {data: locations, error, isLoading} = useGetLocationsQuery();
+    const {data: locations, error, isLoading, refetch} = useGetLocationsQuery();
     const dispatch = useDispatch()
-    let disLocations : MapMarker[] = useSelector(selectDisplayedLocations);
-    useEffect(() => {
-        if(!isLoading){
-            dispatch(setDisplayedLocations(locations!));
-        }
-    }, [isLoading])
 
-    const showBars = useRef(true)
-    const showRestaurants = useRef(true)
-
-    console.log(disLocations)
-    
-    console.log(disLocations.filter(l => l.locationType == LocationType.restaurant))
-
-    console.log(disLocations.filter( loc => {
-        if(loc.locationType == LocationType.bar && showBars.current) return true
-    }))
-
-
+    const [showBars, setShowBars] = useState(true)
+    const [showRestaurants, setShowRestaurants] = useState(true)
 
     return (
         <Flex
@@ -163,19 +153,22 @@ export default function MapElement(): JSX.Element {
 
             <Stack>
                 <Flex>
-                    <FilterModal showRestaurants={showRestaurants} />
+                    <FilterModal
+                        showRestaurants={() => showRestaurants} setShowRestaurants={setShowRestaurants}
+                        showBars={() => showBars} setShowBars={setShowBars}
+                    />
                 </Flex>
                 <MapContainer center={escuela} zoom={13} scrollWheelZoom={true}>
-                    <LocationMarkerWithStore/>
+                    <LocationMarkerWithStore refetchData={() => {refetch();}}/>
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
 
-                    {disLocations
-                        .filter( loc => {
-                            if(loc.locationType == LocationType.restaurant && showRestaurants.current) return true
-                        })
+                    {locations?.filter( loc => {
+                        if(loc.locationType == LocationType.restaurant && showRestaurants) return true
+                        if(loc.locationType == LocationType.bar && showBars) return true
+                    })
                         .map((location: MapMarker) => (
                         <Marker key={location.id}
                                 position={[location.latitude, location.longitude]}
@@ -198,7 +191,11 @@ export default function MapElement(): JSX.Element {
 }
 
 interface FilterModalProps {
-    showRestaurants : MutableRefObject<boolean>
+    showRestaurants : () => boolean,
+    setShowRestaurants :  React.Dispatch<React.SetStateAction<boolean>>,
+
+    showBars : () => boolean,
+    setShowBars : React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
@@ -206,13 +203,13 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
 
     const data = {
         types: [
-            { id: "bars", name: "Bars" },
-            { id: "restaurants", name: "Restaurants" },
-            { id: "shops", name: "Shops" },
-            { id: "sights", name: "Sights" },
-            { id: "monuments", name: "Monuments" },
-            { id: "myLocations", name: "My Locations" },
-            { id: "sharedLocations", name: "Shared Locations" }
+            { id: "bars", name: "Bars", value: props.showBars, onChange: props.setShowBars },
+            { id: "restaurants", name: "Restaurants", value: props.showRestaurants, onChange: props.setShowRestaurants },
+            { id: "shops", name: "Shops", value: props.showRestaurants, onChange: props.setShowRestaurants },
+            { id: "sights", name: "Sights", value: props.showRestaurants, onChange: props.setShowRestaurants },
+            { id: "monuments", name: "Monuments", value: props.showRestaurants, onChange: props.setShowRestaurants },
+            { id: "myLocations", name: "My Locations", value: props.showRestaurants, onChange: props.setShowRestaurants },
+            { id: "sharedLocations", name: "Shared Locations", value: props.showRestaurants, onChange: props.setShowRestaurants }
         ]
     };
 
@@ -230,22 +227,15 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
                         <ModalBody>
                             <Stack spacing={2} direction='column'>
                             <CheckboxGroup>
-                                    {/*data.types.map((type, index) => (
+                                    {data.types.map((type, index) => (
                                         <Checkbox
                                             key={type.id}
-                                            isChecked={true}
-                                            onChange={e => props.showRestaurants.current = e.target.checked}
+                                            isChecked={type.value()}
+                                            onChange={e => type.onChange(!type.value())}
                                             >
                                             {type.name}
                                         </Checkbox>
-                                    ))*/}
-                                <Checkbox
-                                    key={"reer"}
-                                    isChecked={true}
-                                    onChange={e => props.showRestaurants.current = e.target.checked}
-                                >
-                                    Restaurant
-                                </Checkbox>
+                                    ))}
                             </CheckboxGroup>
                             </Stack>
                         </ModalBody>
