@@ -21,13 +21,13 @@ import {
   HStack,
   Spinner,
 } from '@chakra-ui/react';
+//FIXME: Change
 //import {useGetFriendsQuery} from "../../app/services/Friend";
-import {useAddLocationMutation, useGetFriendsQuery} from "../../app/services/Location";
+import {useGetFriendsQuery} from "../../app/services/Location";
 import {useAddFriendMutation} from "../../app/services/Friend";
 import {Friend, MapMarker} from '../../types';
 import { Entry } from './Entry';
 import {Form} from "react-router-dom";
-import {LocationType} from "../../locationType";
 
 export function AddFriendsView(){
   let [addFriendMutation, {isLoading, isError, error}] = useAddFriendMutation();

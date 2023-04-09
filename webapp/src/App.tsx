@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 
 import './App.css';
 import LoginForm from './components/Login';
@@ -46,7 +47,6 @@ const router = createBrowserRouter([
         path: "/about",
         element: <AboutPage />,
       },
-
       //Protected routes
       {
         path: "/",
@@ -55,6 +55,7 @@ const router = createBrowserRouter([
           {
             path: "/map",
             element: <MapElement />,
+
           },
           {
             path: "/friends",
@@ -62,12 +63,12 @@ const router = createBrowserRouter([
           },
           {
             path: "/profile",
-            element: <ProfileView />,
+            element:<ProfileView />,
           },
         ]
       },
     ]
-  }
+  },
 ]);
 
 
