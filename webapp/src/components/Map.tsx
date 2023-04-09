@@ -173,8 +173,8 @@ export default function MapElement(): JSX.Element {
                         if(loc.locationType == LocationType.restaurant && showRestaurants) return true
                         if(loc.locationType == LocationType.bar && showBars) return true
                         if(loc.locationType == LocationType.shop && showShops) return true
-                        if(loc.locationType == LocationType.sight && showBars) return true
-                        if(loc.locationType == LocationType.monument && showBars) return true
+                        if(loc.locationType == LocationType.sight && showSights) return true
+                        if(loc.locationType == LocationType.monument && showMonuments) return true
                     })
                         .map((location: MapMarker) => (
                         <Marker key={location.id}
