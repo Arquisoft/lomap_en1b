@@ -95,7 +95,7 @@ export default {
             {fetch: session.fetch}             // fetch from authenticated Session
         );
 
-        return res.send(getThingAll(newDataset).map(locationThing=>thingToFriend(locationThing)))
+        return res.send(getThingAll(newDataset).map(locationThing=>thingToFriend(locationThing, true)))
     },
 
     deleteFriend : async function(_req:Request, _res:Response){
