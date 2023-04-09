@@ -1,59 +1,43 @@
-[[section-solution-strategy]]
-== Solution Strategy
+[[section-building-block-view]]
 
 
-[role="arc42help"]
-****
-.Contents
-A short summary and explanation of the fundamental decisions and solution strategies, that shape the system's architecture. These include
+== Building Block View
 
-* technology decisions
-* decisions about the top-level decomposition of the system, e.g. usage of an architectural pattern or design pattern
-* decisions on how to achieve key quality goals
-* relevant organizational decisions, e.g. selecting a development process or delegating certain tasks to third parties.
+The LoMap application is mainly divided into two modules with very differentiated behaviour: the WebAPP and the RestAPI. Each of the modules has several components, focused in smaller functionalities.
 
-.Motivation
-These decisions form the cornerstones for your architecture. They are the basis for many other detailed decisions or implementation rules.
+=== Black box view
 
-.Form
-Keep the explanation of these key decisions short.
+==== Level 1
+The LoMap application is divided into two modules, each of which interact with different external services.
 
-Motivate what you have decided and why you decided that way,
-based upon your problem statement, the quality goals and key constraints.
-Refer to details in the following sections.
-****
+image:5-BuildingBlock/BuildingBlockLvl1.drawio.png["Building block level 1"]
 
-=== Technology decisions
-This are the technologies that we have decided to use, some of them may vary in future iterations of the poyect:
+.WebApp
+The web app is the module responsible for managing the communication with the user. It will manage the GUI by means of different views, some of which access an external API to implement the map Leaflet. It communicates with the Rest API (described later on) with http requests.
 
-* SOLID Pods for security
-* TypeScript as programming language
-* MongoDb as our DMBS
-* Redux using React as UI
-* Axios
-* Postman
+On login, it redirects the user to its POD provider to handle the login process, but doesn't access the POD's data
+
+.RestAPI
+The rest API will manage the business logic and access the data of the application. The data will be stored in the user's POD for maintaining the data secured. Some other non-sensitive data will be stored in the database for better performance
+
+It will receive the petitions of the web app (described before), process them, access the necessary information and return a response in form of data.
 
 
-=== Design decisions:
-The general design of our project has two main parts, connected using a facade:
+==== Level 2
 
- * Webapp (frontend): It has different views, it connects to the SOLID pods to acess user's data in an secure way, and it communicates with the backend using a facade
- * RestAPI (backend): controls the acess to the database and communicates with the frontend using the facade
+Each of the previously mentioned modules is divided into smaller components, whose behaviour is described in this section.
 
+image:5-BuildingBlock/BuildingBlockLvl2.drawio.png["Building block level 2"]
 
-=== Quality decisions
-The main quality attributes that we will focus on are the following:
-[options="header",cols="1,2,2"]
-|===
-|Quality goal|Scenario|Solution approach
-|Privacy|Any user using our application will feel their data is secure | We will use SOLID Pods to ensure that user's data is not compromised.
-|Usability|All users, regardless of their level, are able to navigate and use the application correctly|We will use UX conventions to ensure that the app has its components presented in a familiar way
-|Accessibility|All users, regardless of their physical and mental capabilities should be able to use the application.|We are going to use external accesibility tools.
-|===
+.Views
+Component responsible for rendering the GUI.
+
+.Solid access
+Component in charge of accessing the user solid POD. Right now this component is in the RestApi module.
 
 
+.Facade
+Component in charge of receiving the petitions and manage them. Responsible for the business logic.
 
-
-
-
-
+.DB access
+Component in charge of accessing the database. Reads, stores, updates and deletes information.
