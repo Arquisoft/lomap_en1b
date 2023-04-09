@@ -50,18 +50,16 @@ image:08-Crosscutting-Concepts-Structure-EN.png["Possible topics for crosscuttin
 ****
 
 
-=== Domain model
 
-image:UmlDiagram.png["Example UML Diagram"]
+=== _Security_
+Security is extremely important as only authenticated users using a POD must be able to access
+the map view as well as the other functionalities. All routes are protected, so they are not accessed
+without this authentication.
+The backend is also protected from unauthorized requests.
 
 
-
-=== _<Concept 2>_
-
-_<explanation>_
-
-...
-
-=== _<Concept n>_
-
-_<explanation>_
+=== _Privacy_
+Privacy is extremely important as data from the user's locations and friends must not be seen
+or stored outside the PODS. In order to maintain this the RestAPI manages the communication with
+the frontend saving only the nicknames of the users on a database and all sensitive information
+on the PODs.
