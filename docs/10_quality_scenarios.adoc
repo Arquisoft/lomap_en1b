@@ -21,7 +21,7 @@ image:10-QualityRequirements/Quality-tree.png["Quality tree diagram"]
 
 | Privacy
 | We need to protect the user's data. The application will only take essential data from users and it will be done in a decentralized way.
-| User's data will be retrieved from the user's pod. 
+| User's data will be retrieved from the user's POD. 
 | High
 
 
@@ -39,6 +39,6 @@ image:10-QualityRequirements/Quality-tree.png["Quality tree diagram"]
 
 | Decentralization 
 | Decentralization of the log in process (serverless). 
-| It is achieved by means of calling the Pod provider and delegating the process to it.
+| It is achieved by means of calling the POD provider and delegating the process to it.
 | High
 |===
