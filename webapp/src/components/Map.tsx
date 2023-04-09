@@ -139,6 +139,11 @@ export default function MapElement(): JSX.Element {
 
     const [showBars, setShowBars] = useState(true)
     const [showRestaurants, setShowRestaurants] = useState(true)
+    const [showShops, setShowShops] = useState(true)
+    const [showSights, setShowSights] = useState(true)
+    const [showMonuments, setShowMonuments] = useState(true)
+    const [showMyLocations, setShowMyLocations] = useState(true)
+    const [showSharedLocations, setShowSharedLocations] = useState(true)
 
     return (
         <Flex
@@ -151,6 +156,11 @@ export default function MapElement(): JSX.Element {
                     <FilterModal
                         showRestaurants={() => showRestaurants} setShowRestaurants={setShowRestaurants}
                         showBars={() => showBars} setShowBars={setShowBars}
+                        showShops={() => showShops} setShowShops={setShowShops}
+                        showSights={() => showSights} setShowSights={setShowSights}
+                        showMonuments={() => showMonuments} setShowMonuments={setShowMonuments}
+                        showMyLocations={() => showMyLocations} setShowMyLocations={setShowMyLocations}
+                        showSharedLocations={() => showSharedLocations} setShowSharedLocations={setShowSharedLocations}
                     />
                 </Flex>
                 <MapContainer center={escuela} zoom={13} scrollWheelZoom={true}>
@@ -163,6 +173,9 @@ export default function MapElement(): JSX.Element {
                     {locations?.filter( loc => {
                         if(loc.locationType == LocationType.restaurant && showRestaurants) return true
                         if(loc.locationType == LocationType.bar && showBars) return true
+                        if(loc.locationType == LocationType.shop && showShops) return true
+                        if(loc.locationType == LocationType.sight && showBars) return true
+                        if(loc.locationType == LocationType.monument && showBars) return true
                     })
                         .map((location: MapMarker) => (
                         <Marker key={location.id}
@@ -188,9 +201,18 @@ export default function MapElement(): JSX.Element {
 interface FilterModalProps {
     showRestaurants : () => boolean,
     setShowRestaurants :  React.Dispatch<React.SetStateAction<boolean>>,
-
     showBars : () => boolean,
-    setShowBars : React.Dispatch<React.SetStateAction<boolean>>
+    setShowBars : React.Dispatch<React.SetStateAction<boolean>>,
+    showShops : () => boolean,
+    setShowShops : React.Dispatch<React.SetStateAction<boolean>>,
+    showSights : () => boolean,
+    setShowSights : React.Dispatch<React.SetStateAction<boolean>>,
+    showMonuments : () => boolean,
+    setShowMonuments  : React.Dispatch<React.SetStateAction<boolean>>,
+    showMyLocations  : () => boolean,
+    setShowMyLocations : React.Dispatch<React.SetStateAction<boolean>>,
+    showSharedLocations  : () => boolean,
+    setShowSharedLocations : React.Dispatch<React.SetStateAction<boolean>>,
 }
 
 export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
@@ -200,11 +222,11 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
         types: [
             { id: "bars", name: "Bars", value: props.showBars, onChange: props.setShowBars },
             { id: "restaurants", name: "Restaurants", value: props.showRestaurants, onChange: props.setShowRestaurants },
-            { id: "shops", name: "Shops", value: props.showRestaurants, onChange: props.setShowRestaurants },
-            { id: "sights", name: "Sights", value: props.showRestaurants, onChange: props.setShowRestaurants },
-            { id: "monuments", name: "Monuments", value: props.showRestaurants, onChange: props.setShowRestaurants },
-            { id: "myLocations", name: "My Locations", value: props.showRestaurants, onChange: props.setShowRestaurants },
-            { id: "sharedLocations", name: "Shared Locations", value: props.showRestaurants, onChange: props.setShowRestaurants }
+            { id: "shops", name: "Shops", value: props.showShops, onChange: props.setShowShops },
+            { id: "sights", name: "Sights", value: props.showSights, onChange: props.setShowSights },
+            { id: "monuments", name: "Monuments", value: props.showMonuments, onChange: props.setShowMonuments },
+            { id: "myLocations", name: "My Locations", value: props.showMyLocations, onChange: props.setShowMyLocations },
+            { id: "sharedLocations", name: "Shared Locations", value: props.showSharedLocations, onChange: props.setShowSharedLocations }
         ]
     };
 
