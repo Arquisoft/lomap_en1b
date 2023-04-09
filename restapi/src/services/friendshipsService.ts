@@ -2,51 +2,62 @@ import {Request, Response} from "express";
 import {
     setThing,
     saveSolidDatasetAt,
-    getPodUrlAll, getSolidDataset, getThingAll, createSolidDataset
+    getPodUrlAll,
+    getSolidDataset,
+    getThingAll,
+    createSolidDataset,
+    getProfileAll,
+    getThing,
+    Thing,
+    getUrlAll,
+    getWebIdDataset
 } from "@inrupt/solid-client";
 import {getSessionFromStorage} from "@inrupt/solid-client-authn-node";
 import {friendToThing, thingToFriend} from "../builders/friendBuilder";
 import {validateFriend, validateFriendThing} from "../validators/friendValidator";
 import {Friend} from "../types";
+import {FOAF} from "@inrupt/vocab-common-rdf";
 
 export default {
 
     getFriends : async function (req:Request, res:Response){
-            const session = await getSessionFromStorage(req.session.solidSessionId!);
-            if(session==undefined)return res.send('error')
+        const session = await getSessionFromStorage(req.session.solidSessionId!);
+        if(session==undefined)return res.send('error')
 
-            let friendsURL = await getFriendsURL(session.info.webId);
-            if(friendsURL == undefined) return res.send("error");
+        let friendsURL = await getFriendsURL(session.info.webId);
+        if(friendsURL == undefined) return res.send("error");
 
-            //Get friends from contacts
-            let friendsDataset;
-            try{
-                friendsDataset =  await getSolidDataset(
-                    friendsURL,
-                    {fetch: session.fetch}          // fetch from authenticated session
-                );
-            } catch (error:any) {
-                if(typeof error.statusCode === "number" && error.statusCode === 404){
-                    friendsDataset = createSolidDataset();
-                } else {
-                    return res.send("error")
-                }
+        //Get friends from contacts
+        let friendsDataset;
+        try{
+            friendsDataset =  await getSolidDataset(
+                friendsURL,
+                {fetch: session.fetch}          // fetch from authenticated session
+            );
+        } catch (error:any) {
+            if(typeof error.statusCode === "number" && error.statusCode === 404){
+                friendsDataset = createSolidDataset();
+            } else {
+                return res.send("error")
             }
+        }
 
-            //Get friends from profile
-            //TODO
-            //const profiles = await getProfileAll(webId,{ fetch:session!.fetch });
-            //const webIDProfileSolidDataset = profiles.webIdProfile;
-            //const webIdThing = getThing(webIDProfileSolidDataset, webId);
-            //const friends = getUrlAll(webIdThing as Thing, FOAF.knows);
-            //Get friends from extended profile
-            //TODO
+        //Get friends from profile
+        const profile = await getWebIdDataset(decodeURIComponent(session.info.webId!));
+        const profileThing = getThing(profile, decodeURIComponent(session.info.webId!));
+        const profileFriends = getUrlAll(profileThing as Thing, FOAF.knows);
 
+        //Get friends from extended profile
+        //TODO
 
-            return res.send(
-                getThingAll(friendsDataset)
-                    .filter(friendThing=>validateFriendThing(friendThing))
-                    .map(friendThing=>thingToFriend(friendThing)))
+        return res.send(await Promise.all(
+            getThingAll(friendsDataset)
+                .filter(friendThing=>validateFriendThing(friendThing))
+                .map(async friendThing=>await thingToFriend(friendThing, true))
+                .concat(
+                    profileFriends.map(async friendThing=>await thingToFriend(friendThing, false)))
+            ))
+
     },
 
     addFriend : async function (req:Request, res:Response){

@@ -6,6 +6,8 @@ export type Location = {
     locationType:LocationType,
     latitude:number,
     longitude:number
+    isShared:boolean,
+    isOwnLocation:boolean
 };
 
 export type Review = {
