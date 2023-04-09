@@ -476,14 +476,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#section-runtime-view">6. Runtime View</a>
 <ul class="sectlevel2">
-<li><a href="#_user_registration">6.1. User registration</a></li>
-<li><a href="#_user_login">6.2. User Login</a></li>
-<li><a href="#_adding_a_location">6.3. Adding a Location</a></li>
-<li><a href="#_reviewing_information_about_a_place">6.4. Reviewing information about a place</a></li>
-<li><a href="#_changing_privacy_settings">6.5. Changing privacy settings</a></li>
-<li><a href="#_adding_a_new_friend">6.6. Adding a new friend</a></li>
-<li><a href="#_deleting_a_friend">6.7. Deleting a friend</a></li>
-<li><a href="#_creating_a_friend_group">6.8. Creating a friend group</a></li>
+<li><a href="#_user_login">6.1. User Login</a></li>
+<li><a href="#_adding_a_location">6.2. Adding a Location</a></li>
+<li><a href="#_reviewing_information_about_a_place_not_implemented_yet">6.3. Reviewing information about a place (Not implemented yet)</a></li>
+<li><a href="#_changing_privacy_settings_not_implemented_yet">6.4. Changing privacy settings (Not implemented yet)</a></li>
+<li><a href="#_adding_a_new_friend">6.5. Adding a new friend</a></li>
+<li><a href="#_deleting_a_friend_not_implemented_yet">6.6. Deleting a friend (Not implemented yet)</a></li>
+<li><a href="#_creating_a_friend_group_not_implemented_yet">6.7. Creating a friend group (Not implemented yet)</a></li>
 </ul>
 </li>
 <li><a href="#section-deployment-view">7. Deployment View</a>
@@ -495,9 +494,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#section-concepts">8. Cross-cutting Concepts</a>
 <ul class="sectlevel2">
-<li><a href="#_domain_model">8.1. Domain model</a></li>
-<li><a href="#_concept_2">8.2. <em>&lt;Concept 2&gt;</em></a></li>
-<li><a href="#_concept_n">8.3. <em>&lt;Concept n&gt;</em></a></li>
+<li><a href="#_security">8.1. <em>Security</em></a></li>
+<li><a href="#_privacy">8.2. <em>Privacy</em></a></li>
 </ul>
 </li>
 <li><a href="#section-design-decisions">9. Design Decisions</a>
@@ -556,6 +554,9 @@ For documentation of your own system you use better the <em>plain</em> version.<
 <div class="sect1">
 <h2 id="section-introduction-and-goals">1. Introduction and Goals</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>This is a mock to test how to deploy the documentation.</p>
+</div>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
@@ -577,7 +578,13 @@ For documentation of your own system you use better the <em>plain</em> version.<
 </div>
 </div>
 <div class="paragraph">
-<p>LoMap intends to be an easy-to-use tool for people to create, customize, and share personal maps filling them with the places they live</p>
+<p>LoMap intends to be an easy-to-use tool for people to create, customize, and share personal maps filling them with the places they live.</p>
+</div>
+<div class="paragraph">
+<p>This map application allows the user to create multiple different maps that are empty.</p>
+</div>
+<div class="paragraph">
+<p>The user then will create locations or photos for the places they want and add them to any of their own maps. You can add friends or groups and share these location with them so that they show on their maps for them to comment or give a score</p>
 </div>
 <div class="sect2">
 <h3 id="_requirements_overview">1.1. Requirements Overview</h3>
@@ -607,64 +614,22 @@ If requirements documents exist this overview should refer to these documents.</
 <div class="ulist">
 <ul>
 <li>
-<p>Users must be able to create different maps</p>
-<div class="ulist">
-<ul>
-<li>
-<p>One user could have more than one map</p>
-</li>
-</ul>
-</div>
+<p>Users must be able to create different maps. One user could have more than one map</p>
 </li>
 <li>
-<p>Users must be able to add locations to their own maps</p>
-<div class="ulist">
-<ul>
-<li>
-<p>The locations could be of different types, initially shops, bars, restaurants, sight and monuments.</p>
-</li>
-</ul>
-</div>
+<p>Users must be able to add locations to their own maps. Initially shops, bars, restaurants, sight and monuments.</p>
 </li>
 <li>
-<p>Users must be able to add reviews to locations.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Scores, comments and pictures could be added to a location.</p>
-</li>
-</ul>
-</div>
+<p>Users must be able to add reviews to locations. Scores, comments and pictures could be added to a location.</p>
 </li>
 <li>
-<p>Locations could be shared with other users.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Locations can be shared with a friend or a group of friends.</p>
-</li>
-</ul>
-</div>
+<p>Locations could be shared with other users, a friend or a group of friends.</p>
 </li>
 <li>
-<p>User&#8217;s data will be extracted and stored into SOLID PODS.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Users' locations information will also be stored in the user' POD.</p>
-</li>
-</ul>
-</div>
+<p>User&#8217;s data will be extracted and stored into SOLID PODS. Users' locations information will also be stored in the user' POD.</p>
 </li>
 <li>
-<p>Locations will be printed in a map.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>The map should have filters. Initially category, friends, and different types of locations.</p>
-</li>
-</ul>
-</div>
+<p>Locations will be printed in a map. It will have filters. Initially category, friends, and different types of locations.</p>
 </li>
 </ul>
 </div>
@@ -704,26 +669,21 @@ If you as an architect do not know how the quality of your work will be judged �
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Delivery time</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Project must be delivered the first week of May.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Privacy</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Users' data will only be accessed when permissions have been granted.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Decentralization</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Users' data will be accessed and stored using Solid PODS.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Usability</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The application must be intuitive so a novice user should be able to navigate in less than 10 minutes.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Accesibility</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The web application will comply with WCAG 2.0 at level AAA.</p></td>
 </tr>
@@ -788,11 +748,11 @@ These stakeholders determine the extent and the level of detail of your work and
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Developers</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Mario Pérez Fernández (<a href="mailto:uo283720@uniovi.es">uo283720@uniovi.es</a>)<br>
- Ivan Vega Gracía (<a href="mailto:uo276670@uniovi.es">uo276670@uniovi.es</a>)<br>
- Silvia Suárez Prendes (<a href="mailto:uo277412@uniovi.es">uo277412@uniovi.es</a>)<br>
- Sara María Ramírez Pérez (<a href="mailto:uo276188@uniovi.es">uo276188@uniovi.es</a>)<br>
- Elías Llera García-Riaño (<a href="mailto:uo271407@uniovi.es">uo271407@uniovi.es</a>)<br>
- Andrés Álvarez Murillo (<a href="mailto:uo278249@uniovi.es">uo278249@uniovi.es</a>)</p></td>
+Ivan Vega Gracía (<a href="mailto:uo276670@uniovi.es">uo276670@uniovi.es</a>)<br>
+Silvia Suárez Prendes (<a href="mailto:uo277412@uniovi.es">uo277412@uniovi.es</a>)<br>
+Sara María Ramírez Pérez (<a href="mailto:uo276188@uniovi.es">uo276188@uniovi.es</a>)<br>
+Elías Llera García-Riaño (<a href="mailto:uo271407@uniovi.es">uo271407@uniovi.es</a>)<br>
+Andrés Álvarez Murillo (<a href="mailto:uo278249@uniovi.es">uo278249@uniovi.es</a>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Group of students in charge of developing the project.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deliver a fucntional version that meets the specified requirements.</p></td>
 </tr>
@@ -835,7 +795,7 @@ Empathy</p></td>
 <h3 id="_technical_constraints">2.1. Technical constraints</h3>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Use of SOLID pods</dt>
+<dt class="hdlist1">Use of SOLID PODs</dt>
 <dd>
 <p>The user’s information must be secured and stored in personal SOLID pods.</p>
 </dd>
@@ -942,7 +902,7 @@ The credentials of the users are stored in the PODs and the maps service provide
 <p>The frontend of the application is made with React, Redux and has a Map API wich provides the application with visual maps. The frontend will communicate with the Solid POD by means of a library that is not determined yet.</p>
 </div>
 <div class="paragraph">
-<p>The Map will be used to search for an API and it will make HTTP requests. It will also communicate with the backend of the application using a technology that is not determined yet.</p>
+<p>The Map will be used to search for an API and it will make HTTPS requests. It will also communicate with the backend of the application using a technology that is not determined yet.</p>
 </div>
 <div class="paragraph">
 <p>The user will access the frontend of the application by using different devices such as a PC or a smartphone.</p>
@@ -999,7 +959,7 @@ Refer to details in the following sections.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>SOLID Pods for security</p>
+<p>SOLID PODs for security</p>
 </li>
 <li>
 <p>TypeScript as programming language</p>
@@ -1016,6 +976,9 @@ Refer to details in the following sections.</p>
 <li>
 <p>Postman</p>
 </li>
+<li>
+<p>Chakra UI (for the implementation of the views)</p>
+</li>
 </ul>
 </div>
 </div>
@@ -1027,10 +990,10 @@ Refer to details in the following sections.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Webapp (frontend): with views and connections to the SOLID pods and to the RestAPI facade</p>
+<p>Webapp (frontend): It has different views, it communicates with the user with different views, and with the backend using redux hooks</p>
 </li>
 <li>
-<p>RestAPI (backend): controls the acess to the database and works as a microservice</p>
+<p>RestAPI (backend): controls the access to the data. This data can be stored in the user&#8217;s POD or in our database</p>
 </li>
 </ul>
 </div>
@@ -1093,14 +1056,12 @@ Refer to details in the following sections.</p>
 </div>
 <div class="paragraph">
 <div class="title">WebApp</div>
-<p>The web app is the module responsible for managing the communication with the user. It will manage the GUI by means of different views, some of which will access an external API to implement a visual map. It will communicate with the Rest API (described later on) with http requests.</p>
-</div>
-<div class="paragraph">
-<p>At this point of development, we have decided that this component will also be responsible to communicate the application with the user POD to manage operations such as the login and potentially more stored data, although this decision could change during the development process.</p>
+<p>The web app is the module responsible for managing the communication with the user. It will manage the GUI by means of different views, some of which access an external API to implement the map Leaflet. It communicates with the Rest API (described later on) with http requests.
+On login, it redirects the user to its POD provider to handle the login process, but doesn&#8217;t access the POD&#8217;s data</p>
 </div>
 <div class="paragraph">
 <div class="title">RestAPI</div>
-<p>The rest API will manage the business logic and access to the information stored in the database. At this point of development, we are also exploring the option of accessing the data stored in the PODs from this component.</p>
+<p>The rest API will manage the business logic and access the data of the application. The data will be stored in the user&#8217;s POD for maintaining the data secured. Some other non-sensitive data will be stored in the database for better performance</p>
 </div>
 <div class="paragraph">
 <p>It will receive the petitions of the web app (described before), process them, access the necessary information and return a response in form of data.</p>
@@ -1197,15 +1158,15 @@ You will mainly capture scenarios in your documentation to communicate your arch
 </div>
 </div>
 <div class="sect2">
-<h3 id="_user_registration">6.1. User registration</h3>
+<h3 id="_user_login">6.1. User Login</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>The user enters the system for the first time and registers their personal data to create an account and start ussing the webapp.</p>
+<p>The user wants to log in with their POD to acess the webapp.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The user will be able to fill a form with their data that is saved on their private POD.</p>
+<p>The user will be able to fill a form that will redirect him to its POD&#8217;s provider in order to give the application access to its POD&#8217;s information or deny it.</p>
 </li>
 </ul>
 </div>
@@ -1214,24 +1175,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 </div>
 </div>
 <div class="sect2">
-<h3 id="_user_login">6.2. User Login</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>The user already registered on the system and wants to log in with their user and password to acess the webapp.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>The user will be able to fill a form with their user and password that will be sent to the server to be authenticated and allow or deny access.</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_adding_a_location">6.3. Adding a Location</h3>
+<h3 id="_adding_a_location">6.2. Adding a Location</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1239,7 +1183,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <div class="ulist">
 <ul>
 <li>
-<p>The user will be able to select a location category and the coordinates for the location to be placed and seen on their map and it will be saved on their POD.</p>
+<p>The user will click on a place on the map and a form will be displayed where the user will be able to select a location category and the name for the location to be placed and seen on their map and it will be saved on their POD.</p>
 </li>
 </ul>
 </div>
@@ -1248,7 +1192,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 </div>
 </div>
 <div class="sect2">
-<h3 id="_reviewing_information_about_a_place">6.4. Reviewing information about a place</h3>
+<h3 id="_reviewing_information_about_a_place_not_implemented_yet">6.3. Reviewing information about a place (Not implemented yet)</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1265,7 +1209,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 </div>
 </div>
 <div class="sect2">
-<h3 id="_changing_privacy_settings">6.5. Changing privacy settings</h3>
+<h3 id="_changing_privacy_settings_not_implemented_yet">6.4. Changing privacy settings (Not implemented yet)</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1282,7 +1226,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 </div>
 </div>
 <div class="sect2">
-<h3 id="_adding_a_new_friend">6.6. Adding a new friend</h3>
+<h3 id="_adding_a_new_friend">6.5. Adding a new friend</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1290,7 +1234,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <div class="ulist">
 <ul>
 <li>
-<p>The user will be able to write the user of a friend that, if in the database, will be added to their personal friend list and the connection stored on the database.</p>
+<p>The user will be able to write the WebId of a friend&#8217;s POD and also a NickName just to be similar to an agenda.</p>
 </li>
 </ul>
 </div>
@@ -1299,7 +1243,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 </div>
 </div>
 <div class="sect2">
-<h3 id="_deleting_a_friend">6.7. Deleting a friend</h3>
+<h3 id="_deleting_a_friend_not_implemented_yet">6.6. Deleting a friend (Not implemented yet)</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1307,7 +1251,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <div class="ulist">
 <ul>
 <li>
-<p>The user will be given the option to remove a frient from their list, if they do the system wont consider them a friend and all places shared with them will no longer be shared.</p>
+<p>The user will be given the option to remove a friend from their list, if they do the system wont consider them a friend and all places shared with them will no longer be shared.</p>
 </li>
 </ul>
 </div>
@@ -1316,7 +1260,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 </div>
 </div>
 <div class="sect2">
-<h3 id="_creating_a_friend_group">6.8. Creating a friend group</h3>
+<h3 id="_creating_a_friend_group_not_implemented_yet">6.7. Creating a friend group (Not implemented yet)</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1342,7 +1286,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <h3 id="_general_diagram">7.1. General Diagram</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/deployment-general-diagram.png" alt="deployment general diagram" width="590" height="508">
+<img src="./images/deployment-general-diagram.png" alt="deployment general diagram" width="590" height="502">
 </div>
 </div>
 </div>
@@ -1350,7 +1294,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <h3 id="_infrastructure_level_1">7.2. Infrastructure Level 1</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/deployment-l1-diagram.png" alt="deployment l1 diagram" width="509" height="210">
+<img src="./images/deployment-l1-diagram.png" alt="deployment l1 diagram" width="503" height="220">
 </div>
 </div>
 <div class="dlist">
@@ -1418,7 +1362,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <h4 id="_staticprovidercontainer">7.3.1. StaticProviderContainer</h4>
 <div class="imageblock">
 <div class="content">
-<img src="./images/deployment-nginx-diagram.png" alt="deployment nginx diagram" width="362" height="298">
+<img src="./images/deployment-nginx-diagram.png" alt="deployment nginx diagram" width="356" height="292">
 </div>
 </div>
 <div class="dlist">
@@ -1457,7 +1401,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <h4 id="_nodejscontainer">7.3.2. NodeJsContainer</h4>
 <div class="imageblock">
 <div class="content">
-<img src="./images/deployment-node-diagram.png" alt="deployment node diagram" width="239" height="286">
+<img src="./images/deployment-node-diagram.png" alt="deployment node diagram" width="233" height="280">
 </div>
 </div>
 <div class="dlist">
@@ -1608,24 +1552,21 @@ on this list.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_domain_model">8.1. Domain model</h3>
+<h3 id="_security">8.1. <em>Security</em></h3>
 <div class="paragraph">
-<p><span class="image"><img src="./images/UmlDiagram.png" alt="Example UML Diagram"></span></p>
+<p>Security is extremely important as only authenticated users using a POD must be able to access
+the map view as well as the other functionalities. All routes are protected, so they are not accessed
+without this authentication.
+The backend is also protected from unauthorized requests.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_concept_2">8.2. <em>&lt;Concept 2&gt;</em></h3>
+<h3 id="_privacy">8.2. <em>Privacy</em></h3>
 <div class="paragraph">
-<p><em>&lt;explanation&gt;</em></p>
-</div>
-<div class="paragraph">
-<p>&#8230;&#8203;</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_concept_n">8.3. <em>&lt;Concept n&gt;</em></h3>
-<div class="paragraph">
-<p><em>&lt;explanation&gt;</em></p>
+<p>Privacy is extremely important as data from the user&#8217;s locations and friends must not be seen
+or stored outside the PODS. In order to maintain this the RestAPI manages the communication with
+the frontend saving only the nicknames of the users on a database and all sensitive information
+on the PODs.</p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -1889,7 +1830,7 @@ here in this central section or whether you better document it locally
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Privacy</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">We need to protect the user&#8217;s data. The application will only take essential data from users and it will be done in a decentralized way.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User&#8217;s data will be retrieved from the user&#8217;s pod.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User&#8217;s data will be retrieved from the user&#8217;s POD.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
 </tr>
 <tr>
@@ -1907,7 +1848,7 @@ here in this central section or whether you better document it locally
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Decentralization</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Decentralization of the log in process (serverless).</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">It is achieved by means of calling the Pod provider and delegating the process to it.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">It is achieved by means of calling the POD provider and delegating the process to it.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
 </tr>
 </tbody>
@@ -2045,7 +1986,7 @@ Created by Dr. Peter Hruschka &amp; Dr. Gernot Starke.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-02-19 21:51:22 +0100
+Last updated 2023-03-07 14:56:44 +0100
 </div>
 </div>
 </body>
