@@ -183,42 +183,15 @@ export function FilterModal() {
             { id: "sharedLocations", name: "Shared Locations" }
         ]
     };
-    let finalLoc : MapMarker[] = [];
-
-    const {data: locations, error, isLoading} = useGetLocationsQuery();
-    const filterLocations = function (checked: boolean, index: number) {
+    const filter = function (checked: boolean, index: number) {
         let items = checkedItems;
         items = [
             ...items.slice(0, index),
             checked,
             ...items.slice(index + 1)
         ]
-        setCheckedItems(items)
-        let filteredLoc: MapMarker[] = [];
-
-        filteredLoc = filteredLoc.concat(locations!);
-        //if(items[FilterEnum.MyLocations]) {
-        //    filteredLoc = filteredLoc.concat(locations?.filter((loc) => loc.locationType === LocationType.bar)!);
-        //}
-        //if(items[FilterEnum.SharedLocations]) {
-        //    filteredLoc = filteredLoc.concat(locations?.filter((loc) => loc.locationType === LocationType.bar)!);
-        //}
-        if(items[FilterEnum.Bars]) {
-            finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.bar));
-        }
-        if(items[FilterEnum.Restaurants]) {
-            finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.restaurant));
-        }
-        if(items[FilterEnum.Shops]) {
-            finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.shop));
-        }
-        if(items[FilterEnum.Sights]) {
-            finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.sight));
-        }
-        if(items[FilterEnum.Monuments]) {
-            finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.monument));
-        }
-        setDisplayedLocations(finalLoc);
+        setCheckedItems(items);
+        filterLocations(items);
     };
 
     return (
@@ -239,7 +212,7 @@ export function FilterModal() {
                                         <Checkbox
                                             key={type.id}
                                             isChecked={checkedItems[index]}
-                                            onChange={(e) => filterLocations(e.target.checked,index)}>
+                                            onChange={(e) => filter(e.target.checked,index)}>
                                             {type.name}
                                         </Checkbox>
                                     ))}
@@ -254,6 +227,44 @@ export function FilterModal() {
         </>
     )
 }
+
+function filterLocations(items: boolean[]) {
+    let filteredLoc: MapMarker[] = [];
+    let finalLoc : MapMarker[] = [];
+
+    const dispatch = useDispatch();
+    const {data: locations, error, isLoading} = useGetLocationsQuery();
+    useEffect(() => {
+        if(!isLoading){
+            dispatch(setDisplayedLocations(locations!));
+        }
+    }, [isLoading])
+
+    filteredLoc = filteredLoc.concat(locations!);
+    //if(items[FilterEnum.MyLocations]) {
+    //    filteredLoc = filteredLoc.concat(locations?.filter((loc) => loc.locationType === LocationType.bar)!);
+    //}
+    //if(items[FilterEnum.SharedLocations]) {
+    //    filteredLoc = filteredLoc.concat(locations?.filter((loc) => loc.locationType === LocationType.bar)!);
+    //}
+    if(items[FilterEnum.Bars]) {
+        finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.bar));
+    }
+    if(items[FilterEnum.Restaurants]) {
+        finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.restaurant));
+    }
+    if(items[FilterEnum.Shops]) {
+        finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.shop));
+    }
+    if(items[FilterEnum.Sights]) {
+        finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.sight));
+    }
+    if(items[FilterEnum.Monuments]) {
+        finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.monument));
+    }
+    dispatch(setDisplayedLocations(finalLoc));
+};
+
 
 export function PopupContent(marker: MapMarker){
     return(
