@@ -23,6 +23,7 @@
     "@inrupt/solid-client": "1.25.2",
     "@inrupt/solid-client-authn-node": "1.13.2",
     "@inrupt/vocab-common-rdf": "1.0.5",
+    "@inrupt/vocab-solid": "^1.0.4",
     "@types/cookie-parser": "^1.4.3",
     "@types/express-session": "^1.17.6",
     "cookie-parser": "^1.4.6",

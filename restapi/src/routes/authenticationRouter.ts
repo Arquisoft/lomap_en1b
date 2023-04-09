@@ -1,5 +1,5 @@
 import express from "express";
-import authenticationService from "../podsAccess/authenticationService";
+import authenticationService from "../services/authenticationService";
 
 const authenticationRouter = express.Router()
 

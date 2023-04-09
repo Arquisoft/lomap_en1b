@@ -5,11 +5,16 @@ export type MapMarker = {
     name:string,
     locationType:LocationType,
     latitude:number,
-    longitude:number
+    longitude:number,
+    shared: boolean
 };
 
 
+
 export type Friend = {
-    username : string;
-    podId : string;
+    nickName : string;
+    name: string;
+    webId : string;
+    profilePic : string;
+    loMapOnly : boolean;
 }

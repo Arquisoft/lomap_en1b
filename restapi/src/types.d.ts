@@ -8,3 +8,11 @@ export type Location = {
     longitude:number
 };
 
+export type Friend = {
+    nickName : string;
+    name: string;
+    webId : string;
+    profilePic : string;
+    loMapOnly : boolean;
+
+}
