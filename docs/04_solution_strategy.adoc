@@ -26,12 +26,13 @@ Refer to details in the following sections.
 === Technology decisions
 This are the technologies that we have decided to use, some of them may vary in future iterations of the poyect:
 
-* SOLID Pods for security
+* SOLID PODs for security
 * TypeScript as programming language
 * MongoDb as our DMBS
 * Redux using React as UI
 * Axios
 * Postman
+* Chakra UI (for the implementation of the views)
 
 
 === Design decisions:
@@ -39,6 +40,7 @@ The general design of our project has two main parts, connected using a facade:
 
 * Webapp (frontend): It has different views, it communicates with the user with different views, and with the backend using redux hooks
 * RestAPI (backend): controls the access to the data. This data can be stored in the user's POD or in our database
+
 
 
 === Quality decisions
