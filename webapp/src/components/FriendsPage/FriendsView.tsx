@@ -57,7 +57,6 @@ export function AddFriendsView(){
                       };
                       handleSubmit(event)
                       /* TODO:
-
                       Right now when we do this, the textfield is not restored so:
                        - visually there is something written
                        - You can submit the form because the is something written
@@ -92,6 +91,7 @@ export function AddFriendsView(){
                       </FormControl>
                   </Box>
 
+              {/* Applies the action "submit" to the form with id "addFriend" */}
               <Button form={"addFriend"} type={"submit"}
                   bg={'orange.400'}
                   color={'white'}
@@ -106,39 +106,6 @@ export function AddFriendsView(){
 
   );
 }
-/*
-<HStack maxW={'100vw'}>
-    <Box>
-        <FormControl isRequired>
-            <FormLabel>Introduce your friend's WebId:</FormLabel>
-            <Input id="friendWbId"
-                   placeholder="asdfghjkl123456"
-                   _placeholder={{ color: 'gray.500' }}
-                   type="text" />
-        </FormControl>
-    </Box>
-    <Box>
-        <FormControl isRequired>
-            <FormLabel>Nickname:</FormLabel>
-            <Input id="nickname"
-                   placeholder="Motosarius"
-                   _placeholder={{ color: 'gray.500' }}
-                   type="text"
-            />
-        </FormControl>
-    </Box>
-    <Button
-        bg={'orange.400'}
-        color={'white'}
-        _hover={{
-            bg: 'orange.500',
-        }}>
-        Add
-    </Button>
-</HStack>
-
- */
-
 
 export default function FriendsView(): JSX.Element {
   let { data: friends, error, isLoading } = useGetFriendsQuery();

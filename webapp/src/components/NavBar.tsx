@@ -1,3 +1,4 @@
+
 import {
     Avatar,
     Box,
@@ -122,3 +123,4 @@ export default function NavBar() {
         </>
     );
 }
+
