@@ -122,9 +122,13 @@ export function LocationMarkerWithStore() {
 export default function MapElement(): JSX.Element {
     const escuela: LatLngExpression = {lat: 43.354, lng: -5.851};
     const {data: locations, error, isLoading} = useGetLocationsQuery();
-
-    setDisplayedLocations(locations!);
-    let disLocations = useSelector(selectDisplayedLocations);
+    const dispatch = useDispatch()
+    let disLocations : MapMarker[] = useSelector(selectDisplayedLocations);
+    useEffect(() => {
+        if(!isLoading){
+            dispatch(setDisplayedLocations(locations!));
+        }
+    }, [isLoading])
 
     return (
         <Flex
@@ -142,6 +146,7 @@ export default function MapElement(): JSX.Element {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
+
                     {disLocations.map((location: MapMarker) => (
                         <Marker key={location.id}
                                 position={[location.latitude, location.longitude]}
