@@ -15,7 +15,7 @@ const initialState: DisplayedLocationsState = {
 
 export const displayedLocationsSlice = createSlice({
     name: 'displayedLocationsSlice',
-    initialState: initialState,
+    initialState,
     reducers: {
         setDisplayedLocations: (state, action : PayloadAction<MapMarker[]>) => {
             state.displayedLocations = action.payload;
@@ -25,7 +25,8 @@ export const displayedLocationsSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const { setDisplayedLocations } = displayedLocationsSlice.actions
-export const selectDisplayedLocations = (state: RootState) => state.displayedLocations;
+export const selectDisplayedLocations = (state: RootState) => state.displayedLocationsSlice.displayedLocations;
 
+export default displayedLocationsSlice.reducer;
 
 

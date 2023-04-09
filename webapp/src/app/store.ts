@@ -15,7 +15,7 @@ export const store = configureStore({
     reducer: {
         [locationApi.reducerPath]: locationApi.reducer,
         "auth": authSlice.reducer,
-        displayedLocations: displayedLocationsSlice.reducer,
+        displayedLocationsSlice: displayedLocationsSlice.reducer
   },
   middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(

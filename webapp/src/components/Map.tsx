@@ -123,6 +123,7 @@ export default function MapElement(): JSX.Element {
     const escuela: LatLngExpression = {lat: 43.354, lng: -5.851};
     const {data: locations, error, isLoading} = useGetLocationsQuery();
     setDisplayedLocations(locations!);
+    let disLocations = useSelector(selectDisplayedLocations);
 
     return (
         <Flex
@@ -140,7 +141,7 @@ export default function MapElement(): JSX.Element {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    {useSelector(selectDisplayedLocations).displayedLocations.map((location: MapMarker) => (
+                    {disLocations.map((location: MapMarker) => (
                         <Marker key={location.id}
                                 position={[location.latitude, location.longitude]}
                                 icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40]})}>
@@ -216,14 +217,10 @@ export function FilterModal() {
     const displayedLoc = useSelector(selectDisplayedLocations);
     console.log(displayedLoc);
 
-    const eventButton = function (e: React.MouseEvent<HTMLButtonElement>) {
-        e.stopPropagation();
-        onOpen();
-    }
 
     return (
         <>
-            <Button colorScheme='blue' zIndex={'1300'} float={'right'} width={'10rem'} onClick={(e)=> eventButton(e)}>Filter
+            <Button colorScheme='blue' zIndex={'1300'} float={'right'} width={'10rem'} onClick={onOpen}>Filter
                 Locations</Button>
 
             <Modal isOpen={isOpen} onClose={onClose} isCentered={true} size={'md'}>
