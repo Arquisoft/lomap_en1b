@@ -1,5 +1,6 @@
 import {configureStore, ThunkAction, Action, createSlice} from '@reduxjs/toolkit';
-import {displayedLocationsSlice, locationApi} from "./services/Location";
+import {locationApi} from "./services/Location";
+import {displayedLocationsSlice} from "./services/DisplayedLocations"
 
 export const authSlice = createSlice({
     name: 'auth',
@@ -14,7 +15,7 @@ export const store = configureStore({
     reducer: {
         [locationApi.reducerPath]: locationApi.reducer,
         "auth": authSlice.reducer,
-        displayedLocations:displayedLocationsSlice.reducer,
+        displayedLocations: displayedLocationsSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(

@@ -5,7 +5,8 @@ export type MapMarker = {
     name:string,
     locationType:LocationType,
     latitude:number,
-    longitude:number
+    longitude:number,
+    shared: boolean
 };
 
 

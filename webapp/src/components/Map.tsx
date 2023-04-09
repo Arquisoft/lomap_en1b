@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {
     Box, Button,
     Card,
-    CardBody, Checkbox,
+    CardBody, Checkbox, CheckboxGroup,
     Flex, FormControl, FormLabel,
     Heading, Input,
     Modal, ModalBody, ModalCloseButton,
@@ -19,7 +19,8 @@ import { LatLng, LatLngExpression } from 'leaflet';
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import { Icon } from 'leaflet';
 import {useSelector, useDispatch} from 'react-redux';
-import {useAddLocationMutation, useGetLocationsQuery, setDisplayedLocations, selectDisplayedLocations} from "../app/services/Location";
+import {useAddLocationMutation, useGetLocationsQuery} from "../app/services/Location";
+import {setDisplayedLocations, selectDisplayedLocations} from "../app/services/DisplayedLocations";
 import type { MapMarker } from '../types';
 import {LocationType} from "../locationType";
 //import {addLocation, selectAllLocations} from "../app/services/Location";
@@ -41,11 +42,11 @@ export function LocationMarkerWithStore() {
     var [name, setName] = React.useState('')
     var [category, setCategory] = React.useState('Bar')
     var [details, setDetails] = React.useState('')
+    var [isShared, setShared] = React.useState(false)
 
 
     const map = useMapEvents({
         click: (e) => {
-            e.target.
             setLat(e.latlng.lat);
             setLng(e.latlng.lng);
 
@@ -53,6 +54,7 @@ export function LocationMarkerWithStore() {
             setName('')
             setCategory('Bar')
             setDetails('')
+            setShared(false)
         },
     })
 
@@ -71,7 +73,7 @@ export function LocationMarkerWithStore() {
                             (event) => {
                                 event.preventDefault();
                                 const marker : MapMarker = {latitude : lati, longitude : lngi,
-                                    name: name,locationType: category as LocationType, id: lati + " - " + lngi};
+                                    name: name,locationType: category as LocationType, id: lati + " - " + lngi,shared: isShared};
 
                                 const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
                                     event.preventDefault();
@@ -79,24 +81,33 @@ export function LocationMarkerWithStore() {
                                 };
                                 handleSubmit(event)
                                 setName('')
-                                setCategory('')
+                                setCategory('Bar')
                                 setDetails('')
+                                setShared(false)
                             }}>
-                            <FormControl isRequired={true}>
-                                <FormLabel>Name</FormLabel>
-                                <Input value={name} type={"text"} ref={initialRef}
-                                       onChange={(e)=>setName(e.currentTarget.value)}/>
-                            </FormControl>
-                            <FormControl isRequired={true}>
-                                <FormLabel>Category</FormLabel>
-                                <Select value={category} onChange={(e)=>setCategory(e.currentTarget.value)}>
-                                    <option>bar</option>
-                                    <option>restaurant</option>
-                                    <option>shop</option>
-                                    <option>sight</option>
-                                    <option>monument</option>
-                                </Select>
-                            </FormControl>
+                            <Stack spacing={2} direction='column'>
+                                <FormControl isRequired={true}>
+                                    <FormLabel>Name</FormLabel>
+                                    <Input value={name} type={"text"} ref={initialRef}
+                                           onChange={(e)=>setName(e.currentTarget.value)}/>
+                                </FormControl>
+                                <FormControl isRequired={true}>
+                                    <FormLabel>Category</FormLabel>
+                                    <Select value={category} onChange={(e)=>setCategory(e.currentTarget.value)}>
+                                        <option>bar</option>
+                                        <option>restaurant</option>
+                                        <option>shop</option>
+                                        <option>sight</option>
+                                        <option>monument</option>
+                                    </Select>
+                                </FormControl>
+                                <FormControl isRequired={false}>
+                                    <Checkbox isChecked={isShared}
+                                        onChange={(e) => setShared(e.target.checked)}>
+                                        Public
+                                    </Checkbox>
+                                </FormControl>
+                            </Stack>
                         </form>
                     </ModalBody>
                     <ModalFooter>
@@ -110,14 +121,8 @@ export function LocationMarkerWithStore() {
 
 export default function MapElement(): JSX.Element {
     const escuela: LatLngExpression = {lat: 43.354, lng: -5.851};
-    //const {data: locations, error, isLoading} = useGetLocationsQuery();
-    let locations : MapMarker[] = [
-        { id:"asdasdasdfh", name:"Bar", locationType: LocationType.bar, latitude:43.354, longitude:-5.851},
-        { id:"asdasasdadj", name:"Restaurant", locationType: LocationType.restaurant, latitude:43.374, longitude:-5.871},
-        { id:"asdagfgsdfg", name:"Shop", locationType: LocationType.shop, latitude:43.314, longitude:-5.811},
-        { id:"asdagfggdfl", name:"Sight", locationType: LocationType.sight, latitude:43.334, longitude:-5.831}];
-    setDisplayedLocations(locations);
-    const displayedLocations = useSelector(selectDisplayedLocations);
+    const {data: locations, error, isLoading} = useGetLocationsQuery();
+    setDisplayedLocations(locations!);
 
     return (
         <Flex
@@ -126,14 +131,16 @@ export default function MapElement(): JSX.Element {
             justify={'center'}>
 
             <Stack>
-                <MapContainer center={escuela} zoom={13} scrollWheelZoom={true}>
+                <Flex>
                     <FilterModal/>
+                </Flex>
+                <MapContainer center={escuela} zoom={13} scrollWheelZoom={true}>
                     <LocationMarkerWithStore/>
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    {displayedLocations?.map((location: MapMarker) => (
+                    {useSelector(selectDisplayedLocations).displayedLocations.map((location: MapMarker) => (
                         <Marker key={location.id}
                                 position={[location.latitude, location.longitude]}
                                 icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40]})}>
@@ -143,7 +150,9 @@ export default function MapElement(): JSX.Element {
                                               id={location.id}
 
                                               latitude={location.latitude}
-                                              longitude={location.longitude}/>
+                                              longitude={location.longitude}
+                                              shared={location.shared}
+                                />
                             </Popup>
                         </Marker>
                     ))}
@@ -155,84 +164,96 @@ export default function MapElement(): JSX.Element {
 
 export function FilterModal() {
     const {isOpen, onClose, onOpen} = useDisclosure();
-    const [checkedItems, setCheckedItems] = React.useState([true,true,true,true,true,true,true])
-    return(
-      <>
-        <Button colorScheme='blue' zIndex={'1300'} float={'right'} width={'10rem'} onClick={onOpen}>Filter Locations</Button>
+    const [checkedItems, setCheckedItems] = React.useState([true, true, true, true, true, true, true])
+    const data = {
+        types: [
+            { id: "bars", name: "Bars" },
+            { id: "restaurants", name: "Restaurants" },
+            { id: "shops", name: "Shops" },
+            { id: "sights", name: "Sights" },
+            { id: "monuments", name: "Monuments" },
+            { id: "myLocations", name: "My Locations" },
+            { id: "sharedLocations", name: "Shared Locations" }
+        ]
+    };
+    const {data: locations, error, isLoading} = useGetLocationsQuery();
+    const filterLocations = function (checked: boolean, index: number) {
+        let items = checkedItems;
+        items = [
+            ...items.slice(0, index),
+            checked,
+            ...items.slice(index + 1)
+        ]
+        setCheckedItems(items)
+        let filteredLoc: MapMarker[] = [];
+        let finalLoc : MapMarker[] = [];
 
-        <Modal isOpen={isOpen} onClose={onClose} isCentered={true} size={'md'}>
-        <ModalOverlay>
-            <ModalContent>
-                <ModalHeader>
-                    <ModalCloseButton/>
-                </ModalHeader>
-                <ModalBody>
-                    <Stack spacing={2} direction='column'>
-                        <Checkbox isChecked={checkedItems[FilterEnum.Bars]}onChange={(e) =>
-                            [e.target.checked,filterLocations(checkedItems)]}>Bars</Checkbox>
+        filteredLoc = filteredLoc.concat(locations!);
+        //if(items[FilterEnum.MyLocations]) {
+        //    filteredLoc = filteredLoc.concat(locations?.filter((loc) => loc.locationType === LocationType.bar)!);
+        //}
+        //if(items[FilterEnum.SharedLocations]) {
+        //    filteredLoc = filteredLoc.concat(locations?.filter((loc) => loc.locationType === LocationType.bar)!);
+        //}
+        if(items[FilterEnum.Bars]) {
+            finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.bar));
+        }
+        if(items[FilterEnum.Restaurants]) {
+            finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.restaurant));
+        }
+        if(items[FilterEnum.Shops]) {
+            finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.shop));
+        }
+        if(items[FilterEnum.Sights]) {
+            finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.sight));
+        }
+        if(items[FilterEnum.Monuments]) {
+            finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.monument));
+        }
+        console.log(finalLoc);
+        setDisplayedLocations(finalLoc);
+    };
+    const displayedLoc = useSelector(selectDisplayedLocations);
+    console.log(displayedLoc);
 
-                        <Checkbox isChecked={checkedItems[FilterEnum.Restaurants]} onChange={(e) =>
-                            [e.target.checked,filterLocations(checkedItems)]}>Restaurants</Checkbox>
+    const eventButton = function (e: React.MouseEvent<HTMLButtonElement>) {
+        e.stopPropagation();
+        onOpen();
+    }
 
-                        <Checkbox isChecked={checkedItems[FilterEnum.Shops]} onChange={(e) =>
-                            [e.target.checked,filterLocations(checkedItems)]}>Shops</Checkbox>
+    return (
+        <>
+            <Button colorScheme='blue' zIndex={'1300'} float={'right'} width={'10rem'} onClick={(e)=> eventButton(e)}>Filter
+                Locations</Button>
 
-                        <Checkbox isChecked={checkedItems[FilterEnum.Sights]} onChange={(e) =>
-                            [e.target.checked,filterLocations(checkedItems)]}>Sights</Checkbox>
-
-                        <Checkbox isChecked={checkedItems[FilterEnum.Monuments]} onChange={(e) =>
-                            [e.target.checked,filterLocations(checkedItems)]}>Monuments</Checkbox>
-
-                        <Checkbox isChecked={checkedItems[FilterEnum.MyLocations]} onChange={(e) =>
-                            [e.target.checked,filterLocations(checkedItems)]}>My Locations</Checkbox>
-
-                        <Checkbox isChecked={checkedItems[FilterEnum.SharedLocations]} onChange={(e) =>
-                            [e.target.checked,filterLocations(checkedItems)]}>Shared Locations</Checkbox>
-                    </Stack>
-                </ModalBody>
-                <ModalFooter>
-                </ModalFooter>
-                </ModalContent>
-            </ModalOverlay>
-        </Modal>
-    </>
+            <Modal isOpen={isOpen} onClose={onClose} isCentered={true} size={'md'}>
+                <ModalOverlay>
+                    <ModalContent>
+                        <ModalHeader>
+                            <ModalCloseButton/>
+                        </ModalHeader>
+                        <ModalBody>
+                            <Stack spacing={2} direction='column'>
+                            <CheckboxGroup>
+                                    {data.types.map((type, index) => (
+                                        <Checkbox
+                                            key={type.id}
+                                            isChecked={checkedItems[index]}
+                                            onChange={(e) => filterLocations(e.target.checked,index)}>
+                                            {type.name}
+                                        </Checkbox>
+                                    ))}
+                            </CheckboxGroup>
+                            </Stack>
+                        </ModalBody>
+                        <ModalFooter>
+                        </ModalFooter>
+                    </ModalContent>
+                </ModalOverlay>
+            </Modal>
+        </>
     )
 }
-
-function filterLocations(checkedItems: boolean[]) {
-    let filteredLoc: MapMarker[] = [];
-    let finalLoc : MapMarker[] = [];
-    //const {data: locations, error, isLoading} = useGetLocationsQuery();
-    let locations : MapMarker[] = [
-        { id:"asdasdasdfh", name:"Bar", locationType: LocationType.bar, latitude:43.354, longitude:-5.851},
-        { id:"asdasasdadj", name:"Restaurant", locationType: LocationType.restaurant, latitude:43.374, longitude:-5.871},
-        { id:"asdagfgsdfg", name:"Shop", locationType: LocationType.shop, latitude:43.314, longitude:-5.811},
-        { id:"asdagfggdfl", name:"Sight", locationType: LocationType.sight, latitude:43.334, longitude:-5.831}];
-    filteredLoc.concat(locations);
-    //if(checkedItems[FilterEnum.MyLocations]) {
-    //    filteredLoc.concat(locations?.filter((loc) => loc.locationType === LocationType.bar)!);
-    //}
-    //if(checkedItems[FilterEnum.SharedLocations]) {
-    //    filteredLoc.concat(locations?.filter((loc) => loc.locationType === LocationType.bar)!);
-    //}
-    if(checkedItems[FilterEnum.Bars]) {
-        finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.bar));
-    }
-    if(checkedItems[FilterEnum.Restaurants]) {
-        finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.restaurant));
-    }
-    if(checkedItems[FilterEnum.Shops]) {
-        finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.shop));
-    }
-    if(checkedItems[FilterEnum.Sights]) {
-        finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.sight));
-    }
-    if(checkedItems[FilterEnum.Monuments]) {
-        finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.monument));
-    }
-    setDisplayedLocations(finalLoc);
-}
-
 
 export function PopupContent(marker: MapMarker){
     return(
@@ -253,14 +274,6 @@ export function PopupContent(marker: MapMarker){
                         </Heading>
                         <Text pt='2' fontSize='sm'>
                             {marker.locationType}
-                        </Text>
-                    </Box>
-                    <Box>
-                        <Heading size='sm' textTransform='uppercase'>
-                            Address
-                        </Heading>
-                        <Text pt='2' fontSize='sm'>
-                           https://nominatim.openstreetmap.org/reverse?format=geojson&lat= {marker.latitude}&lon={marker.longitude}.["features"].["display_name"]
                         </Text>
                     </Box>
                 </Stack>
