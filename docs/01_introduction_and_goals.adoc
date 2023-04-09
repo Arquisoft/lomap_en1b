@@ -9,7 +9,11 @@ Describes the relevant requirements and the driving forces that software archite
 * quality goals for the architecture
 * relevant stakeholders and their expectations
 ****
-LoMap intends to be an easy-to-use tool for people to create, customize, and share personal maps filling them with the places they live
+LoMap intends to be an easy-to-use tool for people to create, customize, and share personal maps filling them with the places they live.
+
+This map application allows the user to create multiple different maps that are empty.
+
+The user then will create locations or photos for the places they want and add them to any of their own maps. You can add friends or groups and share these location with them so that they show on their maps for them to comment or give a score
 
 === Requirements Overview
 
@@ -32,18 +36,17 @@ If requirements documents exist this overview should refer to these documents.
 Keep these excerpts as short as possible. Balance readability of this document with potential redundancy w.r.t to requirements documents.
 ****
 
-* Users must be able to create different maps
-** One user could have more than one map
-* Users must be able to add locations to their own maps
-** The locations could be of different types, initially shops, bars, restaurants, sight and monuments.
-* Users must be able to add reviews to locations.
-** Scores, comments and pictures could be added to a location.
-* Locations could be shared with other users.
-** Locations can be shared with a friend or a group of friends.
-* User's data will be extracted and stored into SOLID PODS.
-** Users' locations information will also be stored in the user' POD.
-* Locations will be printed in a map.
-** The map should have filters. Initially category, friends, and different types of locations.
+* Users must be able to create different maps. One user could have more than one map
+
+* Users must be able to add locations to their own maps. Initially shops, bars, restaurants, sight and monuments.
+
+* Users must be able to add reviews to locations. Scores, comments and pictures could be added to a location.
+
+* Locations could be shared with other users, a friend or a group of friends.
+
+* User's data will be extracted and stored into SOLID PODS. Users' locations information will also be stored in the user' POD.
+
+* Locations will be printed in a map. It will have filters. Initially category, friends, and different types of locations.
 
 
 
@@ -64,11 +67,10 @@ A table with quality goals and concrete scenarios, ordered by priorities
 [options="header",cols="1,2,2"]
 |===
 |Priority|Description|Expectations
-|1|Delivery time|Project must be delivered the first week of May. 
-|2|Privacy|Users' data will only be accessed when permissions have been granted.
-|3|Decentralization|Users' data will be accessed and stored using Solid PODS.
-|4|Usability|The application must be intuitive so a novice user should be able to navigate in less than 10 minutes.
-|5|Accesibility|The web application will comply with WCAG 2.0 at level AAA.
+|1|Privacy|Users' data will only be accessed when permissions have been granted.
+|2|Decentralization|Users' data will be accessed and stored using Solid PODS.
+|3|Usability|The application must be intuitive so a novice user should be able to navigate in less than 10 minutes.
+|4|Accesibility|The web application will comply with WCAG 2.0 at level AAA.
 |===
 
 === Stakeholders
@@ -97,11 +99,11 @@ Table with role names, person names, and their expectations with respect to the 
 |===
 |Role/Name|Contact|Description|Expectations
 |Developers|Mario Pérez Fernández (uo283720@uniovi.es) +
- Ivan Vega Gracía (uo276670@uniovi.es) + 
- Silvia Suárez Prendes (uo277412@uniovi.es) +
- Sara María Ramírez Pérez (uo276188@uniovi.es) + 
- Elías Llera García-Riaño (uo271407@uniovi.es) + 
- Andrés Álvarez Murillo (uo278249@uniovi.es)|Group of students in charge of developing the project.|Deliver a fucntional version that meets the specified requirements.
+Ivan Vega Gracía (uo276670@uniovi.es) +
+Silvia Suárez Prendes (uo277412@uniovi.es) +
+Sara María Ramírez Pérez (uo276188@uniovi.es) +
+Elías Llera García-Riaño (uo271407@uniovi.es) +
+Andrés Álvarez Murillo (uo278249@uniovi.es)|Group of students in charge of developing the project.|Deliver a fucntional version that meets the specified requirements.
 |Teachers|Pablo González González (gonzalezgpablo@uniovi.es) +
 José Emilio Labra Gayo (labra@uniovi.es) |Professors of the course in charge of supervising and guide the development team.| Evaluate the final delivery and help through the process.
 |Users| |Final users of LoMap. |Use the application, and they should be satisfied by it.
