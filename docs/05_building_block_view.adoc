@@ -13,12 +13,12 @@ The LoMap application is divided into two modules, each of which interact with d
 image:5-BuildingBlock/BuildingBlockLvl1.drawio.png["Building block level 1"]
 
 .WebApp
-The web app is the module responsible for managing the communication with the user. It will manage the GUI by means of different views, some of which access an external API to implement the map Leaflet. It communicates with the Rest API (described later on) with http requests.
+The web app is the module responsible for managing the communication with the user. It will manage the GUI by means of different views, some of which will access an external API to implement a visual map. It will communicate with the Rest API (described later on) with http requests.
 
-On login, it redirects the user to its POD provider to handle the login process, but doesn't access the POD's data
+At this point of development, we have decided that this component will also be responsible to communicate the application with the user POD to manage operations such as the login and potentially more stored data, although this decision could change during the development process.
 
 .RestAPI
-The rest API will manage the business logic and access the data of the application. The data will be stored in the user's POD for maintaining the data secured. Some other non-sensitive data will be stored in the database for better performance
+The rest API will manage the business logic and access to the information stored in the database. At this point of development, we are also exploring the option of accessing the data stored in the PODs from this component.
 
 It will receive the petitions of the web app (described before), process them, access the necessary information and return a response in form of data.
 
@@ -33,7 +33,7 @@ image:5-BuildingBlock/BuildingBlockLvl2.drawio.png["Building block level 2"]
 Component responsible for rendering the GUI.
 
 .Solid access
-Component in charge of accessing the user solid POD. Right now this component is in the RestApi module.
+Component in charge of accessing the user solid POD. Right now this component is in the Web App module, but it could change during the development of the project.
 
 
 .Facade
