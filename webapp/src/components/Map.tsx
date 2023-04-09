@@ -236,11 +236,10 @@ function filterLocations(items: boolean[]) {
     const {data: locations, error, isLoading} = useGetLocationsQuery();
     useEffect(() => {
         if(!isLoading){
-            dispatch(setDisplayedLocations(locations!));
+            filteredLoc = filteredLoc.concat(locations!);
         }
     }, [isLoading])
 
-    filteredLoc = filteredLoc.concat(locations!);
     //if(items[FilterEnum.MyLocations]) {
     //    filteredLoc = filteredLoc.concat(locations?.filter((loc) => loc.locationType === LocationType.bar)!);
     //}
