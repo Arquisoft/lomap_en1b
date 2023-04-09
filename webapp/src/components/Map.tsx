@@ -21,7 +21,7 @@ import { Icon } from 'leaflet';
 import {useSelector, useDispatch} from 'react-redux';
 import {useAddLocationMutation, useGetLocationsQuery} from "../app/services/Location";
 import {setDisplayedLocations, selectDisplayedLocations} from "../app/services/DisplayedLocations";
-import type { MapMarker } from '../types';
+import type {Friend, MapMarker} from '../types';
 import {LocationType} from "../locationType";
 //import {addLocation, selectAllLocations} from "../app/services/Location";
 export enum FilterEnum {
@@ -35,8 +35,7 @@ export function LocationMarkerWithStore() {
     const [lati, setLat] = useState(0);
     const [lngi, setLng] = useState(0);
     const {isOpen, onClose, onOpen} = useDisclosure();
-    const [addLocationMutation, { isLoading, isError, error }] = useAddLocationMutation();
-    
+    let [addLocationMutation, {isLoading, isError, error}] = useAddLocationMutation();
 
     const initialRef = React.useRef(null)
     var [name, setName] = React.useState('')
@@ -56,6 +55,7 @@ export function LocationMarkerWithStore() {
             setDetails('')
             setShared(false)
         },
+
     })
 
     //Use .map to iterate and generate the corresponding markers

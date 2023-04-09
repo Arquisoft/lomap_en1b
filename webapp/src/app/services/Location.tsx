@@ -1,7 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+//import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+//import { RootState } from "../store";
 import type { MapMarker } from '../../types';
-import {RootState} from "../store";
+import {query, response} from "express";
+import {LocationType} from "../../locationType";
+import {Friend} from "../../types";
+
 /**
  * Creates slices automatically and they comunicate with the API.
  * A slice can comunicate with the API or not.
@@ -20,6 +24,86 @@ export const locationApi = createApi({
                 url:`location`,
                 credentials:"include"
             })
+        }),
+        //TODO: THIS IS A MOCK. Delete once friends api is completely functional
+        getFriends: builder.query<Friend[], void>({
+            query: (name) => ({
+                url:`location`,
+                credentials:"include"
+            }),
+            transformResponse: (response: Friend[]) => {
+                const copy: Friend[] = [{
+                    "nickName": "nickname1",
+                    "name": "name1",
+                    "webId": "webId1",
+                    "profilePic": "profilePic1",
+                    "loMapOnly": true
+                },
+                    {
+                        "nickName": "nickname2",
+                        "name": "name2",
+                        "webId": "webId2",
+                        "profilePic": "profilePic2",
+                        "loMapOnly": true
+                    },
+                    {
+                        "nickName": "nickname3",
+                        "name": "name3",
+                        "webId": "webId3",
+                        "profilePic": "profilePic3",
+                        "loMapOnly": true
+                    },
+                    {
+                        "nickName": "nickname4",
+                        "name": "name4",
+                        "webId": "webId4",
+                        "profilePic": "profilePic4",
+                        "loMapOnly": false
+                    },
+                    {
+                        "nickName": "nickname5",
+                        "name": "name5",
+                        "webId": "webId5",
+                        "profilePic": "profilePic5",
+                        "loMapOnly": true
+                    },
+                    {
+                        "nickName": "nickname6",
+                        "name": "name6",
+                        "webId": "webId6",
+                        "profilePic": "profilePic6",
+                        "loMapOnly": true
+                    },
+                    {
+                        "nickName": "nickname7",
+                        "name": "name7",
+                        "webId": "webId7",
+                        "profilePic": "profilePic7",
+                        "loMapOnly": false
+                    }];
+
+                return copy;
+            },
+        }),
+        //TODO: not working
+        filterLocations: builder.query<MapMarker[], LocationType>({
+            query: (locationType) => ({
+                url:`location`,
+                credentials:"include",
+                params:{
+                    locationType : locationType,
+                }
+            }),
+            transformResponse: (response) => {
+                const data = JSON.parse(response as string);
+
+                // Filter the MapMarker using the filter location they use as parameter
+                const locationType = null;//query.params.locationType;
+                const filteredData = data.filter((marker : MapMarker) => marker.locationType === locationType);
+
+                // Return the filtered list
+                return filteredData;
+            }
         }),
         // Omit metemos una localización y da igual que no tenga un id asignado
         addLocation: builder.mutation<void, MapMarker>({
@@ -43,8 +127,35 @@ export const locationApi = createApi({
         }),
     }),
 })
-export const { useGetLocationsQuery, useAddLocationMutation} = locationApi
+
 //I created a Slice to store the location in the store so that we can test without using the API
+interface LocationsState {
+    locations: MapMarker[];
+}
+const initialState: LocationsState = {
+    locations: [],
+};
+
+// actions dont change the state
+// reducers change the state
+//export const locationSlice = createSlice({
+//    name: 'locationTest',
+//    initialState,
+    // métodos: reducers y actions
+    // reducers -> the only way to change the state of the locations, but only the part of the state u want to change
+//    reducers: {
+//        addLocation: (state, action: PayloadAction<MapMarker>) => {
+//            state.locations.push(action.payload); // payload: the param you pass
+//            state.locations.forEach(location => {
+//                console.log(location.lat + " - " + location.lng);
+//            }); // just for printing console
+//            console.log();
+//        }
+//    },
+//});
+
+export const { useGetLocationsQuery, useAddLocationMutation, useGetFriendsQuery} = locationApi
+//export const { addLocation } = locationSlice.actions;
 //export const { getLocations}
 //export default locationSlice.reducer;
 //export const selectAllLocations = (state: RootState) => state.location.locations;
