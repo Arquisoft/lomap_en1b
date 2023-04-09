@@ -1,28 +1,40 @@
-import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents, useMapEvent } from 'react-leaflet';
-import React, {useEffect, useState} from 'react';
+import {MapContainer, Marker, Popup, TileLayer, useMapEvents} from 'react-leaflet';
+import React, {FC, MutableRefObject, useEffect, useRef, useState} from 'react';
 import {
-    Box, Button,
+    Box,
+    Button,
     Card,
-    CardBody, Checkbox, CheckboxGroup,
-    Flex, FormControl, FormLabel,
-    Heading, Input,
-    Modal, ModalBody, ModalCloseButton,
-    ModalContent, ModalFooter, ModalHeader,
-    ModalOverlay, Select,
+    CardBody,
+    Checkbox,
+    CheckboxGroup,
+    Flex,
+    FormControl,
+    FormLabel,
+    Heading,
+    Input,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
+    Select,
     Stack,
     StackDivider,
-    Text, useDisclosure
+    Text,
+    useDisclosure
 } from '@chakra-ui/react';
 import "../css/react_leaflet.css";
 import 'leaflet/dist/leaflet.css';
-import { LatLng, LatLngExpression } from 'leaflet';
+import {Icon, LatLngExpression} from 'leaflet';
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
-import { Icon } from 'leaflet';
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useAddLocationMutation, useGetLocationsQuery} from "../app/services/Location";
-import {setDisplayedLocations, selectDisplayedLocations} from "../app/services/DisplayedLocations";
-import type {Friend, MapMarker} from '../types';
+import {selectDisplayedLocations, setDisplayedLocations} from "../app/services/DisplayedLocations";
+import type {MapMarker} from '../types';
 import {LocationType} from "../locationType";
+
 //import {addLocation, selectAllLocations} from "../app/services/Location";
 export enum FilterEnum {
     Bars, Restaurants, Shops, Sights,
@@ -39,7 +51,7 @@ export function LocationMarkerWithStore() {
 
     const initialRef = React.useRef(null)
     var [name, setName] = React.useState('')
-    var [category, setCategory] = React.useState('Bar')
+    var [category, setCategory] = React.useState('bar')
     var [details, setDetails] = React.useState('')
     var [isShared, setShared] = React.useState(false)
 
@@ -51,7 +63,7 @@ export function LocationMarkerWithStore() {
 
             onOpen();
             setName('')
-            setCategory('Bar')
+            setCategory('bar')
             setDetails('')
             setShared(false)
         },
@@ -81,7 +93,7 @@ export function LocationMarkerWithStore() {
                                 };
                                 handleSubmit(event)
                                 setName('')
-                                setCategory('Bar')
+                                setCategory('bar')
                                 setDetails('')
                                 setShared(false)
                             }}>
@@ -130,6 +142,19 @@ export default function MapElement(): JSX.Element {
         }
     }, [isLoading])
 
+    const showBars = useRef(true)
+    const showRestaurants = useRef(true)
+
+    console.log(disLocations)
+    
+    console.log(disLocations.filter(l => l.locationType == LocationType.restaurant))
+
+    console.log(disLocations.filter( loc => {
+        if(loc.locationType == LocationType.bar && showBars.current) return true
+    }))
+
+
+
     return (
         <Flex
             minH={'100vh'}
@@ -138,7 +163,7 @@ export default function MapElement(): JSX.Element {
 
             <Stack>
                 <Flex>
-                    <FilterModal/>
+                    <FilterModal showRestaurants={showRestaurants} />
                 </Flex>
                 <MapContainer center={escuela} zoom={13} scrollWheelZoom={true}>
                     <LocationMarkerWithStore/>
@@ -147,7 +172,11 @@ export default function MapElement(): JSX.Element {
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
 
-                    {disLocations.map((location: MapMarker) => (
+                    {disLocations
+                        .filter( loc => {
+                            if(loc.locationType == LocationType.restaurant && showRestaurants.current) return true
+                        })
+                        .map((location: MapMarker) => (
                         <Marker key={location.id}
                                 position={[location.latitude, location.longitude]}
                                 icon={new Icon({ iconUrl: markerIconPng, iconSize: [30, 45], iconAnchor: [10, 40]})}>
@@ -155,7 +184,6 @@ export default function MapElement(): JSX.Element {
                                 <PopupContent name={location.name}
                                               locationType={location.locationType}
                                               id={location.id}
-
                                               latitude={location.latitude}
                                               longitude={location.longitude}
                                               shared={location.shared}
@@ -169,9 +197,13 @@ export default function MapElement(): JSX.Element {
     );
 }
 
-export function FilterModal() {
+interface FilterModalProps {
+    showRestaurants : MutableRefObject<boolean>
+}
+
+export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
     const {isOpen, onClose, onOpen} = useDisclosure();
-    const [checkedItems, setCheckedItems] = React.useState([true, true, true, true, true, true, true])
+
     const data = {
         types: [
             { id: "bars", name: "Bars" },
@@ -182,16 +214,6 @@ export function FilterModal() {
             { id: "myLocations", name: "My Locations" },
             { id: "sharedLocations", name: "Shared Locations" }
         ]
-    };
-    const filter = function (checked: boolean, index: number) {
-        let items = checkedItems;
-        items = [
-            ...items.slice(0, index),
-            checked,
-            ...items.slice(index + 1)
-        ]
-        setCheckedItems(items);
-        filterLocations(items);
     };
 
     return (
@@ -208,14 +230,22 @@ export function FilterModal() {
                         <ModalBody>
                             <Stack spacing={2} direction='column'>
                             <CheckboxGroup>
-                                    {data.types.map((type, index) => (
+                                    {/*data.types.map((type, index) => (
                                         <Checkbox
                                             key={type.id}
-                                            isChecked={checkedItems[index]}
-                                            onChange={(e) => filter(e.target.checked,index)}>
+                                            isChecked={true}
+                                            onChange={e => props.showRestaurants.current = e.target.checked}
+                                            >
                                             {type.name}
                                         </Checkbox>
-                                    ))}
+                                    ))*/}
+                                <Checkbox
+                                    key={"reer"}
+                                    isChecked={true}
+                                    onChange={e => props.showRestaurants.current = e.target.checked}
+                                >
+                                    Restaurant
+                                </Checkbox>
                             </CheckboxGroup>
                             </Stack>
                         </ModalBody>
@@ -227,43 +257,6 @@ export function FilterModal() {
         </>
     )
 }
-
-function filterLocations(items: boolean[]) {
-    let filteredLoc: MapMarker[] = [];
-    let finalLoc : MapMarker[] = [];
-
-    const dispatch = useDispatch();
-    const {data: locations, error, isLoading} = useGetLocationsQuery();
-    useEffect(() => {
-        if(!isLoading){
-            filteredLoc = filteredLoc.concat(locations!);
-        }
-    }, [isLoading])
-
-    //if(items[FilterEnum.MyLocations]) {
-    //    filteredLoc = filteredLoc.concat(locations?.filter((loc) => loc.locationType === LocationType.bar)!);
-    //}
-    //if(items[FilterEnum.SharedLocations]) {
-    //    filteredLoc = filteredLoc.concat(locations?.filter((loc) => loc.locationType === LocationType.bar)!);
-    //}
-    if(items[FilterEnum.Bars]) {
-        finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.bar));
-    }
-    if(items[FilterEnum.Restaurants]) {
-        finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.restaurant));
-    }
-    if(items[FilterEnum.Shops]) {
-        finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.shop));
-    }
-    if(items[FilterEnum.Sights]) {
-        finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.sight));
-    }
-    if(items[FilterEnum.Monuments]) {
-        finalLoc = finalLoc.concat(filteredLoc.filter((loc) => loc.locationType === LocationType.monument));
-    }
-    dispatch(setDisplayedLocations(finalLoc));
-};
-
 
 export function PopupContent(marker: MapMarker){
     return(
