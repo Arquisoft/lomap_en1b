@@ -70,7 +70,6 @@ export function LocationMarkerWithStore() {
 
     })
 
-
     //Use .map to iterate and generate the corresponding markers
     //This need to be optimiced because I think it generates again
     //all the markers on top of each other
@@ -217,6 +216,7 @@ interface FilterModalProps {
 
 export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
     const {isOpen, onClose, onOpen} = useDisclosure();
+
 
     const data = {
         types: [
