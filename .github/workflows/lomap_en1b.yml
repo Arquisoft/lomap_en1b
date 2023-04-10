@@ -1,7 +1,7 @@
 name: CI for LOMAP_EN1B
 
 on:
-  pull request
+  [pull_request, push]
 
 jobs:
   docker-push-webapp:
