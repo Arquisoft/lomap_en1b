@@ -23,7 +23,16 @@ import {
     Stack,
     StackDivider,
     Text,
-    useDisclosure
+    Drawer,
+    useDisclosure,
+    DrawerOverlay,
+    DrawerContent,
+    DrawerCloseButton,
+    DrawerBody,
+    DrawerHeader,
+    DrawerFooter,
+    CardFooter,
+    ButtonGroup
 } from '@chakra-ui/react';
 import "../css/react_leaflet.css";
 import 'leaflet/dist/leaflet.css';
@@ -34,6 +43,7 @@ import {useAddLocationMutation, useGetLocationsQuery} from "../app/services/Loca
 import {selectDisplayedLocations, setDisplayedLocations} from "../app/services/DisplayedLocations";
 import type {MapMarker} from '../types';
 import {LocationType} from "../locationType";
+import DetailsDrawer from './mapComponents/LocationReviewsView'
 
 //import {addLocation, selectAllLocations} from "../app/services/Location";
 export enum FilterEnum {
@@ -133,8 +143,12 @@ export function LocationMarkerWithStore() {
 
 export default function MapElement(): JSX.Element {
     const escuela: LatLngExpression = {lat: 43.354, lng: -5.851};
-    const {data: locations, error, isLoading} = useGetLocationsQuery();
+    //const {data: locations, error, isLoading} = useGetLocationsQuery();
     const dispatch = useDispatch()
+
+    const locations : MapMarker[] = [{latitude : 43.354, longitude : -5.851,
+        name:"prueba 1",locationType: LocationType.sight, id: 43.354 + " - " + -5.851,shared: true}];
+
 
     const [showBars, setShowBars] = useState(true)
     const [showRestaurants, setShowRestaurants] = useState(true)
@@ -288,6 +302,16 @@ export function PopupContent(marker: MapMarker){
                     </Box>
                 </Stack>
             </CardBody>
+            <CardFooter>
+                <ButtonGroup spacing='2'>
+                    <DetailsDrawer name={marker.name}
+                                   locationType={marker.locationType}
+                                   id={marker.id}
+                                   latitude={marker.latitude}
+                                   longitude={marker.longitude}
+                                   shared={marker.shared}/>
+                </ButtonGroup>
+            </CardFooter>
         </Card>
     )
 }
