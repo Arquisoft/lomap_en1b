@@ -1,7 +1,10 @@
-name: CI for LOMAP_EN1B
+name: CI/CD for LOMAP_EN1B
 
 on:
   [pull_request, push]
+
+env:
+  DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
 
 jobs:
   docker-push-webapp:
@@ -21,6 +24,14 @@ jobs:
           workdir: webapp
           buildargs: API_URI
 
+    - name: Send notification
+      uses: tsickert/discord-webhook@v5.3.0
+      with:
+        webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        username: "LomapBot"
+        content: "A new version of WebApp LoMap was correctly pushed to GitHub Packages"
+
+
   docker-push-restapi:
     name: Push restapi Docker Image to GitHub Packages
     runs-on: ubuntu-latest
@@ -34,6 +45,15 @@ jobs:
           password: ${{ secrets.DOCKER_PUSH_TOKEN }}
           registry: ghcr.io
           workdir: restapi
+
+    - name: Send notification
+      uses: tsickert/discord-webhook@v5.3.0
+      with:
+        webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        username: "LomapBot"
+        content: "A new version of RestAPI LoMap was correctly pushed to GitHub Packages"
+
+
   deploy:
     name: Deploy over SSH
     runs-on: ubuntu-latest
@@ -51,3 +71,10 @@ jobs:
             docker-compose rm -f
             docker-compose pull   
             docker-compose up -d
+
+      - name: Send notification
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          username: "LomapBot"
+          content: "WebApp and RestAPI new version was deployed correctly"
