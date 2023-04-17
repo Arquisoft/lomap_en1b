@@ -13,21 +13,6 @@ export const friendApi = createApi({
                 credentials:"include"
             })
         }),
-        /*
-        addFriend: builder.mutation<void , Friend>({
-            query: (newFriend) => ({
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-                url: `friendship`,
-                credentials:"include",
-                method: 'POST',
-                mode:"cors",
-                body: JSON.stringify({friend: newFriend })
-              }),
-        }),
-         */
         addFriend: builder.mutation<void , Friend>({
             query: (newFriend) => ({
                 headers: {
