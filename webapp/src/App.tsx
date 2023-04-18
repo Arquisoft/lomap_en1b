@@ -11,15 +11,14 @@ import MapElement from './components/Map';
 
 import Error404 from "./routes/404error";
 
-import Map from "./components/Map"
-
 import HomePage from './components/Home';
 import AboutPage from './components/About';
+import ProfileView from './components/ProfileView';
+import ConfirmLogin from './components/ConfirmLogin';
+import CheckLogin from './components/CheckLogin';
+import FriendsView from './components/FriendsPage/FriendsView';
 
 import NavBar from './components/NavBar';
-import CheckLogin from "./components/CheckLogin";
-import ConfirmLogin from "./components/ConfirmLogin";
-import FriendsView from './components/FriendsPage/FriendsView';
 
 
 const router = createBrowserRouter([
@@ -28,7 +27,7 @@ const router = createBrowserRouter([
     element: <> <NavBar /><Outlet /> </>,
     children: [
 
-        // vvv Public routes vvv
+      // vvv Public routes vvv
       {
         path: "/login/confirm",
         element: <ConfirmLogin />,
@@ -48,16 +47,7 @@ const router = createBrowserRouter([
         path: "/about",
         element: <AboutPage />,
       },
-      {
-        path: "/",
-        element: <CheckLogin />,
-        children: [
-          {
-            path: "/friends",
-            element: <FriendsView />,
-          }
-        ]
-      },
+      //Protected routes
       {
         path: "/",
         element: <CheckLogin />,
@@ -65,7 +55,16 @@ const router = createBrowserRouter([
           {
             path: "/map",
             element: <MapElement />,
-          }
+
+          },
+          {
+            path: "/friends",
+            element: <FriendsView />,
+          },
+          {
+            path: "/profile",
+            element:<ProfileView />,
+          },
         ]
       },
     ]
@@ -77,7 +76,7 @@ const router = createBrowserRouter([
 
 
 function App() {
-   return (<RouterProvider router={router} />);
+  return (<RouterProvider router={router} />);
 }
 
 

@@ -21,6 +21,8 @@ import '../css/nav.css';
 import { logout } from '../app/services/Auth';
 import {useSelector} from "react-redux";
 
+import { useNavigate } from 'react-router-dom';
+
 // const NavLink = ({ children }: { children: ReactNode }) => (
 //     <Link
 //         px={2}
@@ -40,7 +42,7 @@ import {useSelector} from "react-redux";
         <Stack as={'nav'} spacing={4}>
             // TODO links of my profile page and log out
             <NavLink to="">My profile</NavLink>
-            // logout not implemented yet 
+            // logout not implemented yet
             <NavLink to="" onClick={logout}>Log out</NavLink>
         </Stack>
     </Box>
@@ -51,7 +53,8 @@ import {useSelector} from "react-redux";
 
 
 export default function NavBar() {
-    const { isOpen } = useDisclosure();
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const navigate = useNavigate();
     // @ts-ignore
     const loggedIn = useSelector(state  => state.auth.isLoggedIn );
     const colorModeValue = useColorModeValue('white', 'blue')
@@ -75,8 +78,9 @@ export default function NavBar() {
                                 }}>
 
                             <NavLink to="/" className="nav_link">Home</NavLink>
-                            <NavLink to="/login" className="nav_link">Login</NavLink>
+                            {loggedIn == false ? <NavLink to="/login" className="nav_link">Login</NavLink> : <></> }
                             {loggedIn ? <NavLink to="/map" className="nav_link">Map</NavLink> : <></> }
+                            {loggedIn ? <NavLink to="/friends" className="nav_link">Friends</NavLink> : <></> }
                             <NavLink to="/about" className="nav_link">About</NavLink>
                         </HStack>
                     </HStack>
@@ -97,7 +101,7 @@ export default function NavBar() {
                                 />
                             </MenuButton>
                             <MenuList fontSize={20} >
-                                <MenuItem>My profile</MenuItem>
+                                <MenuItem onClick={() => navigate('/profile')}>My profile</MenuItem>
                                 <MenuDivider />
                                 <MenuItem onClick={logout}>Log out</MenuItem>
                             </MenuList>
@@ -119,5 +123,4 @@ export default function NavBar() {
         </>
     );
 }
-
 

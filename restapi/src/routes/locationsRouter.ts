@@ -7,6 +7,4 @@ const locationsRouter: Router = express.Router()
 
     locationsRouter.post("/", locationsService.saveLocation);
 
-    locationsRouter.get("/addlocationtest", locationsService.saveTestLocation)
-
 export default locationsRouter

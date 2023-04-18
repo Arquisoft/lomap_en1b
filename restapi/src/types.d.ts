@@ -23,4 +23,5 @@ export type Friend = {
     webId : string;
     profilePic : string;
     loMapOnly : boolean;
+
 }

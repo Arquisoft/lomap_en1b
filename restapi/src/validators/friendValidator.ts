@@ -12,8 +12,8 @@ export function validateFriendThing(friendThing:Thing) : boolean {
 export function validateFriend(friend:Friend) : boolean{
     return friend !==undefined
         && friend !== null
-        && friend.username !== undefined
-        && friend.username !== null
-        && friend.podId !== undefined
-        && friend.podId !== null
+        && friend.nickName !== undefined
+        && friend.nickName !== null
+        && friend.webId !== undefined
+        && friend.webId !== null
 }

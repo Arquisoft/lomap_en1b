@@ -1,9 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-//import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
-//import { RootState } from "../store";
 import type { MapMarker } from '../../types';
-import {query, response} from "express";
-import {LocationType} from "../../locationType";
 import {Friend} from "../../types";
 
 /**
@@ -16,6 +12,7 @@ import {Friend} from "../../types";
 export const locationApi = createApi({
     reducerPath: 'location',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8082/' }),
+    tagTypes: ['Locations'],
     endpoints: (builder) => ({
         // MyLocation: what is returned
         // void: the type of data we pass as a parameter
@@ -23,87 +20,8 @@ export const locationApi = createApi({
             query: (name) => ({
                 url:`location`,
                 credentials:"include"
-            })
-        }),
-        //TODO: THIS IS A MOCK. Delete once friends api is completely functional
-        getFriends: builder.query<Friend[], void>({
-            query: (name) => ({
-                url:`location`,
-                credentials:"include"
             }),
-            transformResponse: (response: Friend[]) => {
-                const copy: Friend[] = [{
-                    "nickName": "nickname1",
-                    "name": "name1",
-                    "webId": "webId1",
-                    "profilePic": "profilePic1",
-                    "loMapOnly": true
-                },
-                    {
-                        "nickName": "nickname2",
-                        "name": "name2",
-                        "webId": "webId2",
-                        "profilePic": "profilePic2",
-                        "loMapOnly": true
-                    },
-                    {
-                        "nickName": "nickname3",
-                        "name": "name3",
-                        "webId": "webId3",
-                        "profilePic": "profilePic3",
-                        "loMapOnly": true
-                    },
-                    {
-                        "nickName": "nickname4",
-                        "name": "name4",
-                        "webId": "webId4",
-                        "profilePic": "profilePic4",
-                        "loMapOnly": false
-                    },
-                    {
-                        "nickName": "nickname5",
-                        "name": "name5",
-                        "webId": "webId5",
-                        "profilePic": "profilePic5",
-                        "loMapOnly": true
-                    },
-                    {
-                        "nickName": "nickname6",
-                        "name": "name6",
-                        "webId": "webId6",
-                        "profilePic": "profilePic6",
-                        "loMapOnly": true
-                    },
-                    {
-                        "nickName": "nickname7",
-                        "name": "name7",
-                        "webId": "webId7",
-                        "profilePic": "profilePic7",
-                        "loMapOnly": false
-                    }];
-
-                return copy;
-            },
-        }),
-        //TODO: not working
-        filterLocations: builder.query<MapMarker[], LocationType>({
-            query: (locationType) => ({
-                url:`location`,
-                credentials:"include",
-                params:{
-                    locationType : locationType,
-                }
-            }),
-            transformResponse: (response) => {
-                const data = JSON.parse(response as string);
-
-                // Filter the MapMarker using the filter location they use as parameter
-                const locationType = null;//query.params.locationType;
-                const filteredData = data.filter((marker : MapMarker) => marker.locationType === locationType);
-
-                // Return the filtered list
-                return filteredData;
-            }
+            providesTags:['Locations']
         }),
         // Omit metemos una localización y da igual que no tenga un id asignado
         addLocation: builder.mutation<void, MapMarker>({
@@ -117,7 +35,8 @@ export const locationApi = createApi({
                 method: 'POST',
                 mode:"cors",
                 body: JSON.stringify({location: newLocation })
-            })
+            }),
+            invalidatesTags: ['Locations']
         }),
         removeLocation: builder.mutation<void, MapMarker>({
             query: (location) => ({
@@ -154,7 +73,7 @@ const initialState: LocationsState = {
 //    },
 //});
 
-export const { useGetLocationsQuery, useAddLocationMutation, useGetFriendsQuery} = locationApi
+export const { useGetLocationsQuery, useAddLocationMutation} = locationApi
 //export const { addLocation } = locationSlice.actions;
 //export const { getLocations}
 //export default locationSlice.reducer;
