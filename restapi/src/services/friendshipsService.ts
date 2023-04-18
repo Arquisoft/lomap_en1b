@@ -6,14 +6,13 @@ import {
     getSolidDataset,
     getThingAll,
     createSolidDataset,
-    getProfileAll,
     getThing,
     Thing,
     getUrlAll,
     getWebIdDataset
 } from "@inrupt/solid-client";
 import {getSessionFromStorage} from "@inrupt/solid-client-authn-node";
-import {friendToThing, thingToFriend} from "../builders/friendBuilder";
+import {friendToThing, thingToFriend, urlToFriend} from "../builders/friendBuilder";
 import {validateFriend, validateFriendThing} from "../validators/friendValidator";
 import {Friend} from "../types";
 import {FOAF} from "@inrupt/vocab-common-rdf";
@@ -55,7 +54,7 @@ export default {
                 .filter(friendThing=>validateFriendThing(friendThing))
                 .map(async friendThing=>await thingToFriend(friendThing, true))
                 .concat(
-                    profileFriends.map(async friendThing=>await thingToFriend(friendThing, false)))
+                    profileFriends.map(async webId =>await urlToFriend(webId, false)))
             ))
 
     },
