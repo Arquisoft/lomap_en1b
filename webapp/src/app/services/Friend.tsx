@@ -4,7 +4,7 @@ import {MapMarker} from "../../types";
 
 export const friendApi = createApi({
     reducerPath: 'friendship',
-    baseQuery: fetchBaseQuery({ baseUrl: 'https://4255db99-902a-464f-aa3a-e89ffa1a77fe.mock.pstmn.io' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8082/' }),
     endpoints: (builder ) => ({
 
         getFriends: builder.query<Friend[], void>({
