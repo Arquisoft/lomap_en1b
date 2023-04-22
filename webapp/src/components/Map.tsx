@@ -40,7 +40,6 @@ import {Icon, LatLngExpression} from 'leaflet';
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import {useDispatch, useSelector} from 'react-redux';
 import {useAddLocationMutation, useGetLocationsQuery} from "../app/services/Location";
-import {selectDisplayedLocations, setDisplayedLocations} from "../app/services/DisplayedLocations";
 import type {MapMarker} from '../types';
 import {LocationType} from "../locationType";
 import DetailsDrawer from './mapComponents/LocationReviewsView'

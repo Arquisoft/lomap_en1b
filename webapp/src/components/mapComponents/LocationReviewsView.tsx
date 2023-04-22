@@ -17,7 +17,7 @@ import {
     ModalHeader,
     ModalOverlay, Select,
     Stack, Text, Textarea, Image,
-    useDisclosure, Flex, HStack, DrawerFooter
+    useDisclosure, Flex, HStack, DrawerFooter, Spacer, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverHeader, PopoverBody, PopoverCloseButton
 } from "@chakra-ui/react";
 import React, {useState} from "react";
 import {useDispatch} from "react-redux";
@@ -63,7 +63,7 @@ export default function DetailsDrawer(marker: MapMarker) {
                                 <Stack spacing={'24px'} direction='column'>
                                     {comments.map( (comment) => (
                                         <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden'>
-                                            <Image src='gibbresh.png' fallbackSrc='https://via.placeholder.com/150'/>
+                                            <Image src='gibbresh.png' loading={"lazy"} fallbackSrc='https://via.placeholder.com/150'/>
                                             <ReactStars count={5} value={3} size={24} activeColor="#ffd700"/>
                                             {comment}
                                         </Box>
@@ -105,6 +105,8 @@ export function AddCommentForm() {
                     <ModalContent>
                         <ModalHeader fontSize={24}>
                             Add Review
+                            <Spacer />
+                                <InformationPopup/>
                             <ModalCloseButton/>
                         </ModalHeader>
                         <ModalBody>
@@ -173,6 +175,25 @@ export function AddCommentForm() {
                     </ModalContent>
                 </ModalOverlay>
             </Modal>
+        </>
+    );
+}
+
+export function InformationPopup(){
+    return(
+        <>
+            <Popover>
+                <PopoverTrigger>
+                    <Button>?</Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                    <PopoverArrow />
+                    <PopoverCloseButton />
+                    <PopoverHeader>Adding Reviews</PopoverHeader>
+                    <PopoverBody>While adding a review you can upload an image, add a score or/and add
+                    a text comment without or adding any of the other two but you must submit at least one.</PopoverBody>
+                </PopoverContent>
+            </Popover>
         </>
     );
 }
