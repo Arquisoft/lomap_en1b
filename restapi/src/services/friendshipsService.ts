@@ -60,10 +60,11 @@ export default {
     },
 
     addFriend : async function (req:Request, res:Response){
+        console.log("addFriend")
         const session = await getSessionFromStorage(req.session.solidSessionId!)
         if(session==undefined) return res.send('error')
 
-        let friend: Friend = req.body.location;
+        let friend: Friend = req.body.friend;
         if(!validateFriend(friend)){
             res.send('error')
         }
