@@ -1,12 +1,12 @@
 import express, {Router} from "express";
 import friendshipsService from "../services/friendshipsService";
 
-const frienshipsRouter: Router = express.Router()
+const friendshipsRouter: Router = express.Router()
 
-frienshipsRouter.get("/", friendshipsService.getFriends);
+friendshipsRouter.get("/", friendshipsService.getFriends);
 
-frienshipsRouter.post("/", friendshipsService.addFriend);
+friendshipsRouter.post("/", friendshipsService.addFriend);
 
-frienshipsRouter.delete("/", friendshipsService.deleteFriend)
+friendshipsRouter.delete("/", friendshipsService.deleteFriend)
 
-export default frienshipsRouter
+export default friendshipsRouter

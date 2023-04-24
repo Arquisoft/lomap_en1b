@@ -9,7 +9,9 @@ export function thingToLocation(locationThing:Thing) : Location {
         name: getStringNoLocale(locationThing, SCHEMA_INRUPT.name)!,
         locationType: getStringNoLocale(locationThing, SCHEMA_INRUPT.description)! as LocationType,
         latitude: getDecimal(locationThing, SCHEMA_INRUPT.latitude)!,
-        longitude: getDecimal(locationThing, SCHEMA_INRUPT.longitude)!
+        longitude: getDecimal(locationThing, SCHEMA_INRUPT.longitude)!,
+        isShared: false,
+        isOwnLocation: false
     }
 }
 

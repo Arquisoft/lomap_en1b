@@ -6,7 +6,16 @@ export type Location = {
     locationType:LocationType,
     latitude:number,
     longitude:number
+    isShared:boolean,
+    isOwnLocation:boolean
 };
+
+export type Review = {
+    id:string,
+    author:string,
+    body:string,
+    media:string
+}
 
 export type Friend = {
     nickName : string;

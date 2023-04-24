@@ -1,10 +1,10 @@
 import express from "express"
-import locationsRouter from "./routes/locationsRouter";
-import authenticationRouter from "./routes/authenticationRouter";
 import cors from "cors"
 import session from "express-session";
-import frienshipsRouter from "./routes/friendshipsRouter";
-import reviewsRouter from "./routes/reviewsRouter";
+import locationsRouter from "./routes/locationsRouter";
+import authenticationRouter from "./routes/authenticationRouter";
+import friendshipsRouter from "./routes/friendshipsRouter";
+import reviewsRouter from "./routes/reviewsRouter"
 
 //dotenv.config()
 const PORT = 8082
@@ -26,8 +26,9 @@ const app = express()
     .use(express.json())
     .use('/auth', authenticationRouter)
     .use('/location', locationsRouter)
-    .use('/frienship', frienshipsRouter)
+    .use('/friendship', friendshipsRouter)
     .use('/review', reviewsRouter)
+
 
 app.listen(PORT, ()=> {
     console.log('Server running on port ' + PORT)

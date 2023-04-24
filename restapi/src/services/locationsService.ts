@@ -1,4 +1,5 @@
 import {
+    createSolidDataset,
     getPodUrlAll,
     getSolidDataset, getThingAll,
     saveSolidDatasetAt,
@@ -27,20 +28,28 @@ export default {
         let locationsURL = await getLocationsURL(session.info.webId);
         if(locationsURL == undefined){
             return res.send("error")
-
         }
 
-        let locationsSolidDataset = await getSolidDataset(
-            locationsURL,
-            {fetch: session.fetch}          // fetch from authenticated session
-        );
+        let locationsDataset;
+        try{
+            locationsDataset =  await getSolidDataset(
+                locationsURL,
+                {fetch: session.fetch}          // fetch from authenticated session
+            );
+        } catch (error:any) {
+            if(typeof error.statusCode === "number" && error.statusCode === 404){
+                locationsDataset = createSolidDataset();
+            } else {
+                return res.send("error")
+            }
+        }
 
         const locationThing = locationToThing(location)
-        locationsSolidDataset = setThing(locationsSolidDataset, locationThing);
+        locationsDataset = setThing(locationsDataset, locationThing);
 
         let newDataset = await saveSolidDatasetAt(
             locationsURL,
-            locationsSolidDataset,
+            locationsDataset,
             {fetch: session.fetch}             // fetch from authenticated Session
         );
 
@@ -54,10 +63,19 @@ export default {
         let locationsURL = await getLocationsURL(session.info.webId);
         if(locationsURL == undefined) return res.send("error")
 
-        let locationsDataset =  await getSolidDataset(
-            locationsURL,
-            {fetch: session.fetch}          // fetch from authenticated session
-        );
+        let locationsDataset;
+        try{
+            locationsDataset =  await getSolidDataset(
+                locationsURL,
+                {fetch: session.fetch}          // fetch from authenticated session
+            );
+        } catch (error:any) {
+            if(typeof error.statusCode === "number" && error.statusCode === 404){
+                locationsDataset = createSolidDataset();
+            } else {
+                return res.send("error")
+            }
+        }
 
         return res.send(
             getThingAll(locationsDataset)
@@ -71,6 +89,5 @@ async function getLocationsURL(webId: string | undefined){
     if(webId == undefined) return undefined
     let webID = decodeURIComponent(webId)
     const podURL = await getPodUrlAll(webID);
-    console.log(podURL)
-    return  podURL + "private/";
+    return  podURL + "private/lomap/locations";
 }

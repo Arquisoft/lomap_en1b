@@ -23,68 +23,6 @@ export const locationApi = createApi({
             }),
             providesTags:['Locations']
         }),
-        //TODO: THIS IS A MOCK. Delete once friends api is completely functional
-        getFriends: builder.query<Friend[], void>({
-            query: (name) => ({
-                url:`location`,
-                credentials:"include"
-            }),
-            transformResponse: (response: Friend[]) => {
-                const copy: Friend[] = [{
-                    "nickName": "nickname1",
-                    "name": "name1",
-                    "webId": "webId1",
-                    "profilePic": "profilePic1",
-                    "loMapOnly": true
-                },
-                    {
-                        "nickName": "nickname2",
-                        "name": "name2",
-                        "webId": "webId2",
-                        "profilePic": "profilePic2",
-                        "loMapOnly": true
-                    },
-                    {
-                        "nickName": "nickname3",
-                        "name": "name3",
-                        "webId": "webId3",
-                        "profilePic": "profilePic3",
-                        "loMapOnly": true
-                    },
-                    {
-                        "nickName": "nickname4",
-                        "name": "name4",
-                        "webId": "webId4",
-                        "profilePic": "profilePic4",
-                        "loMapOnly": false
-                    },
-                    {
-                        "nickName": "nickname5",
-                        "name": "name5",
-                        "webId": "webId5",
-                        "profilePic": "profilePic5",
-                        "loMapOnly": true
-                    },
-                    {
-                        "nickName": "nickname6",
-                        "name": "name6",
-                        "webId": "webId6",
-                        "profilePic": "profilePic6",
-                        "loMapOnly": true
-                    },
-                    {
-                        "nickName": "nickname7",
-                        "name": "name7",
-                        "webId": "webId7",
-                        "profilePic": "profilePic7",
-                        "loMapOnly": false
-                    }];
-
-                return copy;
-            },
-        }),
-
-
         // Omit metemos una localización y da igual que no tenga un id asignado
         addLocation: builder.mutation<void, MapMarker>({
             query: (newLocation) => ({
@@ -135,7 +73,7 @@ const initialState: LocationsState = {
 //    },
 //});
 
-export const { useGetLocationsQuery, useAddLocationMutation, useGetFriendsQuery} = locationApi
+export const { useGetLocationsQuery, useAddLocationMutation} = locationApi
 //export const { addLocation } = locationSlice.actions;
 //export const { getLocations}
 //export default locationSlice.reducer;
