@@ -259,7 +259,7 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
                             <CheckboxGroup>
                                     {data.types.map((type, index) => (
                                         <Checkbox
-                                            key={type.id}
+                                             key={type.id}
                                             isChecked={type.value()}
                                             onChange={e => type.onChange(!type.value())}
                                             >

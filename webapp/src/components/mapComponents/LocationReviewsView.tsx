@@ -1,4 +1,4 @@
-import {MapMarker} from "../../types";
+import {MapMarker, Review} from "../../types";
 import {
     Box,
     Button, Checkbox,
@@ -19,18 +19,15 @@ import {
     Stack, Text, Textarea, Image,
     useDisclosure, Flex, HStack, DrawerFooter, Spacer, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverHeader, PopoverBody, PopoverCloseButton
 } from "@chakra-ui/react";
-import React, {useState} from "react";
+import React, {ChangeEvent, useState} from "react";
 import {useDispatch} from "react-redux";
-import {useAddLocationMutation} from "../../app/services/Location";
-import {useMapEvents} from "react-leaflet";
-import {LocationType} from "../../locationType";
 // @ts-ignore
 import ReactStars from "react-rating-stars-component";
 
 export default function DetailsDrawer(marker: MapMarker) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const btnRef = React.useRef()
-    const comments : String[] = ["Comentario prueba 1","Comentario prueba 2","Comentario prueba 2","Comentario prueba 2","Comentario prueba 2","Comentario prueba 2","Comentario prueba 2","Comentario prueba 2"];
+    const reviews : Review[] = [{markerId:"a", comment:"prueba", photo:new File([],"nombre"),score:2.5 }];
 
     return (
         <>
@@ -48,12 +45,6 @@ export default function DetailsDrawer(marker: MapMarker) {
                     <DrawerCloseButton />
                     <DrawerHeader fontSize={24}><br/><br/>{marker.name}
                         <Flex gap={2}>
-                            <ReactStars
-                            count={5}
-                            value={3}
-                            size={24}
-                            activeColor="#ffd700"
-                            /> 3
                         </Flex>
                     </DrawerHeader>
                     <DrawerBody>
@@ -61,11 +52,11 @@ export default function DetailsDrawer(marker: MapMarker) {
                             <Box>
                                 <h1>Reviews</h1>
                                 <Stack spacing={'24px'} direction='column'>
-                                    {comments.map( (comment) => (
+                                    {reviews.map( (review) => (
                                         <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden'>
-                                            <Image src='gibbresh.png' loading={"lazy"} fallbackSrc='https://via.placeholder.com/150'/>
-                                            <ReactStars count={5} value={3} size={24} activeColor="#ffd700"/>
-                                            {comment}
+                                            <Image src={review.photo.name} loading={"lazy"} fallbackSrc='https://via.placeholder.com/150'/>
+                                            <ReactStars count={5} value={review.score} isHalf={true} size={28} activeColor="#ffd700" edit={false}/>
+                                            {review.comment}
                                         </Box>
                                         ))}
                                 </Stack>
@@ -73,7 +64,12 @@ export default function DetailsDrawer(marker: MapMarker) {
                         </Stack>
                     </DrawerBody>
                     <DrawerFooter>
-                        <AddCommentForm/>
+                        <AddCommentForm  name={marker.name}
+                                         locationType={marker.locationType}
+                                         id={marker.id}
+                                         latitude={marker.latitude}
+                                         longitude={marker.longitude}
+                                         shared={marker.shared}/>
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
@@ -81,19 +77,22 @@ export default function DetailsDrawer(marker: MapMarker) {
     )
 }
 
-export function AddCommentForm() {
+export function AddCommentForm(marker: MapMarker) {
     const dispatch = useDispatch();
     const {isOpen, onClose, onOpen} = useDisclosure();
 
     const initialRef = React.useRef(null)
-    var [textComment, setTextComment] = React.useState('')
-    var [isShared, setShared] = React.useState(false)
+    let [textComment, setTextComment] = React.useState('')
+    let [rating, changeRating] = React.useState(0)
 
-    var [rating, changeRating] = React.useState(0)
+    const [file, setFile] = useState(new File([],"a"));
+    const handleSetFile = (event: ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files;
+        if(files != null && files.length > 0) {
+            setFile(files[0]);
+        }
+    };
 
-    //Use .map to iterate and generate the corresponding markers
-    //This need to be optimiced because I think it generates again
-    //all the markers on top of each other
     return  (
         <>
             <Button colorScheme='teal' onClick={onOpen}>
@@ -110,7 +109,16 @@ export function AddCommentForm() {
                             <ModalCloseButton/>
                         </ModalHeader>
                         <ModalBody>
-                            <form>
+                            <form id={"formMarker"} onSubmit = {
+                                (event) => {
+                                    event.preventDefault();
+                                    const review : Review = {markerId:marker.id, comment:textComment, photo: file,score:rating};
+
+                                    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+                                        event.preventDefault();
+                                    };
+                                    handleSubmit(event)
+                                }}>
                                 <Box borderColor="gray.300" borderStyle="dashed" borderWidth="2px"
                                     rounded="md" shadow="sm" role="group" transition="all 150ms ease-in-out"
                                     _hover={{
@@ -137,14 +145,18 @@ export function AddCommentForm() {
                                             </Stack>
                                         </Box>
                                         <Input
-                                            type="file"
+                                            type="File"
                                             height="100%" width="100%"
                                             position="absolute"
                                             top="0" left="0"
                                             opacity="0"
                                             aria-hidden="true"
                                             accept="image/*"
+                                            onChange={(event)=>handleSetFile(event)}
                                         />
+                                        <image>
+
+                                        </image>
                                     </Box>
                                 </Box>
                                 <Stack spacing={2} direction='column'>
@@ -162,7 +174,8 @@ export function AddCommentForm() {
                                             count={5}
                                             value={rating}
                                             onChange={changeRating}
-                                            size={24}
+                                            size={32}
+                                            isHalf={true}
                                             activeColor="#ffd700"
                                         />
                                     </FormControl>
