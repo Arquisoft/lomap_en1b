@@ -5,7 +5,7 @@ export const reviewApi = createApi({
     reducerPath: 'review',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8082/' }),
     endpoints: (builder) => ({
-        getReviews: builder.query<Review[], void>({
+        getReviews: builder.query<Review[], string>({
             query: (locationID) => ({
                 url:`review/${locationID}`,
                 credentials:"include"
@@ -13,7 +13,7 @@ export const reviewApi = createApi({
         }),
         // Omit metemos una localización y da igual que no tenga un id asignado
         addReview: builder.mutation<void, Review>({
-            query: (newLocation) => ({
+            query: (newReview) => ({
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
@@ -22,7 +22,7 @@ export const reviewApi = createApi({
                 credentials:"include",
                 method: 'POST',
                 mode:"cors",
-                body: JSON.stringify({location: newLocation })
+                body: JSON.stringify({location: newReview })
             })
         })
     }),

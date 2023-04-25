@@ -66,15 +66,13 @@ export default {
     },
 
     getUserReviews: async function (req:Request, res:Response){
-        console.log("retrieve reviews of active user")
 
         const session = await getSessionFromStorage(req.session.solidSessionId!)
         if(session==undefined)return res.send('error')
-
         let reviewsURL = await getReviewsURL(session.info.webId);
         if(reviewsURL == undefined) return res.send("error")
 
-        console.log(req.query.locationID);
+        console.log("[LOCATION_ID: "+req.params.locationID+"]");
 
         let reviewsDataset;
         try{
@@ -89,6 +87,11 @@ export default {
                 return res.send("error")
             }
         }
+
+        console.log("===============================================================")
+        console.log("REVIEW DATASET:");
+        console.log(reviewsDataset);
+        console.log("===============================================================")
 
         return res.send(
             getThingAll(reviewsDataset)

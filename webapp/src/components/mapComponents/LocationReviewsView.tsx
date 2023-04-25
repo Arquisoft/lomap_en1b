@@ -26,7 +26,9 @@ import ReactStars from "react-rating-stars-component";
 import {useAddReviewMutation, useGetReviewsQuery} from "../../app/services/Reviews";
 
 export default function DetailsDrawer(marker: MapMarker) {
-    const {data: reviews, error, isLoading} = useGetReviewsQuery();
+    console.log("[MARKER_ID: " + marker.id + "]");
+
+    const {data: reviews, error, isLoading} = useGetReviewsQuery(marker.id);
     const { isOpen, onOpen, onClose } = useDisclosure()
     const btnRef = React.useRef()
     //const reviews : Review[] = [{markerId:"a", comment:"prueba", photo:new File([],"nombre"),score:2.5 }];
