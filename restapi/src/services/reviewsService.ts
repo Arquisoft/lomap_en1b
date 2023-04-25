@@ -16,6 +16,7 @@ import {reviewToThing, thingToReview} from "../builders/reviewBuilder";
 export default {
 
     addReview: async function (req:Request, res:Response){
+        console.log("adding review")
         const session = await getSessionFromStorage(req.session.solidSessionId!)
         if(session==undefined){
             return res.send('error')
@@ -65,6 +66,8 @@ export default {
     },
 
     getUserReviews: async function (req:Request, res:Response){
+        console.log("retrieve reviews of active user")
+
         const session = await getSessionFromStorage(req.session.solidSessionId!)
         if(session==undefined)return res.send('error')
 

@@ -21,9 +21,8 @@ import {
   HStack,
   Spinner,
 } from '@chakra-ui/react';
-import {useGetFriendsQuery} from "../../app/services/Friend";
-import {useAddFriendMutation} from "../../app/services/Friend";
-import {Friend, MapMarker} from '../../types';
+import {useGetFriendsQuery, useAddFriendMutation} from "../../app/services/Friend";
+import {Friend} from '../../types';
 import { Entry } from './Entry';
 import {Form} from "react-router-dom";
 
@@ -65,7 +64,7 @@ export function AddFriendsView(){
                       setNickName("");
                        */
 
-                  }}></Form>
+                  }}/>
                   <Box>
                       <FormControl isRequired>
                           <FormLabel>Introduce your friend's WebId:</FormLabel>

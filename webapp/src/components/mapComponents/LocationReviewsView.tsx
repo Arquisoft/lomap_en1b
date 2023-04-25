@@ -23,11 +23,13 @@ import React, {ChangeEvent, useState} from "react";
 import {useDispatch} from "react-redux";
 // @ts-ignore
 import ReactStars from "react-rating-stars-component";
+import {useAddReviewMutation, useGetReviewsQuery} from "../../app/services/Reviews";
 
 export default function DetailsDrawer(marker: MapMarker) {
+    const {data: reviews, error, isLoading} = useGetReviewsQuery();
     const { isOpen, onOpen, onClose } = useDisclosure()
     const btnRef = React.useRef()
-    const reviews : Review[] = [{markerId:"a", comment:"prueba", photo:new File([],"nombre"),score:2.5 }];
+    //const reviews : Review[] = [{markerId:"a", comment:"prueba", photo:new File([],"nombre"),score:2.5 }];
 
     return (
         <>
@@ -52,7 +54,7 @@ export default function DetailsDrawer(marker: MapMarker) {
                             <Box>
                                 <h1>Reviews</h1>
                                 <Stack spacing={'24px'} direction='column'>
-                                    {reviews.map( (review) => (
+                                    {reviews?.map( (review) => (
                                         <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden'>
                                             <Image src={review.photo.name} loading={"lazy"} fallbackSrc='https://via.placeholder.com/150'/>
                                             <ReactStars count={5} value={review.score} isHalf={true} size={28} activeColor="#ffd700" edit={false}/>
@@ -78,6 +80,7 @@ export default function DetailsDrawer(marker: MapMarker) {
 }
 
 export function AddCommentForm(marker: MapMarker) {
+    const [addReviewMutation, {isLoading, isError, error}] = useAddReviewMutation();
     const dispatch = useDispatch();
     const {isOpen, onClose, onOpen} = useDisclosure();
 
@@ -116,6 +119,8 @@ export function AddCommentForm(marker: MapMarker) {
 
                                     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
                                         event.preventDefault();
+
+                                        addReviewMutation(review);
                                     };
                                     handleSubmit(event)
                                 }}>
