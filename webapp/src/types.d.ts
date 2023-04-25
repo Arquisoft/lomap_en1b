@@ -9,6 +9,13 @@ export type MapMarker = {
     shared: boolean
 };
 
+export type Review = {
+    markerId:string,
+    comment:string,
+    photo:File,
+    score:double
+}
+
 
 
 export type Friend = {
