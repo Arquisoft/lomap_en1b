@@ -11,10 +11,10 @@ export type Location = {
 };
 
 export type Review = {
-    id:string,
-    author:string,
-    body:string,
-    media:string
+    markerId:string,
+    comment:string,
+    photo:File,
+    score:double
 }
 
 export type Friend = {

@@ -89,5 +89,5 @@ async function getLocationsURL(webId: string | undefined){
     if(webId == undefined) return undefined
     let webID = decodeURIComponent(webId)
     const podURL = await getPodUrlAll(webID);
-    return  podURL + "private/lomap/locations";
+    return  podURL + "private/lomap/reviews";
 }
