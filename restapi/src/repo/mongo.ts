@@ -1,7 +1,8 @@
 import mongoose from 'mongoose'
-const { model } = mongoose
-
+import LocationSchema from './schemas/Location';
 import ReviewSchema from "./schemas/Review"
+import SharedListSchema from './schemas/SharedList';
+const { model } = mongoose
 
 const connString = process.env.MONGO_CONN_STRING;
 
@@ -11,3 +12,6 @@ mongoose.connect(connString)
     .then(() => console.log("Mongo connected :-)"))
 
 export const Review = model('Review', ReviewSchema)
+export const Location = model('Location', LocationSchema)
+export const SharedList = model('SharedList', SharedListSchema)
+

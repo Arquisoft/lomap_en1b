@@ -34,3 +34,25 @@ function blobToFile(theBlob: Blob, fileName:string): File {
     //Cast to a File() type
     return <File>theBlob;
 }
+
+export function reviewToMongo(review:Review, authorWebId:string, imageUrl:string):Thing{
+    return buildThing(createThing())
+        .addStringNoLocale("schema.org/author", authorWebId)
+        .addUrl(RDFS.seeAlso, review.markerId)
+        .addStringNoLocale(SCHEMA_INRUPT.text, review.comment)
+        .addUrl(SCHEMA_INRUPT.image, imageUrl)
+        .addInteger("schema.org/ratingValue", review.score)
+        .addUrl(RDF.type, "https://schema.org/Review")
+        .build()
+}
+
+export function mongoToReview(review:Review, authorWebId:string, imageUrl:string):Thing{
+    return buildThing(createThing())
+        .addStringNoLocale("schema.org/author", authorWebId)
+        .addUrl(RDFS.seeAlso, review.markerId)
+        .addStringNoLocale(SCHEMA_INRUPT.text, review.comment)
+        .addUrl(SCHEMA_INRUPT.image, imageUrl)
+        .addInteger("schema.org/ratingValue", review.score)
+        .addUrl(RDF.type, "https://schema.org/Review")
+        .build()
+}

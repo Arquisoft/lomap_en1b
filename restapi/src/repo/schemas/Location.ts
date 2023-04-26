@@ -9,10 +9,8 @@ const LocationSchema = new Schema({
     latitude: Number,
     longitude: Number,
     isShared: Boolean,
-    isOwnLocation: Boolean
-    //owner
-    //nuevo esquema ocn un id que puede ser
-    // un ownerr y una lista de permitidos
+    isOwnLocation: Boolean,
+    owner : String //El webID de la persona que crea esa localizacion
 
     //OJO para ver una review tienes que ser amigo de la persona que tiene la localizacvion
 })
