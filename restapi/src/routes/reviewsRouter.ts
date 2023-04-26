@@ -3,7 +3,7 @@ import reviewsService from "../services/reviewsService";
 
 const reviewsRouter: Router = express.Router()
 
-reviewsRouter.get("/", reviewsService.getReviews);
+reviewsRouter.get("/:locationID", reviewsService.getUserReviews);
 
 reviewsRouter.post("/", reviewsService.addReview);
 
