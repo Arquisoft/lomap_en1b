@@ -8,6 +8,7 @@ import reviewsRouter from "./routes/reviewsRouter"
 
 //dotenv.config()
 const PORT = 8082
+const mongoose = require('mongoose');
 
 // Configure attribute in webapp session to link it to solid session
 declare module 'express-session' {
@@ -15,6 +16,14 @@ declare module 'express-session' {
         solidSessionId:string;
     }
 }
+
+//const connString = process.env.MONGO_CONN_STRING;
+//FIXME: I will use this to try the connections
+const connString = 'mongodb+srv://admin:' +
+    'admin@musicstoreapp.cew3gcy.mongodb.net/' +
+    'prueba?retryWrites=true&w=majority';
+
+if(connString == undefined) throw new Error("MongoDB connection string is undefined")
 
 const app = express()
     .use(session({
@@ -29,10 +38,22 @@ const app = express()
     .use('/friendship', friendshipsRouter)
     .use('/review', reviewsRouter)
 
-
-app.listen(PORT, ()=> {
-    console.log('Server running on port ' + PORT)
+mongoose.connect(connString, {
+    useNewUrlParser : true,
+    useUnifiedTopology: true,
 })
+    .then(() => {
+        console.log("Mongo connected :-)")
+        //la config del servidor
+        app.listen(PORT, ()=> {
+            console.log('Server running on port ' + PORT)
+        })
+
+        // @ts-ignore
+    }).catch(err=> {
+    console.error(err)
+})
+
 
 
 //connectToDatabase(process.env.CONNECTION_STRING as string).then( db =>{

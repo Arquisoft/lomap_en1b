@@ -1,13 +1,51 @@
-import mongoose from 'mongoose'
-import ReviewSchema from "./schemas/Review"
+const ReviewModel = require('../repo/schemas/Review')
+import {Review} from '../types';
 
-const { model } = mongoose
-export const Review = model('Review', ReviewSchema)
 export const ReviewRepository = {
-    async createReview(review: any) {
-        const newReview = new Review(review);
-        await newReview.save();
-        return newReview;
+    async createReview(review: Review) {
+        const newReview = new ReviewModel({
+            stars : review.score,
+            comment : review.comment,
+            location : review.markerId,
+            //FIXME: Podemos pasar varias
+            images : review.photo
+        })
+
+        newReview.save()
+            //@ts-ignore
+            .then(result => {
+                console.log(result);
+            })
+            //@ts-ignore
+            .catch(err => {
+                console.log(err);
+            })
     },
+
+    async getReviewsForGivenLocation(locationId: String) {
+        //Todas las reviews para una localizacion, no se si hace
+        // falta filtrar aqui el hecho de ser o no amigo, o si
+        // se hace a nivel webapp
+
+        ReviewModel.find({location : locationId})
+            //@ts-ignore
+            .then(reviews =>{
+                return reviews;
+            })
+            //@ts-ignore
+            .catch(err => {
+                console.log(err);
+            })
+    }
+    /*
+    async deleteReview(review: any) {
+
+    },
+    async getReview(review: any) {
+
+    },
+
+     */
+
 
 };

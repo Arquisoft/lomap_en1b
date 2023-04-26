@@ -1,7 +1,5 @@
-import mongoose from 'mongoose'
-import { LocationType } from '../../locationType';
-const { Schema } = mongoose
-
+const { model, Schema } = mongoose
+const {LocationType} = require('../../types');
 const LocationSchema = new Schema({
     id: String,
     name: String,
@@ -15,4 +13,6 @@ const LocationSchema = new Schema({
     //OJO para ver una review tienes que ser amigo de la persona que tiene la localizacvion
 })
 
-export default  LocationSchema;
+const Location = model('Location', LocationSchema)
+
+export default Location;

@@ -12,6 +12,7 @@ import {
 import {validateReview, validateReviewThing} from "../validators/reviewValidator";
 import {reviewToThing, thingToReview} from "../builders/reviewBuilder";
 
+import {ReviewRepository} from "../repo/reviewRepository";
 
 export default {
 
@@ -47,10 +48,8 @@ export default {
                 return res.send("error")
             }
         }
-
         //Save image
         const savedImage = await saveFileInContainer(imagesURL, review.photo);
-
 
         const reviewThing = reviewToThing(review, session.info.webId!, savedImage.name)
         reviewsDataset = setThing(reviewsDataset, reviewThing);
@@ -60,13 +59,12 @@ export default {
             reviewsDataset,
             {fetch: session.fetch}             // fetch from authenticated Session
         );
-
+        ReviewRepository.createReview(review);
         return res.send(getThingAll(newDataset).map(locationThing=>thingToReview(locationThing)))
-
     },
 
     getUserReviews: async function (req:Request, res:Response){
-
+        //FIXME condicion: si tienes acceso a la localizacion o ser el dueño
         const session = await getSessionFromStorage(req.session.solidSessionId!)
         if(session==undefined)return res.send('error')
         let reviewsURL = await getReviewsURL(session.info.webId);

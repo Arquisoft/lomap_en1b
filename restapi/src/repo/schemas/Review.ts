@@ -1,6 +1,4 @@
-import mongoose from 'mongoose'
-const { Schema } = mongoose
-
+const { model, Schema } = mongoose
 const ReviewSchema = new Schema({
     stars : Number,
     comment : String,
@@ -9,4 +7,6 @@ const ReviewSchema = new Schema({
     images : [String]
 })
 
-export default  ReviewSchema;
+const Review = model('Review', ReviewSchema)
+
+export default  Review;
