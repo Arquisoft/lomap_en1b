@@ -8,10 +8,22 @@ const LocationSchema = new Schema({
     longitude: Number,
     isShared: Boolean,
     isOwnLocation: Boolean,
-    owner : String //El webID de la persona que crea esa localizacion
+    owner : String
 
     //OJO para ver una review tienes que ser amigo de la persona que tiene la localizacvion
 })
+
+LocationSchema.methods.setShared = function setShared (arg : boolean) {
+    return this.isShared = arg;
+};
+
+LocationSchema.methods.getSharedLocationsFromUsers = function getSharedLocationsFromUsers (users : [String]) {
+    return this.model('Location').find({ owner: { $in: users } ,isShared: true });
+};
+
+LocationSchema.methods.isOwner = function isOwner (webId: String) {
+    return this.owner.equals(webId);
+};
 
 const Location = model('Location', LocationSchema)
 

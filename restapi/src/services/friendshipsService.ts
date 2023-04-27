@@ -94,7 +94,9 @@ export default {
             friendsDataset,
             {fetch: session.fetch}             // fetch from authenticated Session
         );
-        sharedListRepository.addToSharedList(friend.webId)
+        //FIXME Check if it is correct or if I should do some sort of mechanism to ensure that there exists session.info.webId
+        //@ts-ignore
+        sharedListRepository.addToSharedList(session.info.webId,friend.webId)
         return res.send(getThingAll(newDataset).map(locationThing=>thingToFriend(locationThing, true)))
     },
     deleteFriend : async function(_req:Request, _res:Response){

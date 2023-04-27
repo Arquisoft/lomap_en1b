@@ -1,27 +1,29 @@
-const LocationModel = require('../repo/schemas/Location')
-import Location from '../types';
-import {SharedLocationRepository} from "../repo/SharedLocationRepository";
+import LocationModel from '../repo/models/Location'
+import {Location} from '../types';
+
 export const SharedLocationRepository = {
-    //Añadir una nueva copia de localizacion compartida a la base de datos
-    //quitar esa localizacion de la base de datos
+    async addSharedLocation(location: Location, ownerId: String) {
+        const newLocation = new LocationModel({
+            id: location.id,
+            name: location.name,
+            locationType: location.locationType,
+            latitude: location.latitude,
+            longitude: location.longitude,
+            isShared: true,
+            isOwnLocation: location.isOwnLocation,
+            owner : ownerId
 
-
-    async addSharedLocation(locationData: any) {
-
-        //Update
+            //OJO para ver una review tienes que ser amigo de la persona que tiene la localizacvion
+        })
+        newLocation.save()
     },
 
     async removeSharedLocation(locationId: string) {
-
+        LocationModel.removeSharedLocation(locationId)
     },
 
-    async getLocation(locationId: string) {
-        //@ts-ignore
-        LocationModel.find({}).then( result =>{
-
-            return result;
-        })
-
+    async getSharedLocationFromUsers(users : [String]) {
+        return LocationModel.getSharedLocationsFromUsers(users)
     },
 
 };

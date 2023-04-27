@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import SharedListSchema from './schemas/SharedList';
+import SharedListSchema from './models/SharedList';
 const { model } = mongoose
 export const SharedList = model('SharedList', SharedListSchema)
 
@@ -10,8 +10,6 @@ export const sharedListRepository = {
             owner: userId,
             sharedList: friendId
         })
-
-
 
         const newSharedList = new SharedList(newList);
         await newSharedList.save();

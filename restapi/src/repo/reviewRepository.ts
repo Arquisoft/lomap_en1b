@@ -1,4 +1,4 @@
-const ReviewModel = require('../repo/schemas/Review')
+import ReviewModel from '../repo/models/Review'
 import {Review} from '../types';
 
 export const ReviewRepository = {
@@ -36,7 +36,16 @@ export const ReviewRepository = {
             .catch(err => {
                 console.log(err);
             })
+    },
+
+    async getReviewsFromListOfLocation(locations: [String]) {
+        return ReviewModel.getReviewsFromListOfLocation(locations)
+    },
+
+    async getReviewsOfGivenUser(user : String) {
+        return ReviewModel.getReviewsOfGivenUser(user)
     }
+
     /*
     async deleteReview(review: any) {
 
