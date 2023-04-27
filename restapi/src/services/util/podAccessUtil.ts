@@ -6,7 +6,7 @@ export async function getOrCreateDataset (datasetURL:string, session:Session){
     try{
         dataset=  await getSolidDataset(
             datasetURL,
-            {fetch: session.fetch}          // fetch from authenticated session
+            {fetch: session.fetch}
         );
     } catch (error:any) {
         if(typeof error.statusCode === "number" && error.statusCode === 404){

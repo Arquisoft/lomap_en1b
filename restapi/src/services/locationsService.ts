@@ -1,86 +1,51 @@
 import {
-    createSolidDataset,
     getPodUrlAll,
-    getSolidDataset, getThingAll,
+    getThingAll,
     saveSolidDatasetAt,
     setThing
 } from "@inrupt/solid-client";
 import {Location} from "../types";
-import {Request, Response} from "express";
-import {getSessionFromStorage} from "@inrupt/solid-client-authn-node";
+import {Session} from "@inrupt/solid-client-authn-node";
 import {locationToThing, thingToLocation} from "../builders/locationBuilder"
 import {validateLocation, validateLocationThing} from "../validators/locationValidator";
+import {getOrCreateDataset} from "./util/podAccessUtil";
 
 
 export default {
 
-    saveLocation: async function (req:Request, res:Response){
-        const session = await getSessionFromStorage(req.session.solidSessionId!)
-        if(session==undefined){
-            return res.send('error')
-        }
-
-        let location : Location = req.body.location;
-        if(!validateLocation(location)){
-            res.send('error')
-        }
+    saveLocation: async function (location:Location, session:Session){
+        if(!validateLocation(location)) return "error"
 
         let locationsURL = await getLocationsURL(session.info.webId);
-        if(locationsURL == undefined){
-            return res.send("error")
-        }
+        if(locationsURL == undefined) return "error"
 
-        let locationsDataset;
-        try{
-            locationsDataset =  await getSolidDataset(
-                locationsURL,
-                {fetch: session.fetch}          // fetch from authenticated session
-            );
-        } catch (error:any) {
-            if(typeof error.statusCode === "number" && error.statusCode === 404){
-                locationsDataset = createSolidDataset();
-            } else {
-                return res.send("error")
-            }
-        }
+        let locationsDataset = await getOrCreateDataset(locationsURL, session);
+        if(locationsDataset == undefined) return "error"
+        locationsDataset = locationsDataset!
 
         const locationThing = locationToThing(location)
         locationsDataset = setThing(locationsDataset, locationThing);
 
-        let newDataset = await saveSolidDatasetAt(
+        await saveSolidDatasetAt(
             locationsURL,
             locationsDataset,
-            {fetch: session.fetch}             // fetch from authenticated Session
+            {fetch: session.fetch}
         );
 
-        return res.send(getThingAll(newDataset).map(locationThing=>thingToLocation(locationThing)))
+        return "ok"
     },
 
-    getOwnLocations: async function (req:Request, res:Response){
-        const session = await getSessionFromStorage(req.session.solidSessionId!)
-        if(session==undefined)return res.send('error')
-
+    getLocations: async function(session:Session){
         let locationsURL = await getLocationsURL(session.info.webId);
-        if(locationsURL == undefined) return res.send("error")
+        if(locationsURL == undefined) return "error"
 
-        let locationsDataset;
-        try{
-            locationsDataset =  await getSolidDataset(
-                locationsURL,
-                {fetch: session.fetch}          // fetch from authenticated session
-            );
-        } catch (error:any) {
-            if(typeof error.statusCode === "number" && error.statusCode === 404){
-                locationsDataset = createSolidDataset();
-            } else {
-                return res.send("error")
-            }
-        }
+        let locationsDataset = await getOrCreateDataset(locationsURL, session);
+        if(locationsDataset == undefined) return "error"
+        locationsDataset = locationsDataset!
 
-        return res.send(
-            getThingAll(locationsDataset)
+        return getThingAll(locationsDataset)
                 .filter(locationThing=>validateLocationThing(locationThing))
-                .map(locationThing=>thingToLocation(locationThing)))
+                .map(locationThing=>thingToLocation(locationThing));
     },
 
 }
