@@ -10,17 +10,9 @@ export default {
         ReviewRepository.createReview(review)
     },
 
-    getReviews: async function (userWebId : String){
-        //Obtain the list of friends of the user
-        let users = await SharedListRepository.getSharedListFor(userWebId)
-        //Add the user to the list
-        users.concat(userWebId)
-        //Obtain all those shared locations
-        let locations = await SharedLocationRepository.getSharedLocationFromUsers(users)
-        //Obtain the reviews of those locations
-        let reviews = await ReviewRepository.getReviewsFromListOfLocation(locations)
-        //return
-        return reviews;
+    getReviews: async function (locationID : String){
+        //Obtain only the reviews of the given location
+        return await ReviewRepository.getReviewsFromListOfLocation([locationID])
     },
 
     getLocationsSharedWithUser: async function (userWebId : String){

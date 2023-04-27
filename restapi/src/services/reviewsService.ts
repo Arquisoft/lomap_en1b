@@ -97,7 +97,7 @@ export default {
                 .filter(reviewThing=>validateReviewThing(reviewThing))
                 .map(reviewThing=>thingToReview(reviewThing))
                 //@ts-ignore
-                .concat(MongoService.getReviews(session.info.webId)))
+                .concat(MongoService.getReviews(req.params.locationID)))
     },
 
     deleteReview: async function (_req:Request, _res:Response){
