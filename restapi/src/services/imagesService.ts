@@ -6,15 +6,16 @@ import {
 import {Session} from "@inrupt/solid-client-authn-node";
 import {imageToThing} from "../builders/imageBuilder";
 import {getOrCreateDataset} from "./util/podAccessUtil";
+import {PodProviderError} from "./util/customErrors";
 
 export default {
     saveImage: async function (encodedImage:string, session:Session){
         let imagesURL = await getImagesURL(session.info.webId);
-        if(imagesURL == undefined) return "error"
+        if(imagesURL == undefined) throw new PodProviderError("Unable to get the images dataset URL.");
 
         // Get or create images dataset
         let imagesDataset = await getOrCreateDataset(imagesURL, session)
-        if(imagesDataset == undefined) return "error"
+        if(imagesDataset == undefined) throw new PodProviderError("Unable to get the images dataset.");
         imagesDataset = imagesDataset!
 
         let imageThing:Thing =  imageToThing(encodedImage)

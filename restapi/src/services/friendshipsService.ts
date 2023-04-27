@@ -15,16 +15,17 @@ import {validateFriend, validateFriendThing} from "../validators/friendValidator
 import {Friend} from "../types";
 import {FOAF} from "@inrupt/vocab-common-rdf";
 import {getOrCreateDataset} from "./util/podAccessUtil";
+import {InvalidRequestBodyError, PodProviderError} from "./util/customErrors";
 
 export default {
 
     getFriends : async function (session:Session){
         let friendsURL = await getFriendsURL(session.info.webId);
-        if(friendsURL == undefined) return "error"
+        if(friendsURL == undefined) throw new PodProviderError("Unable to get the contacts dataset URL.")
 
         //Get friends from contacts
         let friendsDataset = await getOrCreateDataset(friendsURL, session)
-        if(friendsDataset == undefined) return "error"
+        if(friendsDataset == undefined) throw new PodProviderError("Unable to get the contacts dataset.")
         friendsDataset = friendsDataset!
 
         //Get friends from profile
@@ -45,16 +46,16 @@ export default {
     },
 
     addFriend : async function (friend:Friend, session:Session){
-        if(!validateFriend(friend)) return 'error'
+        if(!validateFriend(friend)) throw new InvalidRequestBodyError("Not valid friendship.");
 
         let friendsURL = await getFriendsURL(session.info.webId);
-        if(friendsURL == undefined) return "error"
+        if(friendsURL == undefined) throw new PodProviderError("Unable to get the contacts dataset URL.");
 
         let friendsDataset = await getOrCreateDataset(friendsURL, session);
-        if(friendsDataset == undefined) return "error"
-        friendsDataset = friendsDataset!
+        if(friendsDataset == undefined) throw new PodProviderError("Unable to get the contacts dataset.");
+        friendsDataset = friendsDataset!;
 
-        const friendThing = friendToThing(friend)
+        const friendThing = friendToThing(friend);
         friendsDataset = setThing(friendsDataset, friendThing);
 
         await saveSolidDatasetAt(
@@ -63,7 +64,7 @@ export default {
             {fetch: session.fetch}
         );
 
-        return "ok"
+        return friendThing.url;
     },
 
     deleteFriend : async function(_req:Request, _res:Response){

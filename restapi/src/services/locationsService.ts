@@ -9,18 +9,19 @@ import {Session} from "@inrupt/solid-client-authn-node";
 import {locationToThing, thingToLocation} from "../builders/locationBuilder"
 import {validateLocation, validateLocationThing} from "../validators/locationValidator";
 import {getOrCreateDataset} from "./util/podAccessUtil";
+import {InvalidRequestBodyError, PodProviderError} from "./util/customErrors";
 
 
 export default {
 
     saveLocation: async function (location:Location, session:Session){
-        if(!validateLocation(location)) return "error"
+        if(!validateLocation(location)) throw new InvalidRequestBodyError("Not valid location.")
 
         let locationsURL = await getLocationsURL(session.info.webId);
-        if(locationsURL == undefined) return "error"
+        if(locationsURL == undefined) throw new PodProviderError("Unable to get the locations dataset URL.")
 
         let locationsDataset = await getOrCreateDataset(locationsURL, session);
-        if(locationsDataset == undefined) return "error"
+        if(locationsDataset == undefined) throw new PodProviderError("Unable to get the locations dataset.")
         locationsDataset = locationsDataset!
 
         const locationThing = locationToThing(location)
@@ -32,15 +33,15 @@ export default {
             {fetch: session.fetch}
         );
 
-        return "ok"
+        return locationThing.url
     },
 
     getLocations: async function(session:Session){
         let locationsURL = await getLocationsURL(session.info.webId);
-        if(locationsURL == undefined) return "error"
+        if(locationsURL == undefined) throw new PodProviderError("Unable to get the locations dataset URL.")
 
         let locationsDataset = await getOrCreateDataset(locationsURL, session);
-        if(locationsDataset == undefined) return "error"
+        if(locationsDataset == undefined) throw new PodProviderError("Unable to get the locations dataset.")
         locationsDataset = locationsDataset!
 
         return getThingAll(locationsDataset)

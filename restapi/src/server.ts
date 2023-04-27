@@ -1,4 +1,4 @@
-import express from "express"
+import express, {Response, Request, Errback, NextFunction} from "express"
 import cors from "cors"
 import session from "express-session";
 import locationsRouter from "./routes/locationsRouter";
@@ -28,18 +28,11 @@ const app = express()
     .use('/location', locationsRouter)
     .use('/friendship', friendshipsRouter)
     .use('/review', reviewsRouter)
+    .use(function (_err:Errback, _req:Request, res:Response, _next:NextFunction){
+        return res.status(500).send("Internal server error.")
+    })
 
 
 app.listen(PORT, ()=> {
     console.log('Server running on port ' + PORT)
 })
-
-
-//connectToDatabase(process.env.CONNECTION_STRING as string).then( db =>{
-    //Repositories
-//    let repoLocations = new Repository("locations", db);
-    //Rutas
-//    initLocationsRouter(app, repoLocations)
-//} );
-
-
