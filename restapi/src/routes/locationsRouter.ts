@@ -26,7 +26,8 @@ const locationsRouter: Router = express.Router()
         if(session==undefined) return res.status(401).send("Invalid access.");
 
         try {
-            return res.send(locationsService.saveLocation(await req.body.location, session));
+            const result = await locationsService.saveLocation(req.body.location, session)
+            return res.status(200).send(result);
         } catch (error:any){
             if(error instanceof InvalidRequestBodyError){
                 return res.status(400).send(error.message);

@@ -27,11 +27,15 @@ export default {
         const locationThing = locationToThing(location)
         locationsDataset = setThing(locationsDataset, locationThing);
 
-        await saveSolidDatasetAt(
+        console.log(locationsDataset)
+
+        console.log(await saveSolidDatasetAt(
             locationsURL,
             locationsDataset,
             {fetch: session.fetch}
-        );
+        ))
+
+        console.log(locationThing)
 
         return locationThing.url
     },
