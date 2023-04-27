@@ -6,27 +6,21 @@ import {
     getPodUrlAll,
     getSolidDataset,
     getThingAll,
-    saveFileInContainer,
     saveSolidDatasetAt,
     setThing
 } from "@inrupt/solid-client";
 import {validateReview, validateReviewThing} from "../validators/reviewValidator";
 import {reviewToThing, thingToReview} from "../builders/reviewBuilder";
+import ImagesService from "./imagesService";
+import {getOrCreateDataset} from "./util/podAccessUtil";
 
 export default {
 
     addReview: async function (req:Request, res:Response){
-        console.log("adding review")
         const session = await getSessionFromStorage(req.session.solidSessionId!)
         if(session==undefined){
             return res.send('error')
         }
-
-        console.log("=================================")
-        console.log("BODY")
-        console.log("=================================")
-
-        console.log((req.body))
 
         let review : Review = req.body.review;
         if(!validateReview(review)){
@@ -36,41 +30,14 @@ export default {
         let reviewsURL = await getReviewsURL(session.info.webId);
         if(reviewsURL == undefined) return res.send("error")
 
-        let imagesURL = await getImagesURL(session.info.webId);
-        if(imagesURL == undefined) return res.send("error")
-
         // Get or create reviews dataset
-        let reviewsDataset;
-        try{
-            reviewsDataset =  await getSolidDataset(
-                reviewsURL,
-                {fetch: session.fetch}          // fetch from authenticated session
-            );
-        } catch (error:any) {
-            if(typeof error.statusCode === "number" && error.statusCode === 404){
-                reviewsDataset = createSolidDataset();
-            } else {
-                return res.send("error")
-            }
-        }
+        let reviewsDataset = await getOrCreateDataset(reviewsURL, session);
+        if(reviewsDataset == undefined) return res.send("error")
+        reviewsDataset = reviewsDataset!
 
-        console.log("=================================")
-        console.log("REVIEW")
-        console.log("=================================")
+        const imageURL = await ImagesService.saveImage(req);
 
-        console.log(review)
-
-        //Read review.encodedPhoto, decode it and store it in review.photo
-        //TODO
-        const fetchResult = await fetch(review.encodedPhoto)
-        if(fetchResult == null) return res.send("error")
-        review.photo = await fetchResult.blob();
-
-        console.log(review)
-
-        const savedImage = await saveFileInContainer(imagesURL, review.photo, {fetch:session.fetch});
-
-        const reviewThing = reviewToThing(review, session.info.webId!, savedImage.name)
+        const reviewThing = reviewToThing(review, session.info.webId!, imageURL)
         reviewsDataset = setThing(reviewsDataset, reviewThing);
 
         let newDataset = await saveSolidDatasetAt(
@@ -106,12 +73,6 @@ export default {
             }
         }
 
-        console.log("===============================================================")
-        console.log("REVIEW DATASET:");
-        console.log(reviewsDataset);
-        console.log("===============================================================")
-
-
         return res.send(
             getThingAll(reviewsDataset)
                 .filter(reviewThing=>validateReviewThing(reviewThing))
@@ -129,11 +90,4 @@ async function getReviewsURL(webId: string | undefined){
     let webID = decodeURIComponent(webId)
     const podURL = await getPodUrlAll(webID);
     return  podURL + "private/lomap/reviews";
-}
-
-async function getImagesURL(webId: string | undefined){
-    if(webId == undefined) return undefined
-    let webID = decodeURIComponent(webId)
-    const podURL = await getPodUrlAll(webID);
-    return  podURL + "private/lomap/images";
 }
