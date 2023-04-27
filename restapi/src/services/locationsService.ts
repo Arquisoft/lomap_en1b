@@ -10,7 +10,7 @@ import {Request, Response} from "express";
 import {getSessionFromStorage} from "@inrupt/solid-client-authn-node";
 import {locationToThing, thingToLocation} from "../builders/locationBuilder"
 import {validateLocation, validateLocationThing} from "../validators/locationValidator";
-
+import MongoService from "./MongoService"
 
 export default {
 
@@ -53,6 +53,11 @@ export default {
             {fetch: session.fetch}             // fetch from authenticated Session
         );
 
+        if(location.isShared){
+            // @ts-ignore
+            MongoService.addLocation(location, session.info.webId)
+        }
+
         return res.send(getThingAll(newDataset).map(locationThing=>thingToLocation(locationThing)))
     },
 
@@ -80,7 +85,9 @@ export default {
         return res.send(
             getThingAll(locationsDataset)
                 .filter(locationThing=>validateLocationThing(locationThing))
-                .map(locationThing=>thingToLocation(locationThing)))
+                .map(locationThing=>thingToLocation(locationThing))
+                //@ts-ignore
+                .concat(MongoService.getLocationsSharedWithUser(session.info.webId)))
     },
 
 }

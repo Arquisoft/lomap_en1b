@@ -11,8 +11,7 @@ import {
 } from "@inrupt/solid-client";
 import {validateReview, validateReviewThing} from "../validators/reviewValidator";
 import {reviewToThing, thingToReview} from "../builders/reviewBuilder";
-
-import {ReviewRepository} from "../repo/reviewRepository";
+import MongoService from "./MongoService"
 
 export default {
 
@@ -59,7 +58,9 @@ export default {
             reviewsDataset,
             {fetch: session.fetch}             // fetch from authenticated Session
         );
-        ReviewRepository.createReview(review);
+
+        MongoService.createReview(review);
+
         return res.send(getThingAll(newDataset).map(locationThing=>thingToReview(locationThing)))
     },
 
@@ -94,7 +95,9 @@ export default {
         return res.send(
             getThingAll(reviewsDataset)
                 .filter(reviewThing=>validateReviewThing(reviewThing))
-                .map(reviewThing=>thingToReview(reviewThing)))
+                .map(reviewThing=>thingToReview(reviewThing))
+                //@ts-ignore
+                .concat(MongoService.getReviews(session.info.webId)))
     },
 
     deleteReview: async function (_req:Request, _res:Response){

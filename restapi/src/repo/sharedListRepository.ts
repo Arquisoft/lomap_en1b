@@ -1,24 +1,16 @@
-import mongoose from 'mongoose'
-import SharedListSchema from './models/SharedList';
-const { model } = mongoose
-export const SharedList = model('SharedList', SharedListSchema)
+import SharedListModel from './models/SharedList';
 
-export const sharedListRepository = {
-    async addToSharedList(userId: string, friendId: string) {
-
-        const newList = new SharedListSchema({
-            owner: userId,
-            sharedList: friendId
-        })
-
-        const newSharedList = new SharedList(newList);
-        await newSharedList.save();
-        return newSharedList;
+export const SharedListRepository = {
+    async addToSharedList(userWebId: string, friendId: string) {
+        SharedListModel.addToList(userWebId, friendId)
     },
-    async removeFromSharedList(sharedList: any) {
-        const newSharedList = new SharedList(sharedList);
-        await newSharedList.save();
-        return newSharedList;
+    async removeFromSharedList(userWebId: string, friendId: string) {
+        SharedListModel.getSharedListFor(userWebId, friendId)
     },
+
+    async getSharedListFor (userWebId : String) {
+        return SharedListModel.getSharedListFor(userWebId)
+    },
+
 
 };

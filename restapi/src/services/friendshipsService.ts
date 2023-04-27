@@ -16,7 +16,8 @@ import {friendToThing, thingToFriend, urlToFriend} from "../builders/friendBuild
 import {validateFriend, validateFriendThing} from "../validators/friendValidator";
 import {Friend} from "../types";
 import {FOAF} from "@inrupt/vocab-common-rdf";
-import {sharedListRepository} from "../repo/sharedListRepository";
+import MongoService from "./MongoService"
+
 export default {
 
     getFriends : async function (req:Request, res:Response){
@@ -94,9 +95,10 @@ export default {
             friendsDataset,
             {fetch: session.fetch}             // fetch from authenticated Session
         );
-        //FIXME Check if it is correct or if I should do some sort of mechanism to ensure that there exists session.info.webId
+
         //@ts-ignore
-        sharedListRepository.addToSharedList(session.info.webId,friend.webId)
+        MongoService.addFriend(friend.webId , session.info.webId)
+
         return res.send(getThingAll(newDataset).map(locationThing=>thingToFriend(locationThing, true)))
     },
     deleteFriend : async function(_req:Request, _res:Response){

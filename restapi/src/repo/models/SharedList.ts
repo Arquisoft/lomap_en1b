@@ -1,23 +1,54 @@
 const { model, Schema } = mongoose
 const SharedListSchema = new Schema({
-    //ID del propietario de la localizacion
+    //ID of the owner of the locations
     owner: String,
-    //LIst with the IDs of those who can see it
+    //List with the IDs of those who can see it
     sharedList: [String]
 })
 
 SharedListSchema.methods.getSharedListFor = function getSharedListFor (userWebId : String) {
-    return this.model('SharedList').find({ owner: userWebId });
+    this.model('SharedList').find({ owner: userWebId })
+        //@ts-ignore
+        .then( result => {
+            return result.sharedList
+        })
+        //@ts-ignore
+        .catch(err => {
+            console.log(err)
+        });
 };
 
-SharedListSchema.methods.addToList = function getSharedLocations (friendWebId : String) {
-    this.sharedList.push(friendWebId);
+SharedListSchema.methods.addToList = function addToList (userWebId : String , friendWebId : String) {
+    this.model('SharedList').find({ owner: userWebId })
+        //@ts-ignore
+        .then( result => {
+            if(result.sharedList.length <= 0){
+                const newList = new SharedList({
+                    owner: userWebId,
+                    sharedList: [friendWebId]
+                })
+                newList.save()
+            }else{
+                result.sharedList.push(friendWebId)
+            }
+        })
+        //@ts-ignore
+        .catch(err => {
+            console.log(err)
+        });
 };
 
-SharedListSchema.methods.removeFromList = function isOwner (friendWebId: String) {
-    let newArray = this.sharedList.filter((e : String) => e !== friendWebId)
-    this.SharedList = null;
-    this.SharedList = newArray;
+SharedListSchema.methods.removeFromList = function removeFromList (userWebId : String , friendWebId : String) {
+    this.model('SharedList').find({ owner: userWebId })
+        //@ts-ignore
+        .then( result => {
+            let newArray = result.sharedList.filter((e : String) => e !== friendWebId)
+            result.sharedList = newArray;
+        })
+        //@ts-ignore
+        .catch(err => {
+            console.log(err)
+        });
 };
 
 const SharedList = model('SharedList', SharedListSchema)
