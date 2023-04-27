@@ -1,7 +1,7 @@
 import {MapMarker, Review} from "../../types";
 import {
     Box,
-    Button, Checkbox,
+    Button,
     Drawer,
     DrawerBody,
     DrawerCloseButton,
@@ -15,12 +15,11 @@ import {
     ModalCloseButton,
     ModalContent, ModalFooter,
     ModalHeader,
-    ModalOverlay, Select,
+    ModalOverlay,
     Stack, Text, Textarea, Image,
-    useDisclosure, Flex, HStack, DrawerFooter, Spacer, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverHeader, PopoverBody, PopoverCloseButton
+    useDisclosure, Flex, DrawerFooter, Spacer, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverHeader, PopoverBody, PopoverCloseButton
 } from "@chakra-ui/react";
 import React, {ChangeEvent, useState} from "react";
-import {useDispatch} from "react-redux";
 // @ts-ignore
 import ReactStars from "react-rating-stars-component";
 import {useAddReviewMutation, useGetReviewsQuery} from "../../app/services/Reviews";
@@ -30,8 +29,6 @@ export default function DetailsDrawer(marker: MapMarker) {
 
     const {data: reviews, error, isLoading} = useGetReviewsQuery(marker.id);
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const btnRef = React.useRef()
-    //const reviews : Review[] = [{markerId:"a", comment:"prueba", photo:new File([],"nombre"),score:2.5 }];
 
     return (
         <>
@@ -83,7 +80,6 @@ export default function DetailsDrawer(marker: MapMarker) {
 
 export function AddCommentForm(marker: MapMarker) {
     const [addReviewMutation, {isLoading, isError, error}] = useAddReviewMutation();
-    const dispatch = useDispatch();
     const {isOpen, onClose, onOpen} = useDisclosure();
 
     const initialRef = React.useRef(null)
@@ -117,13 +113,34 @@ export function AddCommentForm(marker: MapMarker) {
                             <form id={"formMarker"} onSubmit = {
                                 (event) => {
                                     event.preventDefault();
-                                    const review : Review = {markerId:marker.id, comment:textComment, photo: file,score:rating};
+                                    const review : Review = {markerId:marker.id, comment:textComment, photo: file,score:rating, encodedPhoto:""};
 
                                     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
                                         event.preventDefault();
-
-                                        addReviewMutation(review);
+                                        if(review.photo) {
+                                            getBase64(file)
+                                                .then(result => {
+                                                    review.encodedPhoto = result;
+                                                    addReviewMutation(review);
+                                                })
+                                                .catch(err => {
+                                                    console.log(err);
+                                                });
+                                        }
                                     };
+
+                                    const getBase64 = (file:File) => {
+                                        return new Promise<string>(resolve => {
+                                            let encoded = "";
+                                            let reader = new FileReader();
+                                            reader.readAsDataURL(file);
+                                            reader.onload = () => {
+                                                encoded = reader.result as string;
+                                                resolve(encoded);
+                                            };
+                                        });
+                                    };
+
                                     handleSubmit(event)
                                 }}>
                                 <Box borderColor="gray.300" borderStyle="dashed" borderWidth="2px"
@@ -161,9 +178,6 @@ export function AddCommentForm(marker: MapMarker) {
                                             accept="image/*"
                                             onChange={(event)=>handleSetFile(event)}
                                         />
-                                        <image>
-
-                                        </image>
                                     </Box>
                                 </Box>
                                 <Stack spacing={2} direction='column'>

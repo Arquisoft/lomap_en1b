@@ -14,6 +14,7 @@ export type Review = {
     comment:string,
     photo:File,
     score:double
+    encodedPhoto:string
 }
 
 

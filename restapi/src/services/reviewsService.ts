@@ -5,13 +5,13 @@ import {
     createSolidDataset,
     getPodUrlAll,
     getSolidDataset,
-    getThingAll, saveFileInContainer,
+    getThingAll,
+    saveFileInContainer,
     saveSolidDatasetAt,
     setThing
 } from "@inrupt/solid-client";
 import {validateReview, validateReviewThing} from "../validators/reviewValidator";
 import {reviewToThing, thingToReview} from "../builders/reviewBuilder";
-
 
 export default {
 
@@ -21,6 +21,12 @@ export default {
         if(session==undefined){
             return res.send('error')
         }
+
+        console.log("=================================")
+        console.log("BODY")
+        console.log("=================================")
+
+        console.log((req.body))
 
         let review : Review = req.body.review;
         if(!validateReview(review)){
@@ -48,9 +54,21 @@ export default {
             }
         }
 
-        //Save image
-        const savedImage = await saveFileInContainer(imagesURL, review.photo);
+        console.log("=================================")
+        console.log("REVIEW")
+        console.log("=================================")
 
+        console.log(review)
+
+        //Read review.encodedPhoto, decode it and store it in review.photo
+        //TODO
+        const fetchResult = await fetch(review.encodedPhoto)
+        if(fetchResult == null) return res.send("error")
+        review.photo = await fetchResult.blob();
+
+        console.log(review)
+
+        const savedImage = await saveFileInContainer(imagesURL, review.photo, {fetch:session.fetch});
 
         const reviewThing = reviewToThing(review, session.info.webId!, savedImage.name)
         reviewsDataset = setThing(reviewsDataset, reviewThing);
@@ -61,7 +79,7 @@ export default {
             {fetch: session.fetch}             // fetch from authenticated Session
         );
 
-        return res.send(getThingAll(newDataset).map(locationThing=>thingToReview(locationThing)))
+        return res.send(getThingAll(newDataset).map(locationThing=>thingToReview(locationThing, session.fetch)))
 
     },
 
@@ -93,10 +111,11 @@ export default {
         console.log(reviewsDataset);
         console.log("===============================================================")
 
+
         return res.send(
             getThingAll(reviewsDataset)
                 .filter(reviewThing=>validateReviewThing(reviewThing))
-                .map(reviewThing=>thingToReview(reviewThing)))
+                .map(reviewThing=>thingToReview(reviewThing, session.fetch)))
     },
 
     deleteReview: async function (_req:Request, _res:Response){
@@ -109,7 +128,7 @@ async function getReviewsURL(webId: string | undefined){
     if(webId == undefined) return undefined
     let webID = decodeURIComponent(webId)
     const podURL = await getPodUrlAll(webID);
-    return  podURL + "private/";
+    return  podURL + "private/lomap/reviews";
 }
 
 async function getImagesURL(webId: string | undefined){

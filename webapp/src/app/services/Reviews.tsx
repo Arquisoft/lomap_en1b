@@ -22,7 +22,7 @@ export const reviewApi = createApi({
                 credentials:"include",
                 method: 'POST',
                 mode:"cors",
-                body: JSON.stringify({location: newReview })
+                body: JSON.stringify({review: newReview}),
             })
         })
     }),
