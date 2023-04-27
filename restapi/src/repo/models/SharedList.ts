@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const { model, Schema } = mongoose
 const SharedListSchema = new Schema({
     //ID of the owner of the locations
