@@ -7,8 +7,8 @@ import {
     saveSolidDatasetAt,
     setThing
 } from "@inrupt/solid-client";
-import {validateReview, validateReviewThing} from "../validators/reviewValidator";
-import {reviewToThing, thingToReview} from "../builders/reviewBuilder";
+import {validateReview} from "../validators/reviewValidator";
+import {reviewToThing} from "../builders/reviewBuilder";
 import ImagesService from "./imagesService";
 import {getOrCreateDataset} from "./util/podAccessUtil";
 import {InvalidRequestBodyError, PodProviderError} from "./util/customErrors";
@@ -19,18 +19,16 @@ export default {
         return locationID;
     },
 
+    //Only for testing
     getUserReviews: async function (session:Session){
         let reviewsURL = await getReviewsURL(session.info.webId);
         if(reviewsURL == undefined) throw new PodProviderError("Unable to get the reviews dataset URL.");
 
-        // Get or create reviews dataset
         let reviewsDataset = await getOrCreateDataset(reviewsURL, session);
         if(reviewsDataset == undefined) throw new PodProviderError("Unable to get the reviews dataset.");
         reviewsDataset = reviewsDataset!
 
-        return getThingAll(reviewsDataset)
-                .filter(reviewThing=>validateReviewThing(reviewThing))
-                .map(reviewThing=>thingToReview(reviewThing, session.fetch))
+        return getThingAll(reviewsDataset);
     },
 
     addReview: async function (review:Review, session:Session){
@@ -39,7 +37,6 @@ export default {
         let reviewsURL = await getReviewsURL(session.info.webId);
         if(reviewsURL == undefined) throw new PodProviderError("Unable to get the reviews dataset URL.");
 
-        // Get or create reviews dataset
         let reviewsDataset = await getOrCreateDataset(reviewsURL, session);
         if(reviewsDataset == undefined) throw new PodProviderError("Unable to get the reviews dataset.");
         reviewsDataset = reviewsDataset!;

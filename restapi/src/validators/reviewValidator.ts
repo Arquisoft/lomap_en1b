@@ -1,10 +1,7 @@
 import {Review} from "../types";
-import {Thing} from "@inrupt/solid-client";
 
-export function validateReviewThing(_reviewThing:Thing) : boolean {
-    return true;
-}
-
-export function validateReview(_review:Review) : boolean{
-    return true;
+export function validateReview(review:Review) : boolean{
+    return review.score !== undefined
+        && review.score !== null
+        && review.score <= 5;
 }

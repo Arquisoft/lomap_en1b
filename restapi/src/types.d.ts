@@ -13,7 +13,6 @@ export type Location = {
 export type Review = {
     markerId:string,
     comment:string,
-    photo:Blob,
     score:double,
     encodedPhoto:string
 }

@@ -1,5 +1,5 @@
 import {
-    getPodUrlAll,
+    getPodUrlAll, getThingAll,
     saveSolidDatasetAt, setThing,
     Thing
 } from "@inrupt/solid-client";
@@ -13,7 +13,6 @@ export default {
         let imagesURL = await getImagesURL(session.info.webId);
         if(imagesURL == undefined) throw new PodProviderError("Unable to get the images dataset URL.");
 
-        // Get or create images dataset
         let imagesDataset = await getOrCreateDataset(imagesURL, session)
         if(imagesDataset == undefined) throw new PodProviderError("Unable to get the images dataset.");
         imagesDataset = imagesDataset!
@@ -29,7 +28,19 @@ export default {
         )
 
         return imageThing.url;
-    }
+    },
+
+    //Only for testing
+    getUserImages: async function (session:Session){
+        let imagesURL = await getImagesURL(session.info.webId);
+        if(imagesURL == undefined) throw new PodProviderError("Unable to get the images dataset URL.");
+
+        let imagesDataset = await getOrCreateDataset(imagesURL, session);
+        if(imagesDataset == undefined) throw new PodProviderError("Unable to get the images dataset.");
+        imagesDataset = imagesDataset!
+
+        return getThingAll(imagesDataset);
+    },
 }
 
 async function getImagesURL(webId: string | undefined){
