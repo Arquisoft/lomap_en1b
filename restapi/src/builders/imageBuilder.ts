@@ -7,7 +7,7 @@ export function thingToImage(imageThing:Thing) : string {
 
 export function imageToThing(encodedPhoto:string):Thing{
     return buildThing(createThing())
-        .addUrl("https://schema.org/contentUrl", encodedPhoto)
+        .addStringNoLocale("https://schema.org/contentUrl", encodedPhoto)
         .addStringNoLocale("https://schema.org/encodingFormat", "base64")
         .addUrl(RDF.type, "https://schema.org/ImageObject")
         .build()
