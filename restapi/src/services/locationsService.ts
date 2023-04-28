@@ -1,4 +1,5 @@
 import {
+    createSolidDataset,
     getPodUrlAll,
     getSolidDataset, getThingAll,
     saveSolidDatasetAt,
@@ -9,7 +10,7 @@ import {Request, Response} from "express";
 import {getSessionFromStorage} from "@inrupt/solid-client-authn-node";
 import {locationToThing, thingToLocation} from "../builders/locationBuilder"
 import {validateLocation, validateLocationThing} from "../validators/locationValidator";
-
+import MongoService from "./MongoService"
 
 export default {
 
@@ -27,22 +28,35 @@ export default {
         let locationsURL = await getLocationsURL(session.info.webId);
         if(locationsURL == undefined){
             return res.send("error")
-
         }
 
-        let locationsSolidDataset = await getSolidDataset(
-            locationsURL,
-            {fetch: session.fetch}          // fetch from authenticated session
-        );
+        let locationsDataset;
+        try{
+            locationsDataset =  await getSolidDataset(
+                locationsURL,
+                {fetch: session.fetch}          // fetch from authenticated session
+            );
+        } catch (error:any) {
+            if(typeof error.statusCode === "number" && error.statusCode === 404){
+                locationsDataset = createSolidDataset();
+            } else {
+                return res.send("error")
+            }
+        }
 
         const locationThing = locationToThing(location)
-        locationsSolidDataset = setThing(locationsSolidDataset, locationThing);
+        locationsDataset = setThing(locationsDataset, locationThing);
 
         let newDataset = await saveSolidDatasetAt(
             locationsURL,
-            locationsSolidDataset,
+            locationsDataset,
             {fetch: session.fetch}             // fetch from authenticated Session
         );
+
+        if(location.isShared){
+            // @ts-ignore
+            MongoService.addLocation(location, session.info.webId)
+        }
 
         return res.send(getThingAll(newDataset).map(locationThing=>thingToLocation(locationThing)))
     },
@@ -54,15 +68,26 @@ export default {
         let locationsURL = await getLocationsURL(session.info.webId);
         if(locationsURL == undefined) return res.send("error")
 
-        let locationsDataset =  await getSolidDataset(
-            locationsURL,
-            {fetch: session.fetch}          // fetch from authenticated session
-        );
+        let locationsDataset;
+        try{
+            locationsDataset =  await getSolidDataset(
+                locationsURL,
+                {fetch: session.fetch}          // fetch from authenticated session
+            );
+        } catch (error:any) {
+            if(typeof error.statusCode === "number" && error.statusCode === 404){
+                locationsDataset = createSolidDataset();
+            } else {
+                return res.send("error")
+            }
+        }
 
         return res.send(
             getThingAll(locationsDataset)
                 .filter(locationThing=>validateLocationThing(locationThing))
-                .map(locationThing=>thingToLocation(locationThing)))
+                .map(locationThing=>thingToLocation(locationThing))
+                //@ts-ignore
+                .concat(MongoService.getLocationsSharedWithUser(session.info.webId)))
     },
 
 }
@@ -71,6 +96,5 @@ async function getLocationsURL(webId: string | undefined){
     if(webId == undefined) return undefined
     let webID = decodeURIComponent(webId)
     const podURL = await getPodUrlAll(webID);
-    console.log(podURL)
-    return  podURL + "private/";
+    return  podURL + "private/lomap/reviews";
 }
