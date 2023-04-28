@@ -113,7 +113,7 @@ export function AddCommentForm(marker: MapMarker) {
                             <form id={"formMarker"} onSubmit = {
                                 (event) => {
                                     event.preventDefault();
-                                    const review : Review = {markerId:marker.id, comment:textComment, photo: file,score:rating, encodedPhoto:""};
+                                    const review : Review = {markerId:marker.id, comment:textComment, photo: file ,score:rating, encodedPhoto: ""};
 
                                     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
                                         event.preventDefault();
@@ -136,12 +136,14 @@ export function AddCommentForm(marker: MapMarker) {
                                             reader.readAsDataURL(file);
                                             reader.onload = () => {
                                                 encoded = reader.result as string;
-                                                resolve(encoded);
+                                                const base64String = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+                                                resolve(base64String);
                                             };
                                         });
                                     };
 
                                     handleSubmit(event)
+                                    addReviewMutation(review);
                                 }}>
                                 <Box borderColor="gray.300" borderStyle="dashed" borderWidth="2px"
                                     rounded="md" shadow="sm" role="group" transition="all 150ms ease-in-out"
