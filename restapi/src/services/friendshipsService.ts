@@ -59,16 +59,17 @@ export default {
         const friendThing = friendToThing(friend);
         friendsDataset = setThing(friendsDataset, friendThing);
 
-        await saveSolidDatasetAt(
-            friendsURL,
-            friendsDataset,
-            {fetch: session.fetch}
-        );
-
-        await MongoService.addFriend(friend.webId , session.info.webId!)
+        await Promise.all([
+            saveSolidDatasetAt(
+                friendsURL,
+                friendsDataset,
+                {fetch: session.fetch}
+            ),
+            MongoService.addFriend(friend.webId , session.info.webId!)])
 
         return friendThing.url;
     },
+
     deleteFriend : async function(_req:Request, _res:Response){
     }
 

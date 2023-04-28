@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const { model, Schema } = mongoose
-//import {LocationType} from '../../locationType';
 
 const LocationSchema = new Schema({
     id: String,
@@ -13,7 +12,7 @@ const LocationSchema = new Schema({
     owner : String
 })
 
-LocationSchema.methods.getSharedLocationsFromUsers = function getSharedLocationsFromUsers (users : [String]) {
+LocationSchema.methods.getSharedLocationsFromUsers = function getSharedLocationsFromUsers (users : [string]) {
     return this.model('Location').find({ owner: { $in: users } ,isShared: true });
 }
 

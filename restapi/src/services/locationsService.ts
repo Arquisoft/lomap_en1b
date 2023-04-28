@@ -27,15 +27,13 @@ export default {
         const locationThing = locationToThing(location)
         locationsDataset = setThing(locationsDataset, locationThing);
 
-        await saveSolidDatasetAt(
-            locationsURL,
-            locationsDataset,
-            {fetch: session.fetch}
-        )
-
-        if(location.isShared){
-             await MongoService.addLocation(location, session.info.webId!)
-        }
+        await Promise.all([
+            saveSolidDatasetAt(
+                locationsURL,
+                locationsDataset,
+                {fetch: session.fetch}),
+            MongoService.addLocation(location, session.info.webId!)
+        ])
 
         return locationThing.url
     },

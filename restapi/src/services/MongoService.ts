@@ -22,7 +22,7 @@ export default {
     },
 
     addLocation: async function (newLocation : Location, userWebId : string){
-        await SharedLocationRepository.addSharedLocation(newLocation, userWebId)
+        if(newLocation.isShared) await SharedLocationRepository.addSharedLocation(newLocation, userWebId)
     },
 
     removeLocation: async function (locationId : string){
