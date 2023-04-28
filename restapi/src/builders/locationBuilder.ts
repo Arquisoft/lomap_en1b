@@ -16,7 +16,7 @@ export function thingToLocation(locationThing:Thing) : Location {
 }
 
 export function locationToThing(location:Location):Thing{
-    return buildThing(createThing({name: location.name}))
+    return buildThing(createThing())
         .addStringNoLocale(SCHEMA_INRUPT.name, location.name)
         .addStringNoLocale(SCHEMA_INRUPT.description, location.locationType)
         .addDecimal(SCHEMA_INRUPT.latitude, location.latitude)

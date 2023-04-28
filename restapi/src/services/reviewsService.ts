@@ -1,103 +1,62 @@
 import {Request, Response} from "express";
-import {getSessionFromStorage} from "@inrupt/solid-client-authn-node";
+import {Session} from "@inrupt/solid-client-authn-node";
 import {Review} from "../types";
 import {
-    createSolidDataset,
     getPodUrlAll,
-    getSolidDataset,
-    getThingAll, saveFileInContainer,
+    getThingAll,
     saveSolidDatasetAt,
     setThing
 } from "@inrupt/solid-client";
-import {validateReview, validateReviewThing} from "../validators/reviewValidator";
-import {reviewToThing, thingToReview} from "../builders/reviewBuilder";
+import {validateReview} from "../validators/reviewValidator";
+import {reviewToThing} from "../builders/reviewBuilder";
+import ImagesService from "./imagesService";
+import {getOrCreateDataset} from "./util/podAccessUtil";
+import {InvalidRequestBodyError, PodProviderError} from "./util/customErrors";
 import MongoService from "./MongoService"
 
 export default {
 
-    addReview: async function (req:Request, res:Response){
-        console.log("adding review")
-        const session = await getSessionFromStorage(req.session.solidSessionId!)
-        if(session==undefined){
-            return res.send('error')
-        }
-
-        let review : Review = req.body.review;
-        if(!validateReview(review)){
-            res.send('error')
-        }
-
-        let reviewsURL = await getReviewsURL(session.info.webId);
-        if(reviewsURL == undefined) return res.send("error")
-
-        let imagesURL = await getImagesURL(session.info.webId);
-        if(imagesURL == undefined) return res.send("error")
-
-        // Get or create reviews dataset
-        let reviewsDataset;
-        try{
-            reviewsDataset =  await getSolidDataset(
-                reviewsURL,
-                {fetch: session.fetch}          // fetch from authenticated session
-            );
-        } catch (error:any) {
-            if(typeof error.statusCode === "number" && error.statusCode === 404){
-                reviewsDataset = createSolidDataset();
-            } else {
-                return res.send("error")
-            }
-        }
-        //Save image
-        const savedImage = await saveFileInContainer(imagesURL, review.photo);
-
-        const reviewThing = reviewToThing(review, session.info.webId!, savedImage.name)
-        reviewsDataset = setThing(reviewsDataset, reviewThing);
-
-        let newDataset = await saveSolidDatasetAt(
-            reviewsURL,
-            reviewsDataset,
-            {fetch: session.fetch}             // fetch from authenticated Session
-        );
-
-        MongoService.createReview(review);
-
-        return res.send(getThingAll(newDataset).map(locationThing=>thingToReview(locationThing)))
+    getReviewsForLocation: async function(locationID:string){
+        return await MongoService.getReviews(locationID);
     },
 
-    getUserReviews: async function (req:Request, res:Response){
-        //FIXME condicion: si tienes acceso a la localizacion o ser el dueño
-        const session = await getSessionFromStorage(req.session.solidSessionId!)
-        if(session==undefined)return res.send('error')
+    //Only for testing
+    getUserReviews: async function (session:Session){
         let reviewsURL = await getReviewsURL(session.info.webId);
-        if(reviewsURL == undefined) return res.send("error")
+        if(reviewsURL == undefined) throw new PodProviderError("Unable to get the reviews dataset URL.");
 
-        console.log("[LOCATION_ID: "+req.params.locationID+"]");
+        let reviewsDataset = await getOrCreateDataset(reviewsURL, session);
+        if(reviewsDataset == undefined) throw new PodProviderError("Unable to get the reviews dataset.");
+        reviewsDataset = reviewsDataset!
 
-        let reviewsDataset;
-        try{
-            reviewsDataset =  await getSolidDataset(
+        return getThingAll(reviewsDataset);
+    },
+
+    addReview: async function (review:Review, session:Session){
+        if(!validateReview(review)) throw new InvalidRequestBodyError("Not valid review.");
+
+        let reviewsURL = await getReviewsURL(session.info.webId);
+        if(reviewsURL == undefined) throw new PodProviderError("Unable to get the reviews dataset URL.");
+
+        let reviewsDataset = await getOrCreateDataset(reviewsURL, session);
+        if(reviewsDataset == undefined) throw new PodProviderError("Unable to get the reviews dataset.");
+        reviewsDataset = reviewsDataset!;
+
+        const imageURL = await ImagesService.saveImage(review.encodedPhoto, session);
+
+        const reviewThing = reviewToThing(review, session.info.webId!, imageURL);
+        reviewsDataset = setThing(reviewsDataset, reviewThing);
+
+        await Promise.all([
+            saveSolidDatasetAt(
                 reviewsURL,
-                {fetch: session.fetch}          // fetch from authenticated session
-            );
-        } catch (error:any) {
-            if(typeof error.statusCode === "number" && error.statusCode === 404){
-                reviewsDataset = createSolidDataset();
-            } else {
-                return res.send("error")
-            }
-        }
+                reviewsDataset,
+                {fetch: session.fetch}
+            ),
+            MongoService.createReview(review)
+        ])
 
-        console.log("===============================================================")
-        console.log("REVIEW DATASET:");
-        console.log(reviewsDataset);
-        console.log("===============================================================")
-
-        return res.send(
-            getThingAll(reviewsDataset)
-                .filter(reviewThing=>validateReviewThing(reviewThing))
-                .map(reviewThing=>thingToReview(reviewThing))
-                //@ts-ignore
-                .concat(MongoService.getReviews(req.params.locationID)))
+        return reviewThing.url;
     },
 
     deleteReview: async function (_req:Request, _res:Response){
@@ -110,12 +69,5 @@ async function getReviewsURL(webId: string | undefined){
     if(webId == undefined) return undefined
     let webID = decodeURIComponent(webId)
     const podURL = await getPodUrlAll(webID);
-    return  podURL + "private/";
-}
-
-async function getImagesURL(webId: string | undefined){
-    if(webId == undefined) return undefined
-    let webID = decodeURIComponent(webId)
-    const podURL = await getPodUrlAll(webID);
-    return  podURL + "private/lomap/images";
+    return  podURL + "private/lomap/reviews";
 }

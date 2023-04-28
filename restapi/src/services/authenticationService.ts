@@ -49,28 +49,4 @@ export default {
         res.redirect("http://localhost:3000")
     },
 
-
-
-    initTestLogin: async function(req:Request, res:Response){
-        const session = new Session();
-        req.session.solidSessionId = session.info.sessionId;
-        const redirectToSolidIdentityProvider = (providerURL : string) => {
-            res.redirect(providerURL);
-        };
-        await session.login({
-            redirectUrl: 'http://localhost:8082/auth/testloginconfirm',
-            oidcIssuer: "https://login.inrupt.com",
-            clientName: "LoMap",
-            handleRedirect: redirectToSolidIdentityProvider
-        });
-    },
-    confirmTestLogin : async function (req:Request, res:Response){
-        const session = await getSessionFromStorage(req.session.solidSessionId!);
-        await session!.handleIncomingRedirect(`http://localhost:8082/auth${req.url}`);
-        if (session!.info.isLoggedIn) {
-            return res.redirect("http://localhost:3000")
-        }
-        return res.send("Not able to log in")
-    },
-
 }

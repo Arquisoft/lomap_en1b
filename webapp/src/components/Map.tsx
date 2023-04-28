@@ -142,11 +142,11 @@ export function LocationMarkerWithStore() {
 
 export default function MapElement(): JSX.Element {
     const escuela: LatLngExpression = {lat: 43.354, lng: -5.851};
-    //const {data: locations, error, isLoading} = useGetLocationsQuery();
+    const {data: locations, error, isLoading} = useGetLocationsQuery();
     const dispatch = useDispatch()
 
-    const locations : MapMarker[] = [{latitude : 43.354, longitude : -5.851,
-        name:"prueba 1",locationType: LocationType.sight, id: 43.354 + " - " + -5.851,shared: true}];
+ //   const locations : MapMarker[] = [{latitude : 43.354, longitude : -5.851,
+ //       name:"prueba 1",locationType: LocationType.sight, id: 43.354 + " - " + -5.851,shared: true}];
 
 
     const [showBars, setShowBars] = useState(true)

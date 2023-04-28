@@ -1,34 +1,32 @@
 import {Review} from "../types";
-import {Thing} from "@inrupt/solid-client";
 
-export function validateReviewThing(_reviewThing:Thing) : boolean {
-    return true;
+export function validateReview(review:Review) : boolean{
+    return review.score !== undefined
+        && review.score !== null
+        && review.score <= 5;
 }
 
-export function validateReview(_review:Review) : boolean{
-    if(_review == undefined || _review == null
-        || _review.markerId == undefined || _review.markerId == null){
+export function validateReview2(review:Review) : boolean{
+    if(review == undefined
+        || review.markerId == undefined){
         return false;
     }
-    var filledFields = 0;
 
-    if(_review.comment !== null && _review.comment !== undefined
-        && _review.comment.trim().length > 0){
+    let filledFields = 0;
+
+    if(review.comment !== null && review.comment !== undefined
+        && review.comment.trim().length > 0){
         filledFields++;
     }
     //FIXME: I need to know how to check if a given photo is valid or not
-    if(_review.photo !== null && _review.photo !== undefined ){
+    if(review.encodedPhoto !== null && review.encodedPhoto !== undefined ){
         filledFields++;
     }
-    if(_review.score !== null && _review.score !== undefined
-        && _review.score > 0){
+    if(review.score !== null && review.score !== undefined
+        && review.score > 0){
         filledFields++;
     }
 
     //To create a review you need at leats one of those fields with valid content
-    if( filledFields > 0){
-        return true;
-    }else{
-        return false;
-    }
+    return filledFields > 0;
 }

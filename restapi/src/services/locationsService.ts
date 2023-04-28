@@ -1,93 +1,55 @@
 import {
-    createSolidDataset,
     getPodUrlAll,
-    getSolidDataset, getThingAll,
+    getThingAll,
     saveSolidDatasetAt,
     setThing
 } from "@inrupt/solid-client";
 import {Location} from "../types";
-import {Request, Response} from "express";
-import {getSessionFromStorage} from "@inrupt/solid-client-authn-node";
+import {Session} from "@inrupt/solid-client-authn-node";
 import {locationToThing, thingToLocation} from "../builders/locationBuilder"
 import {validateLocation, validateLocationThing} from "../validators/locationValidator";
+import {getOrCreateDataset} from "./util/podAccessUtil";
+import {InvalidRequestBodyError, PodProviderError} from "./util/customErrors";
 import MongoService from "./MongoService"
 
 export default {
 
-    saveLocation: async function (req:Request, res:Response){
-        const session = await getSessionFromStorage(req.session.solidSessionId!)
-        if(session==undefined){
-            return res.send('error')
-        }
-
-        let location : Location = req.body.location;
-        if(!validateLocation(location)){
-            res.send('error')
-        }
+    saveLocation: async function (location:Location, session:Session){
+        if(!validateLocation(location)) throw new InvalidRequestBodyError("Not valid location.")
 
         let locationsURL = await getLocationsURL(session.info.webId);
-        if(locationsURL == undefined){
-            return res.send("error")
-        }
+        if(locationsURL == undefined) throw new PodProviderError("Unable to get the locations dataset URL.")
 
-        let locationsDataset;
-        try{
-            locationsDataset =  await getSolidDataset(
-                locationsURL,
-                {fetch: session.fetch}          // fetch from authenticated session
-            );
-        } catch (error:any) {
-            if(typeof error.statusCode === "number" && error.statusCode === 404){
-                locationsDataset = createSolidDataset();
-            } else {
-                return res.send("error")
-            }
-        }
+        let locationsDataset = await getOrCreateDataset(locationsURL, session);
+        if(locationsDataset == undefined) throw new PodProviderError("Unable to get the locations dataset.")
+        locationsDataset = locationsDataset!
 
         const locationThing = locationToThing(location)
         locationsDataset = setThing(locationsDataset, locationThing);
 
-        let newDataset = await saveSolidDatasetAt(
-            locationsURL,
-            locationsDataset,
-            {fetch: session.fetch}             // fetch from authenticated Session
-        );
+        await Promise.all([
+            saveSolidDatasetAt(
+                locationsURL,
+                locationsDataset,
+                {fetch: session.fetch}),
+            MongoService.addLocation(location, session.info.webId!)
+        ])
 
-        if(location.isShared){
-            // @ts-ignore
-            MongoService.addLocation(location, session.info.webId)
-        }
-
-        return res.send(getThingAll(newDataset).map(locationThing=>thingToLocation(locationThing)))
+        return locationThing.url
     },
 
-    getOwnLocations: async function (req:Request, res:Response){
-        const session = await getSessionFromStorage(req.session.solidSessionId!)
-        if(session==undefined)return res.send('error')
-
+    getLocations: async function(session:Session){
         let locationsURL = await getLocationsURL(session.info.webId);
-        if(locationsURL == undefined) return res.send("error")
+        if(locationsURL == undefined) throw new PodProviderError("Unable to get the locations dataset URL.")
 
-        let locationsDataset;
-        try{
-            locationsDataset =  await getSolidDataset(
-                locationsURL,
-                {fetch: session.fetch}          // fetch from authenticated session
-            );
-        } catch (error:any) {
-            if(typeof error.statusCode === "number" && error.statusCode === 404){
-                locationsDataset = createSolidDataset();
-            } else {
-                return res.send("error")
-            }
-        }
+        let locationsDataset = await getOrCreateDataset(locationsURL, session);
+        if(locationsDataset == undefined) throw new PodProviderError("Unable to get the locations dataset.")
+        locationsDataset = locationsDataset!
 
-        return res.send(
-            getThingAll(locationsDataset)
+        return getThingAll(locationsDataset)
                 .filter(locationThing=>validateLocationThing(locationThing))
                 .map(locationThing=>thingToLocation(locationThing))
-                //@ts-ignore
-                .concat(MongoService.getLocationsSharedWithUser(session.info.webId)))
+                .concat(await MongoService.getLocationsSharedWithUser(session.info.webId!))
     },
 
 }
