@@ -7,26 +7,23 @@ export const ReviewRepository = {
             stars : review.score,
             comment : review.comment,
             location : review.markerId,
-            //FIXME: Podemos pasar varias
-            images : review.photo
+            images : review.encodedPhoto
         })
 
         newReview.save()
-            //@ts-ignore
-            .then(result => {
+            .then((result: any) => {
                 console.log(result);
             })
-            //@ts-ignore
-            .catch(err => {
+            .catch((err: any) => {
                 console.log(err);
             })
     },
 
-    async getReviewsFromListOfLocation(locations: [String]) {
+    async getReviewsFromListOfLocation(locations: [string]) {
         return ReviewModel.getReviewsFromListOfLocation(locations)
     },
 
-    async getReviewsOfGivenUser(user : String) {
+    async getReviewsOfGivenUser(user : string) {
         return ReviewModel.getReviewsOfGivenUser(user)
     }
 };

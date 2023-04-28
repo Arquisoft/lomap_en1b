@@ -65,8 +65,7 @@ export default {
             {fetch: session.fetch}
         );
 
-        //@ts-ignore
-        MongoService.addFriend(friend.webId , session.info.webId)
+        await MongoService.addFriend(friend.webId , session.info.webId!)
 
         return friendThing.url;
     },

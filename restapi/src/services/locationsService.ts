@@ -27,17 +27,14 @@ export default {
         const locationThing = locationToThing(location)
         locationsDataset = setThing(locationsDataset, locationThing);
 
-        console.log(locationsDataset)
-
-        console.log(await saveSolidDatasetAt(
+        await saveSolidDatasetAt(
             locationsURL,
             locationsDataset,
             {fetch: session.fetch}
-        ))
+        )
 
         if(location.isShared){
-            // @ts-ignore
-            MongoService.addLocation(location, session.info.webId)
+             await MongoService.addLocation(location, session.info.webId!)
         }
 
         return locationThing.url
@@ -53,9 +50,8 @@ export default {
 
         return getThingAll(locationsDataset)
                 .filter(locationThing=>validateLocationThing(locationThing))
-                .map(locationThing=>thingToLocation(locationThing)
-                //@ts-ignore
-                .concat(MongoService.getLocationsSharedWithUser(session.info.webId)))
+                .map(locationThing=>thingToLocation(locationThing))
+                .concat(await MongoService.getLocationsSharedWithUser(session.info.webId!))
     },
 
 }

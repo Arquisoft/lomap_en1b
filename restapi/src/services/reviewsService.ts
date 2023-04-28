@@ -17,7 +17,7 @@ import MongoService from "./MongoService"
 export default {
 
     getReviewsForLocation: async function(locationID:string){
-        return MongoService.getReviews(locationID);
+        return await MongoService.getReviews(locationID);
     },
 
     //Only for testing
@@ -53,7 +53,7 @@ export default {
             {fetch: session.fetch}
         );
 
-        MongoService.createReview(review);
+        await MongoService.createReview(review);
 
         return reviewThing.url;
     },
