@@ -57,6 +57,7 @@ export default function DetailsDrawer(marker: MapMarker) {
                                             <Image src={review.photo.name} loading={"lazy"} fallbackSrc='https://via.placeholder.com/150'/>
                                             <ReactStars count={5} value={review.score} isHalf={true} size={28} activeColor="#ffd700" edit={false}/>
                                             {review.comment}
+
                                         </Box>
                                         ))}
                                 </Stack>

@@ -23,14 +23,7 @@ import {
     Stack,
     StackDivider,
     Text,
-    Drawer,
     useDisclosure,
-    DrawerOverlay,
-    DrawerContent,
-    DrawerCloseButton,
-    DrawerBody,
-    DrawerHeader,
-    DrawerFooter,
     CardFooter,
     ButtonGroup
 } from '@chakra-ui/react';
@@ -43,12 +36,6 @@ import {useAddLocationMutation, useGetLocationsQuery} from "../app/services/Loca
 import type {MapMarker} from '../types';
 import {LocationType} from "../locationType";
 import DetailsDrawer from './mapComponents/LocationReviewsView'
-
-//import {addLocation, selectAllLocations} from "../app/services/Location";
-export enum FilterEnum {
-    Bars, Restaurants, Shops, Sights,
-    Monuments, MyLocations, SharedLocations,
-}
 
 export function LocationMarkerWithStore() {
     // const [position, setPosition] : LatLng = {lat: 0, lng: 0};
@@ -230,7 +217,6 @@ interface FilterModalProps {
 export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
     const {isOpen, onClose, onOpen} = useDisclosure();
 
-
     const data = {
         types: [
             { id: "bars", name: "Bars", value: props.showBars, onChange: props.setShowBars },
@@ -242,6 +228,9 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
             { id: "sharedLocations", name: "Shared Locations", value: props.showSharedLocations, onChange: props.setShowSharedLocations }
         ]
     };
+
+    const propsChecked = (props.showBars() && props.showRestaurants() && props.showShops()
+    && props.showMonuments() && props.showMyLocations() && props.showSharedLocations() && props.showSights());
 
     return (
         <>
@@ -255,19 +244,26 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
                             <ModalCloseButton/>
                         </ModalHeader>
                         <ModalBody>
-                            <Stack spacing={2} direction='column'>
                             <CheckboxGroup>
-                                    {data.types.map((type, index) => (
-                                        <Checkbox
-                                             key={type.id}
-                                            isChecked={type.value()}
-                                            onChange={e => type.onChange(!type.value())}
-                                            >
-                                            {type.name}
-                                        </Checkbox>
-                                    ))}
+                                <Checkbox
+                                    isChecked={propsChecked}
+                                    onChange={(e) =>
+                                        data.types.forEach(element=> element.onChange(e.target.checked))
+                                    }>
+                                    Show all
+                                </Checkbox>
+                                <Stack pl={6} mt={1} spacing={2} direction='column'>
+                                        {data.types.map((type, index) => (
+                                            <Checkbox
+                                                 key={type.id}
+                                                isChecked={type.value()}
+                                                onChange={e => type.onChange(!type.value())}
+                                                >
+                                                {type.name}
+                                            </Checkbox>
+                                        ))}
+                                </Stack>
                             </CheckboxGroup>
-                            </Stack>
                         </ModalBody>
                         <ModalFooter>
                         </ModalFooter>
