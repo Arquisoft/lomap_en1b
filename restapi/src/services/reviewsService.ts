@@ -12,11 +12,12 @@ import {reviewToThing} from "../builders/reviewBuilder";
 import ImagesService from "./imagesService";
 import {getOrCreateDataset} from "./util/podAccessUtil";
 import {InvalidRequestBodyError, PodProviderError} from "./util/customErrors";
+import MongoService from "./MongoService"
 
 export default {
 
     getReviewsForLocation: async function(locationID:string){
-        return locationID;
+        return MongoService.getReviews(locationID);
     },
 
     //Only for testing
@@ -51,6 +52,8 @@ export default {
             reviewsDataset,
             {fetch: session.fetch}
         );
+
+        MongoService.createReview(review);
 
         return reviewThing.url;
     },

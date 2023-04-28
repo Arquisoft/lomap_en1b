@@ -10,7 +10,7 @@ import {locationToThing, thingToLocation} from "../builders/locationBuilder"
 import {validateLocation, validateLocationThing} from "../validators/locationValidator";
 import {getOrCreateDataset} from "./util/podAccessUtil";
 import {InvalidRequestBodyError, PodProviderError} from "./util/customErrors";
-
+import MongoService from "./MongoService"
 
 export default {
 
@@ -35,7 +35,10 @@ export default {
             {fetch: session.fetch}
         ))
 
-        console.log(locationThing)
+        if(location.isShared){
+            // @ts-ignore
+            MongoService.addLocation(location, session.info.webId)
+        }
 
         return locationThing.url
     },
@@ -50,7 +53,9 @@ export default {
 
         return getThingAll(locationsDataset)
                 .filter(locationThing=>validateLocationThing(locationThing))
-                .map(locationThing=>thingToLocation(locationThing));
+                .map(locationThing=>thingToLocation(locationThing)
+                //@ts-ignore
+                .concat(MongoService.getLocationsSharedWithUser(session.info.webId)))
     },
 
 }

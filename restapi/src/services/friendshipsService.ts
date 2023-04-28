@@ -16,6 +16,7 @@ import {Friend} from "../types";
 import {FOAF} from "@inrupt/vocab-common-rdf";
 import {getOrCreateDataset} from "./util/podAccessUtil";
 import {InvalidRequestBodyError, PodProviderError} from "./util/customErrors";
+import MongoService from "./MongoService"
 
 export default {
 
@@ -64,11 +65,12 @@ export default {
             {fetch: session.fetch}
         );
 
+        //@ts-ignore
+        MongoService.addFriend(friend.webId , session.info.webId)
+
         return friendThing.url;
     },
-
     deleteFriend : async function(_req:Request, _res:Response){
-
     }
 
 }
