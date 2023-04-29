@@ -54,9 +54,9 @@ export default function DetailsDrawer(marker: MapMarker) {
                                 <Stack spacing={'24px'} direction='column'>
                                     {reviews.map( (review) => (
                                         <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden'>
-                                            <Image src={review.photo.name} loading={"lazy"} fallbackSrc='https://via.placeholder.com/150'/>
+                                            <Image src={URL.createObjectURL(review.photo)} loading={"lazy"} fallbackSrc='https://via.placeholder.com/150'/>
                                             <ReactStars count={5} value={review.score} isHalf={true} size={28} activeColor="#ffd700" edit={false}/>
-                                            {review.comment}
+                                            <Box borderWidth='0.5px' >{review.comment}</Box>
 
                                         </Box>
                                         ))}
@@ -83,10 +83,10 @@ export function AddCommentForm(marker: MapMarker) {
     const {isOpen, onClose, onOpen} = useDisclosure();
 
     const initialRef = React.useRef(null)
-    let [textComment, setTextComment] = React.useState('')
-    let [rating, changeRating] = React.useState(0)
+    let [textComment, setTextComment] = React.useState("")
+    let [rating, changeRating] = React.useState(0.0)
 
-    const [file, setFile] = useState(new File([],"a"));
+    const [file, setFile] = useState(new File([],""));
     const handleSetFile = (event: ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
         if(files != null && files.length > 0) {
@@ -94,9 +94,18 @@ export function AddCommentForm(marker: MapMarker) {
         }
     };
 
+    const resetAndOpen = () => {
+        onOpen()
+        setTextComment("");
+        changeRating(0.0);
+        setFile(new File([],""));
+    }
+
+    const notAnySet = textComment.trim().length == 0 && file.name.trim() == "" && rating==0.0;
+
     return  (
         <>
-            <Button colorScheme='teal' onClick={onOpen}>
+            <Button colorScheme='teal' onClick={resetAndOpen}>
                 Add a Review
             </Button>
 
@@ -120,6 +129,10 @@ export function AddCommentForm(marker: MapMarker) {
                                     };
                                     handleSubmit(event)
                                 }}>
+                                {(file.name != "") &&
+                                    <Image src={URL.createObjectURL(file)} loading={"lazy"}
+                                           fallbackSrc='https://via.placeholder.com/150'/>
+                                }
                                 <Box borderColor="gray.300" borderStyle="dashed" borderWidth="2px"
                                     rounded="md" shadow="sm" role="group" transition="all 150ms ease-in-out"
                                     _hover={{
@@ -155,9 +168,6 @@ export function AddCommentForm(marker: MapMarker) {
                                             accept="image/*"
                                             onChange={(event)=>handleSetFile(event)}
                                         />
-                                        <image>
-
-                                        </image>
                                     </Box>
                                 </Box>
                                 <Stack spacing={2} direction='column'>
@@ -184,7 +194,8 @@ export function AddCommentForm(marker: MapMarker) {
                             </form>
                         </ModalBody>
                         <ModalFooter>
-                            <Button form={"formMarker"} type={"submit"} onClick={onClose}>Submit</Button>
+                            <Button form={"formMarker"} type={"submit"} onClick={onClose}
+                                    isDisabled={notAnySet}>Submit</Button>
                         </ModalFooter>
                     </ModalContent>
                 </ModalOverlay>
