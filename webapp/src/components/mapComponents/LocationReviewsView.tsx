@@ -32,7 +32,7 @@ export default function DetailsDrawer(marker: MapMarker) {
     return (
         <>
             <Button colorScheme='teal' onClick={onOpen}>
-                Details
+                Reviews
             </Button>
             <Drawer
                 isOpen={isOpen}

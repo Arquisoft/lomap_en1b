@@ -129,19 +129,14 @@ export function LocationMarkerWithStore() {
 
 export default function MapElement(): JSX.Element {
     const escuela: LatLngExpression = {lat: 43.354, lng: -5.851};
-    //const {data: locations, error, isLoading} = useGetLocationsQuery();
+    const {data: locations, error, isLoading} = useGetLocationsQuery();
     const dispatch = useDispatch()
-
-    const locations : MapMarker[] = [{latitude : 43.354, longitude : -5.851,
-        name:"prueba 1",locationType: LocationType.sight, id: 43.354 + " - " + -5.851,shared: true}];
-
 
     const [showBars, setShowBars] = useState(true)
     const [showRestaurants, setShowRestaurants] = useState(true)
     const [showShops, setShowShops] = useState(true)
     const [showSights, setShowSights] = useState(true)
     const [showMonuments, setShowMonuments] = useState(true)
-    const [showMyLocations, setShowMyLocations] = useState(true)
     const [showSharedLocations, setShowSharedLocations] = useState(true)
 
     return (
@@ -158,7 +153,6 @@ export default function MapElement(): JSX.Element {
                         showShops={() => showShops} setShowShops={setShowShops}
                         showSights={() => showSights} setShowSights={setShowSights}
                         showMonuments={() => showMonuments} setShowMonuments={setShowMonuments}
-                        showMyLocations={() => showMyLocations} setShowMyLocations={setShowMyLocations}
                         showSharedLocations={() => showSharedLocations} setShowSharedLocations={setShowSharedLocations}
                     />
                 </Flex>
@@ -175,6 +169,7 @@ export default function MapElement(): JSX.Element {
                         if(loc.locationType == LocationType.shop && showShops) return true
                         if(loc.locationType == LocationType.sight && showSights) return true
                         if(loc.locationType == LocationType.monument && showMonuments) return true
+                        if(loc.shared && showSharedLocations) return true
                     })
                         .map((location: MapMarker) => (
                         <Marker key={location.id}
@@ -208,8 +203,6 @@ interface FilterModalProps {
     setShowSights : React.Dispatch<React.SetStateAction<boolean>>,
     showMonuments : () => boolean,
     setShowMonuments  : React.Dispatch<React.SetStateAction<boolean>>,
-    showMyLocations  : () => boolean,
-    setShowMyLocations : React.Dispatch<React.SetStateAction<boolean>>,
     showSharedLocations  : () => boolean,
     setShowSharedLocations : React.Dispatch<React.SetStateAction<boolean>>,
 }
@@ -224,13 +217,12 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
             { id: "shops", name: "Shops", value: props.showShops, onChange: props.setShowShops },
             { id: "sights", name: "Sights", value: props.showSights, onChange: props.setShowSights },
             { id: "monuments", name: "Monuments", value: props.showMonuments, onChange: props.setShowMonuments },
-            { id: "myLocations", name: "My Locations", value: props.showMyLocations, onChange: props.setShowMyLocations },
             { id: "sharedLocations", name: "Shared Locations", value: props.showSharedLocations, onChange: props.setShowSharedLocations }
         ]
     };
 
     const propsChecked = (props.showBars() && props.showRestaurants() && props.showShops()
-    && props.showMonuments() && props.showMyLocations() && props.showSharedLocations() && props.showSights());
+    && props.showMonuments() && props.showSharedLocations() && props.showSights());
 
     return (
         <>
