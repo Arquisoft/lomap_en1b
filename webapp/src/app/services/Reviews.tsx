@@ -7,18 +7,10 @@ export const reviewApi = createApi({
     endpoints: (builder) => ({
         getReviews: builder.query<Review[], string>({
             query: (locationID) => ({
-                url:`review/https://storage.inrupt.com/2b40442a-5cc1-4c63-b066-a83317c39…f/private/lomap/reviews#034901c3-bb86-4ae6-bd59-ea90b6ad17e4`,
+                url:`review/${locationID}`,
                 credentials:"include",
             })
         }),
-        /*
-                getReviews: builder.query<Review[], string>({
-            query: (locationID) => ({
-                url:`review/`+JSON.stringify(locationID),
-                credentials:"include",
-            })
-        }),
-         */
         // Omit metemos una localización y da igual que no tenga un id asignado
         addReview: builder.mutation<void, Review>({
             query: (newReview) => ({

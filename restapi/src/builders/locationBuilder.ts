@@ -4,7 +4,7 @@ import {LocationType} from "../locationType";
 import {RDF, SCHEMA_INRUPT} from "@inrupt/vocab-common-rdf";
 
 export function thingToLocation(locationThing:Thing) : Location {
-    let splitId = locationThing.url.split("/").pop()
+    let splitId = locationThing.url.split("#").pop()
     if(splitId === null || splitId === 'undefined'){
         splitId = ''
     }

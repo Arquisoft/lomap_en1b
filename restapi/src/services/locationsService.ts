@@ -26,16 +26,13 @@ export default {
 
         const locationThing = locationToThing(location)
         locationsDataset = setThing(locationsDataset, locationThing);
-        console.log("locationService")
-        console.log(locationThing.url)
-        console.log("locationService")
+        location.id = locationThing.url.split("/").pop()!
 
         await Promise.all([
             saveSolidDatasetAt(
                 locationsURL,
                 locationsDataset,
                 {fetch: session.fetch}),
-            console.log(locationThing.url),
             MongoService.addLocation(location, session.info.webId!)
         ])
 
