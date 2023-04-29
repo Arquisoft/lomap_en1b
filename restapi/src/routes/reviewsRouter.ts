@@ -6,11 +6,14 @@ import {InvalidRequestBodyError, PodProviderError} from "../services/util/custom
 const reviewsRouter: Router = express.Router();
 
     reviewsRouter.get("/:locationID", async (req:Request, res:Response)=> {
+        console.log("Review router: get")
         const session = await getSessionFromStorage(req.session.solidSessionId!);
         if(session==undefined) return res.status(401).send("Invalid access.");
 
         try {
             const locationID:string = req.params.locationID;
+            console.log(req.params.locationID)
+            console.log(locationID)
             return res.send(await reviewsService.getReviewsForLocation(locationID));
         } catch (error:any){
             if(error instanceof InvalidRequestBodyError){

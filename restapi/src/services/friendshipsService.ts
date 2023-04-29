@@ -47,8 +47,8 @@ export default {
     },
 
     addFriend : async function (friend:Friend, session:Session){
-        if(!validateFriend(friend)) throw new InvalidRequestBodyError("Not valid friendship.");
 
+        if(!validateFriend(friend)) throw new InvalidRequestBodyError("Not valid friendship.");
         let friendsURL = await getFriendsURL(session.info.webId);
         if(friendsURL == undefined) throw new PodProviderError("Unable to get the contacts dataset URL.");
 
@@ -56,8 +56,11 @@ export default {
         if(friendsDataset == undefined) throw new PodProviderError("Unable to get the contacts dataset.");
         friendsDataset = friendsDataset!;
 
+        console.log("Friendship service")
         const friendThing = friendToThing(friend);
+        console.log("Friendship service")
         friendsDataset = setThing(friendsDataset, friendThing);
+        console.log("Friendship service")
 
         await Promise.all([
             saveSolidDatasetAt(

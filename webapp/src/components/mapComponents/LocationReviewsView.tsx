@@ -24,9 +24,7 @@ import React, {ChangeEvent, useState} from "react";
 import ReactStars from "react-rating-stars-component";
 import {useAddReviewMutation, useGetReviewsQuery} from "../../app/services/Reviews";
 
-export default function DetailsDrawer(marker: MapMarker) {
-    console.log("[MARKER_ID: " + marker.id + "]");
-
+export default function DetailsDrawer(marker: MapMarker): JSX.Element  {
     const {data: reviews, error, isLoading} = useGetReviewsQuery(marker.id);
     const { isOpen, onOpen, onClose } = useDisclosure()
 
