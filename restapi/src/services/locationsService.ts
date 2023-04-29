@@ -27,7 +27,7 @@ export default {
         const locationThing = locationToThing(location)
         locationsDataset = setThing(locationsDataset, locationThing);
         console.log("locationService")
-        console.log(location)
+        console.log(locationThing.url)
         console.log("locationService")
 
         await Promise.all([
@@ -35,6 +35,7 @@ export default {
                 locationsURL,
                 locationsDataset,
                 {fetch: session.fetch}),
+            console.log(locationThing.url),
             MongoService.addLocation(location, session.info.webId!)
         ])
 
