@@ -11,7 +11,7 @@ SharedListSchema.statics.getSharedListFor = function(userWebId : String): Promis
     return this.model('SharedList').findOne({owner: userWebId})
         //@ts-ignore
         .then(result => {
-            if (result === null) {
+            if (result === null || result === 'undefined') {
                 return [] as string[];
             } else {
                 return JSON.stringify(result.sharedList);
@@ -24,10 +24,10 @@ SharedListSchema.statics.getSharedListFor = function(userWebId : String): Promis
 };
 
 SharedListSchema.statics.addToList = function(userWebId : String , friendWebId : String) {
-    this.model('SharedList').find({ owner: userWebId })
+    this.model('SharedList').findOne({ owner: userWebId })
         //@ts-ignore
         .then( result => {
-            if(result.sharedList.length <= 0){
+            if( result === null || result === 'undefined'){
                 const newList = new SharedListModel({
                     owner: userWebId,
                     sharedList: [friendWebId]

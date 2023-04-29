@@ -56,11 +56,8 @@ export default {
         if(friendsDataset == undefined) throw new PodProviderError("Unable to get the contacts dataset.");
         friendsDataset = friendsDataset!;
 
-        console.log("Friendship service")
         const friendThing = friendToThing(friend);
-        console.log("Friendship service")
         friendsDataset = setThing(friendsDataset, friendThing);
-        console.log("Friendship service")
 
         await Promise.all([
             saveSolidDatasetAt(
@@ -68,7 +65,8 @@ export default {
                 friendsDataset,
                 {fetch: session.fetch}
             ),
-            MongoService.addFriend(friend.webId , session.info.webId!)])
+            MongoService.addFriend(friend.webId , session.info.webId!)
+        ])
 
         return friendThing.url;
     },
