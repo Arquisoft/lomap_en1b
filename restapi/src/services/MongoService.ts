@@ -1,4 +1,5 @@
 import {Review, Location} from "../types"
+import {MapMarker} from "../../../webapp/src/types"
 import {ReviewRepository} from "../repo/reviewRepository"
 import {SharedLocationRepository} from "../repo/sharedLocationRepository"
 import {SharedListRepository} from "../repo/sharedListRepository"
@@ -17,12 +18,20 @@ export default {
     getLocationsSharedWithUser: async function (userWebId : string){
         //Obtain the list of friends of the user
         let users = await SharedListRepository.getSharedListFor(userWebId)
+        console.log("Users(MongoService.ts)")
+        console.log(users)
+        console.log("Users")
         //Obtain all those shared locations
-        return await SharedLocationRepository.getSharedLocationFromUsers(users)
+        let sharedLocations  = await SharedLocationRepository.getSharedLocationFromUsers(users)
+        console.log("Shared locations(MongoService.ts)")
+        console.log(sharedLocations)
+        console.log("Shared locations")
+        return sharedLocations
     },
 
     addLocation: async function (newLocation : Location, userWebId : string){
-        if(newLocation.isShared) await SharedLocationRepository.addSharedLocation(newLocation, userWebId)
+        let isShared = (newLocation as unknown as MapMarker).shared
+        if(isShared) await SharedLocationRepository.addSharedLocation(newLocation, userWebId)
     },
 
     removeLocation: async function (locationId : string){

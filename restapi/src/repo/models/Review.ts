@@ -8,18 +8,43 @@ const ReviewSchema = new Schema({
     location : String
 })
 
-ReviewSchema.methods.getReviewsFromListOfLocation = function getReviewsFromListOfLocation(locations : [String]) {
-    return this.model('Review').find({ location: {$in : locations} });
+ReviewSchema.statics.getReviewsFromListOfLocation = function(locations : [String]): Promise<string[]> {
+    return this.find({ location: {$in : locations} })
+        //@ts-ignore
+        .then(result => {
+
+            if (result === null || result.length <= 0) {
+                return [] as string[];
+            } else {
+                return JSON.stringify(result);
+            }
+        })
+        //@ts-ignore
+        .catch(err => {
+            console.log(err);
+        });
 };
 
-ReviewSchema.methods.getReviewsOfGivenUser = function getReviewsOfGivenUser(user : String) {
-    return this.model('Review').find({ owner: user });
+ReviewSchema.statics.getReviewsOfGivenUser = function(user : String): Promise<string[]> {
+    return this.find({ owner: user })
+        //@ts-ignore
+        .then(result => {
+
+            if (result === null || result.length <= 0) {
+                return [] as string[];
+            } else {
+                return JSON.stringify(result);
+            }
+        })
+        //@ts-ignore
+        .catch(err => {
+            console.log(err);
+        });
 };
 
-ReviewSchema.methods.isOwner = function isOwner (webId: String) {
+ReviewSchema.methods.isOwner = function(webId: String): Promise<boolean> {
     return this.owner.equals(webId);
 };
 
-const Review = model('Review', ReviewSchema)
+export const ReviewModel = model('Review', ReviewSchema)
 
-export default  Review;

@@ -26,6 +26,9 @@ export default {
 
         const locationThing = locationToThing(location)
         locationsDataset = setThing(locationsDataset, locationThing);
+        console.log("locationService")
+        console.log(location)
+        console.log("locationService")
 
         await Promise.all([
             saveSolidDatasetAt(
@@ -46,10 +49,12 @@ export default {
         if(locationsDataset == undefined) throw new PodProviderError("Unable to get the locations dataset.")
         locationsDataset = locationsDataset!
 
-        return getThingAll(locationsDataset)
+        let locations = getThingAll(locationsDataset)
                 .filter(locationThing=>validateLocationThing(locationThing))
                 .map(locationThing=>thingToLocation(locationThing))
                 .concat(await MongoService.getLocationsSharedWithUser(session.info.webId!))
+
+        return locations
     },
 
 }

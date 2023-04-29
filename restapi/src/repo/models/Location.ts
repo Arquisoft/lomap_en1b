@@ -12,14 +12,25 @@ const LocationSchema = new Schema({
     owner : String
 })
 
-LocationSchema.methods.getSharedLocationsFromUsers = function getSharedLocationsFromUsers (users : [string]) {
-    return this.model('Location').find({ owner: { $in: users } ,isShared: true });
+LocationSchema.statics.getSharedLocationsFromUsers = function(users : [string]): Promise<string[]> {
+    return this.find({owner: {$in: users}, isShared: true})
+        //@ts-ignore
+        .then(result => {
+
+            if (result === null || result.length <= 0) {
+                return [] as string[];
+            } else {
+                return JSON.stringify(result);
+            }
+        })
+        //@ts-ignore
+        .catch(err => {
+            console.log(err);
+        });
+};
+
+LocationSchema.methods.removeSharedLocation = function(locationId: string) {
+    this.deleteOne({ id: locationId })
 }
 
-LocationSchema.methods.removeSharedLocation = function removeSharedLocation(locationId: string) {
-    this.model('Location').deleteOne({ id: locationId })
-}
-
-const Location = model('Location', LocationSchema)
-
-export default Location;
+export const LocationModel = model('Location', LocationSchema)
