@@ -2,6 +2,7 @@ import HomePage from "../components/Home";
 import { screen  } from "@testing-library/react"
 import {BrowserRouter} from "react-router-dom";
 import { render } from '../setupTests'
+import '@testing-library/jest-dom'
 
 
 /**

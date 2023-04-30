@@ -2,6 +2,7 @@ import NavBar from "../components/NavBar";
 import { screen  } from "@testing-library/react"
 import {BrowserRouter} from "react-router-dom";
 import { render } from '../setupTests'
+import '@testing-library/jest-dom'
 
 
 /**
