@@ -16,9 +16,19 @@ export default {
 
     getLocationsSharedWithUser: async function (userWebId : string){
         //Obtain the list of friends of the user
+        console.log("UserWebId")
+        console.log(userWebId)
+        console.log("UserWebId")
         let users = await SharedListRepository.getSharedListFor(userWebId)
+        console.log("Users(MongoService.ts)")
+        console.log(users)
+        console.log("Users")
         //Obtain all those shared locations
-        return await SharedLocationRepository.getSharedLocationFromUsers(users)
+        let sharedLocations  = await SharedLocationRepository.getSharedLocationFromUsers(users)
+        console.log("Shared locations(MongoService.ts)")
+        console.log(sharedLocations)
+        console.log("Shared locations")
+        return sharedLocations
     },
 
     addLocation: async function (newLocation : Location, userWebId : string){

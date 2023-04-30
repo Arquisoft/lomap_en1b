@@ -55,9 +55,9 @@ export default function DetailsDrawer(marker: MapMarker) {
                                 <Stack spacing={'24px'} direction='column'>
                                     {reviews?.map( (review) => (
                                         <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden'>
-                                            <Image src={URL.createObjectURL(review.photo)} loading={"lazy"} fallbackSrc='https://via.placeholder.com/150'/>
-                                            <ReactStars count={5} value={review.score} isHalf={true} size={28} activeColor="#ffd700" edit={false}/>
-                                            <Box borderWidth='0.5px' >{review.comment}</Box>
+                                            {review.encodedPhoto!="" ?<Image src={`data:image/jpg;base64,${review.encodedPhoto}`} loading={"lazy"} fallbackSrc='https://via.placeholder.com/150'/> : <></> }
+                                            {review.score >0 ? <ReactStars count={5} value={review.score} isHalf={true} size={28} activeColor="#ffd700" edit={false}/> : <></> }
+                                            {review.comment.length != 0 ?<Box borderWidth='0.5px' >{review.comment}</Box> : <></> }
 
                                         </Box>
                                         ))}
@@ -71,7 +71,7 @@ export default function DetailsDrawer(marker: MapMarker) {
                                          id={marker.id}
                                          latitude={marker.latitude}
                                          longitude={marker.longitude}
-                                         shared={marker.shared}/>
+                                         isShared={marker.isShared}/>
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
@@ -153,7 +153,6 @@ export function AddCommentForm(marker: MapMarker) {
                                     };
 
                                     handleSubmit(event)
-                                    addReviewMutation(review);
                                 }}>
                                 {(file.name != "") &&
                                     <Image src={URL.createObjectURL(file)} loading={"lazy"}

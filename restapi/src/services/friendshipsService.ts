@@ -47,8 +47,8 @@ export default {
     },
 
     addFriend : async function (friend:Friend, session:Session){
-        if(!validateFriend(friend)) throw new InvalidRequestBodyError("Not valid friendship.");
 
+        if(!validateFriend(friend)) throw new InvalidRequestBodyError("Not valid friendship.");
         let friendsURL = await getFriendsURL(session.info.webId);
         if(friendsURL == undefined) throw new PodProviderError("Unable to get the contacts dataset URL.");
 
@@ -65,7 +65,8 @@ export default {
                 friendsDataset,
                 {fetch: session.fetch}
             ),
-            MongoService.addFriend(friend.webId , session.info.webId!)])
+            MongoService.addFriend(friend.webId , session.info.webId!)
+        ])
 
         return friendThing.url;
     },

@@ -8,7 +8,7 @@ export const reviewApi = createApi({
         getReviews: builder.query<Review[], string>({
             query: (locationID) => ({
                 url:`review/${locationID}`,
-                credentials:"include"
+                credentials:"include",
             })
         }),
         // Omit metemos una localización y da igual que no tenga un id asignado

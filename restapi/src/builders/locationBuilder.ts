@@ -4,8 +4,13 @@ import {LocationType} from "../locationType";
 import {RDF, SCHEMA_INRUPT} from "@inrupt/vocab-common-rdf";
 
 export function thingToLocation(locationThing:Thing) : Location {
+    let splitId = locationThing.url.split("#").pop()
+    if(splitId === null || splitId === 'undefined'){
+        splitId = ''
+    }
+
     return {
-        id: locationThing.url,
+        id: splitId!,
         name: getStringNoLocale(locationThing, SCHEMA_INRUPT.name)!,
         locationType: getStringNoLocale(locationThing, SCHEMA_INRUPT.description)! as LocationType,
         latitude: getDecimal(locationThing, SCHEMA_INRUPT.latitude)!,

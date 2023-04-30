@@ -17,7 +17,11 @@ import MongoService from "./MongoService"
 export default {
 
     getReviewsForLocation: async function(locationID:string){
-        return await MongoService.getReviews(locationID);
+        let reviews = await MongoService.getReviews(locationID);
+        console.log("Reviews (ReviewService.ts)")
+        console.log(reviews)
+        console.log("Reviews (ReviewService.ts)")
+        return reviews
     },
 
     //Only for testing
@@ -46,7 +50,6 @@ export default {
 
         const reviewThing = reviewToThing(review, session.info.webId!, imageURL);
         reviewsDataset = setThing(reviewsDataset, reviewThing);
-
         await Promise.all([
             saveSolidDatasetAt(
                 reviewsURL,
@@ -55,7 +58,6 @@ export default {
             ),
             MongoService.createReview(review)
         ])
-
         return reviewThing.url;
     },
 

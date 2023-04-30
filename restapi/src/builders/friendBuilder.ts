@@ -32,10 +32,10 @@ export async function urlToFriend(webId:string, loMapFriend:boolean): Promise<Fr
 }
 
 export function friendToThing(friend:Friend): Thing{
-    return buildThing(createThing({name:friend.webId}))
-        .addStringNoLocale(FOAF.nick, friend.nickName)
-        .addUrl(RDFS.seeAlso, friend.webId)
-        .addBoolean("loMapOnly", true)
-        .addUrl(RDF.type, "http://xmlns.com/foaf/0.1/#term_Person")
-        .build()
+    let aux = buildThing(createThing({name:friend.webId}))
+    aux = aux.addStringNoLocale(FOAF.nick, friend.nickName)
+    aux = aux.addUrl(RDFS.seeAlso, friend.webId)
+    //aux = aux.addBoolean("loMapOnly", true)
+    aux = aux.addUrl(RDF.type, "http://xmlns.com/foaf/0.1/#term_Person")
+    return aux.build()
 }

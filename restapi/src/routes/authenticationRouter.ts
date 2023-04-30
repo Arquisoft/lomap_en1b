@@ -7,9 +7,11 @@ const authenticationRouter = express.Router()
     authenticationRouter.get("/loginconfirm", authenticationService.confirmLogin);
     authenticationRouter.get("/logout", authenticationService.logout);
 
-
+/*
     authenticationRouter.get("/testlogin", authenticationService.initTestLogin);
     authenticationRouter.get("/testloginconfirm", authenticationService.confirmTestLogin);
+
+ */
 
 
 export default authenticationRouter

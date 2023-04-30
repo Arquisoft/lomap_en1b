@@ -1,4 +1,4 @@
-import SharedListModel from './models/SharedList';
+import {SharedListModel} from './models/SharedList';
 
 export const SharedListRepository = {
     async addToSharedList(userWebId: string, friendId: string) {
@@ -8,8 +8,8 @@ export const SharedListRepository = {
         SharedListModel.getSharedListFor(userWebId, friendId)
     },
 
-    async getSharedListFor (userWebId : String) {
-        return SharedListModel.getSharedListFor(userWebId)
+    async getSharedListFor (userWebId : string) {
+        return await SharedListModel.getSharedListFor(userWebId)
     },
 
 

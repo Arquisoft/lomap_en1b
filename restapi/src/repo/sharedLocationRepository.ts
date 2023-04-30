@@ -1,4 +1,4 @@
-import LocationModel from '../repo/models/Location'
+import {LocationModel} from '../repo/models/Location'
 import {Location} from '../types';
 
 export const SharedLocationRepository = {
@@ -23,7 +23,24 @@ export const SharedLocationRepository = {
     },
 
     async getSharedLocationFromUsers(users : [String]) {
-        return LocationModel.getSharedLocationsFromUsers(users)
+        let sharedLocations = await LocationModel.getSharedLocationsFromUsers(users)
+
+        if(sharedLocations === null || sharedLocations === 'undefined' || sharedLocations.length <= 0){
+            return []
+        }
+
+        sharedLocations
+            .map((location : Location) => ({
+                id: location.id,
+                name: location.name,
+                locationType: location.locationType,
+                latitude: location.latitude,
+                longitude: location.longitude,
+                isShared: true,
+                isOwnLocation: false,
+            }))
+
+        return sharedLocations
     },
 
 };

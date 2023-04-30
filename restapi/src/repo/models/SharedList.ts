@@ -5,32 +5,38 @@ const SharedListSchema = new Schema({
     owner: String,
     //List with the IDs of those who can see it
     sharedList: [String]
-})
+});
 
-SharedListSchema.methods.getSharedListFor = function getSharedListFor (userWebId : String) {
-    this.model('SharedList').find({ owner: userWebId })
+SharedListSchema.statics.getSharedListFor = function(userWebId : string): Promise<string[]> {
+
+    return this.model('SharedList').findOne({owner: userWebId})
         //@ts-ignore
-        .then( result => {
-            return result.sharedList
+        .then(result => {
+            if (result === null || result === 'undefined') {
+                return [] as string[];
+            } else {
+                return result.sharedList;
+            }
         })
         //@ts-ignore
         .catch(err => {
-            console.log(err)
+            console.log(err);
         });
 };
 
-SharedListSchema.methods.addToList = function addToList (userWebId : String , friendWebId : String) {
-    this.model('SharedList').find({ owner: userWebId })
+SharedListSchema.statics.addToList = function(userWebId : String , friendWebId : String) {
+    this.model('SharedList').findOne({ owner: userWebId })
         //@ts-ignore
         .then( result => {
-            if(result.sharedList.length <= 0){
-                const newList = new SharedList({
+            if( result === null || result === 'undefined'){
+                const newList = new SharedListModel({
                     owner: userWebId,
                     sharedList: [friendWebId]
                 })
                 newList.save()
             }else{
                 result.sharedList.push(friendWebId)
+                result.save()
             }
         })
         //@ts-ignore
@@ -39,12 +45,13 @@ SharedListSchema.methods.addToList = function addToList (userWebId : String , fr
         });
 };
 
-SharedListSchema.methods.removeFromList = function removeFromList (userWebId : String , friendWebId : String) {
+SharedListSchema.statics.removeFromList = function(userWebId : String , friendWebId : String) {
     this.model('SharedList').find({ owner: userWebId })
         //@ts-ignore
         .then( result => {
             let newArray = result.sharedList.filter((e : String) => e !== friendWebId)
             result.sharedList = newArray;
+            result.save();
         })
         //@ts-ignore
         .catch(err => {
@@ -52,6 +59,6 @@ SharedListSchema.methods.removeFromList = function removeFromList (userWebId : S
         });
 };
 
-const SharedList = model('SharedList', SharedListSchema)
-export default  SharedList;
+export const SharedListModel = model('SharedList', SharedListSchema)
+
 
