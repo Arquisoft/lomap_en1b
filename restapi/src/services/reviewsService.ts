@@ -50,16 +50,14 @@ export default {
 
         const reviewThing = reviewToThing(review, session.info.webId!, imageURL);
         reviewsDataset = setThing(reviewsDataset, reviewThing);
-
         await Promise.all([
             saveSolidDatasetAt(
                 reviewsURL,
                 reviewsDataset,
                 {fetch: session.fetch}
             ),
-//            MongoService.createReview(review)
+            MongoService.createReview(review)
         ])
-
         return reviewThing.url;
     },
 

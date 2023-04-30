@@ -55,7 +55,7 @@ export default function DetailsDrawer(marker: MapMarker): JSX.Element  {
                                 <Stack spacing={'24px'} direction='column'>
                                     {reviews?.map( (review) => (
                                         <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden'>
-                                            <Image src={review.photo.name} loading={"lazy"} fallbackSrc='https://via.placeholder.com/150'/>
+                                            <Image src={ review.encodedPhoto} loading={"lazy"} fallbackSrc='https://via.placeholder.com/150'/>
                                             <ReactStars count={5} value={review.score} isHalf={true} size={28} activeColor="#ffd700" edit={false}/>
                                             {review.comment}
                                         </Box>
@@ -143,7 +143,6 @@ export function AddCommentForm(marker: MapMarker) {
                                     };
 
                                     handleSubmit(event)
-                                    addReviewMutation(review);
                                 }}>
                                 <Box borderColor="gray.300" borderStyle="dashed" borderWidth="2px"
                                     rounded="md" shadow="sm" role="group" transition="all 150ms ease-in-out"
