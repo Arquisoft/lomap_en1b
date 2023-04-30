@@ -3,9 +3,10 @@ const { model, Schema } = mongoose
 const ReviewSchema = new Schema({
     score : Number,
     comment : String,
-    images : [String],
+    encodedPhoto : String,
     owner : String,
     location : String
+
 })
 
 ReviewSchema.statics.getReviewsFromListOfLocation = function(locations : [String]): Promise<string[]> {
@@ -33,7 +34,7 @@ ReviewSchema.statics.getReviewsOfGivenUser = function(user : String): Promise<st
             if (result === null || result.length <= 0) {
                 return [] as string[];
             } else {
-                return JSON.stringify(result);
+                return result;
             }
         })
         //@ts-ignore

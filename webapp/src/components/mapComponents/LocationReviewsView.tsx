@@ -55,7 +55,7 @@ export default function DetailsDrawer(marker: MapMarker) {
                                 <Stack spacing={'24px'} direction='column'>
                                     {reviews?.map( (review) => (
                                         <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden'>
-                                            {review.encodedPhoto!="" ?<Image src={review.encodedPhoto} loading={"lazy"} fallbackSrc='https://via.placeholder.com/150'/> : <></> }
+                                            {review.encodedPhoto!="" ?<Image src={`data:image/jpg;base64,${review.encodedPhoto}`} loading={"lazy"} fallbackSrc='https://via.placeholder.com/150'/> : <></> }
                                             {review.score >0 ? <ReactStars count={5} value={review.score} isHalf={true} size={28} activeColor="#ffd700" edit={false}/> : <></> }
                                             {review.comment.length != 0 ?<Box borderWidth='0.5px' >{review.comment}</Box> : <></> }
 
