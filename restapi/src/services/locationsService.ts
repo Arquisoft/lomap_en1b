@@ -47,11 +47,14 @@ export default {
         if(locationsDataset == undefined) throw new PodProviderError("Unable to get the locations dataset.")
         locationsDataset = locationsDataset!
 
-        let locations = getThingAll(locationsDataset)
+        let locations = await getThingAll(locationsDataset)
                 .filter(locationThing=>validateLocationThing(locationThing))
                 .map(locationThing=>thingToLocation(locationThing))
                 .concat(await MongoService.getLocationsSharedWithUser(session.info.webId!))
 
+        console.log("Shared locations(LocationsService.ts)")
+        console.log(locations)
+        console.log("Shared locations")
         return locations
     },
 
