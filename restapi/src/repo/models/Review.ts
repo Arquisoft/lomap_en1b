@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { model, Schema } = mongoose
 const ReviewSchema = new Schema({
-    stars : Number,
+    score : Number,
     comment : String,
     images : [String],
     owner : String,

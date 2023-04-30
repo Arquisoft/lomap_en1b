@@ -56,9 +56,9 @@ export default function DetailsDrawer(marker: MapMarker) {
                                     {reviews?.map( (review) => (
                                         <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden'>
                                             <Image src={review.encodedPhoto} loading={"lazy"} fallbackSrc='https://via.placeholder.com/150'/>
+
                                             <ReactStars count={5} value={review.score} isHalf={true} size={28} activeColor="#ffd700" edit={false}/>
                                             <Box borderWidth='0.5px' >{review.comment}</Box>
-
                                         </Box>
                                         ))}
                                 </Stack>
@@ -153,7 +153,6 @@ export function AddCommentForm(marker: MapMarker) {
                                     };
 
                                     handleSubmit(event)
-                                    addReviewMutation(review);
                                 }}>
                                 {(file.name != "") &&
                                     <Image src={URL.createObjectURL(file)} loading={"lazy"}

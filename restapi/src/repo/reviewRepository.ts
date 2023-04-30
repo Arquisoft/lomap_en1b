@@ -4,7 +4,7 @@ import {Review} from '../types';
 export const ReviewRepository = {
     async createReview(review: Review) {
         const newReview = new ReviewModel({
-            stars : review.score,
+            score : review.score,
             comment : review.comment,
             location : review.markerId,
             images : review.encodedPhoto
