@@ -7,14 +7,15 @@ const SharedListSchema = new Schema({
     sharedList: [String]
 });
 
-SharedListSchema.statics.getSharedListFor = function(userWebId : String): Promise<string[]> {
+SharedListSchema.statics.getSharedListFor = function(userWebId : string): Promise<string[]> {
+
     return this.model('SharedList').findOne({owner: userWebId})
         //@ts-ignore
         .then(result => {
             if (result === null || result === 'undefined') {
                 return [] as string[];
             } else {
-                return JSON.stringify(result.sharedList);
+                return result.sharedList;
             }
         })
         //@ts-ignore
@@ -35,6 +36,7 @@ SharedListSchema.statics.addToList = function(userWebId : String , friendWebId :
                 newList.save()
             }else{
                 result.sharedList.push(friendWebId)
+                result.save()
             }
         })
         //@ts-ignore
@@ -49,6 +51,7 @@ SharedListSchema.statics.removeFromList = function(userWebId : String , friendWe
         .then( result => {
             let newArray = result.sharedList.filter((e : String) => e !== friendWebId)
             result.sharedList = newArray;
+            result.save();
         })
         //@ts-ignore
         .catch(err => {

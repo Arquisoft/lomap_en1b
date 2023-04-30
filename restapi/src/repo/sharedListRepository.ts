@@ -8,7 +8,7 @@ export const SharedListRepository = {
         SharedListModel.getSharedListFor(userWebId, friendId)
     },
 
-    async getSharedListFor (userWebId : String) {
+    async getSharedListFor (userWebId : string) {
         return await SharedListModel.getSharedListFor(userWebId)
     },
 
