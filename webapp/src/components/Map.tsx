@@ -23,14 +23,7 @@ import {
     Stack,
     StackDivider,
     Text,
-    Drawer,
     useDisclosure,
-    DrawerOverlay,
-    DrawerContent,
-    DrawerCloseButton,
-    DrawerBody,
-    DrawerHeader,
-    DrawerFooter,
     CardFooter,
     ButtonGroup
 } from '@chakra-ui/react';
@@ -43,12 +36,6 @@ import {useAddLocationMutation, useGetLocationsQuery} from "../app/services/Loca
 import type {MapMarker} from '../types';
 import {LocationType} from "../locationType";
 import DetailsDrawer from './mapComponents/LocationReviewsView'
-
-//import {addLocation, selectAllLocations} from "../app/services/Location";
-export enum FilterEnum {
-    Bars, Restaurants, Shops, Sights,
-    Monuments, MyLocations, SharedLocations,
-}
 
 export function LocationMarkerWithStore() {
     // const [position, setPosition] : LatLng = {lat: 0, lng: 0};
@@ -145,16 +132,11 @@ export default function MapElement(): JSX.Element {
     const {data: locations, error, isLoading} = useGetLocationsQuery();
     const dispatch = useDispatch()
 
- //   const locations : MapMarker[] = [{latitude : 43.354, longitude : -5.851,
- //       name:"prueba 1",locationType: LocationType.sight, id: 43.354 + " - " + -5.851,shared: true}];
-
-
     const [showBars, setShowBars] = useState(true)
     const [showRestaurants, setShowRestaurants] = useState(true)
     const [showShops, setShowShops] = useState(true)
     const [showSights, setShowSights] = useState(true)
     const [showMonuments, setShowMonuments] = useState(true)
-    const [showMyLocations, setShowMyLocations] = useState(true)
     const [showSharedLocations, setShowSharedLocations] = useState(true)
 
     return (
@@ -171,7 +153,6 @@ export default function MapElement(): JSX.Element {
                         showShops={() => showShops} setShowShops={setShowShops}
                         showSights={() => showSights} setShowSights={setShowSights}
                         showMonuments={() => showMonuments} setShowMonuments={setShowMonuments}
-                        showMyLocations={() => showMyLocations} setShowMyLocations={setShowMyLocations}
                         showSharedLocations={() => showSharedLocations} setShowSharedLocations={setShowSharedLocations}
                     />
                 </Flex>
@@ -188,6 +169,7 @@ export default function MapElement(): JSX.Element {
                         if(loc.locationType == LocationType.shop && showShops) return true
                         if(loc.locationType == LocationType.sight && showSights) return true
                         if(loc.locationType == LocationType.monument && showMonuments) return true
+                        if(loc.shared && showSharedLocations) return true
                     })
                         .map((location: MapMarker) => (
                         <Marker key={location.id}
@@ -221,15 +203,12 @@ interface FilterModalProps {
     setShowSights : React.Dispatch<React.SetStateAction<boolean>>,
     showMonuments : () => boolean,
     setShowMonuments  : React.Dispatch<React.SetStateAction<boolean>>,
-    showMyLocations  : () => boolean,
-    setShowMyLocations : React.Dispatch<React.SetStateAction<boolean>>,
     showSharedLocations  : () => boolean,
     setShowSharedLocations : React.Dispatch<React.SetStateAction<boolean>>,
 }
 
 export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
     const {isOpen, onClose, onOpen} = useDisclosure();
-
 
     const data = {
         types: [
@@ -238,10 +217,12 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
             { id: "shops", name: "Shops", value: props.showShops, onChange: props.setShowShops },
             { id: "sights", name: "Sights", value: props.showSights, onChange: props.setShowSights },
             { id: "monuments", name: "Monuments", value: props.showMonuments, onChange: props.setShowMonuments },
-            { id: "myLocations", name: "My Locations", value: props.showMyLocations, onChange: props.setShowMyLocations },
             { id: "sharedLocations", name: "Shared Locations", value: props.showSharedLocations, onChange: props.setShowSharedLocations }
         ]
     };
+
+    const propsChecked = (props.showBars() && props.showRestaurants() && props.showShops()
+    && props.showMonuments() && props.showSharedLocations() && props.showSights());
 
     return (
         <>
@@ -255,19 +236,26 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
                             <ModalCloseButton/>
                         </ModalHeader>
                         <ModalBody>
-                            <Stack spacing={2} direction='column'>
                             <CheckboxGroup>
-                                    {data.types.map((type, index) => (
-                                        <Checkbox
-                                             key={type.id}
-                                            isChecked={type.value()}
-                                            onChange={e => type.onChange(!type.value())}
-                                            >
-                                            {type.name}
-                                        </Checkbox>
-                                    ))}
+                                <Checkbox
+                                    isChecked={propsChecked}
+                                    onChange={(e) =>
+                                        data.types.forEach(element=> element.onChange(e.target.checked))
+                                    }>
+                                    Show all
+                                </Checkbox>
+                                <Stack pl={6} mt={1} spacing={2} direction='column'>
+                                        {data.types.map((type, index) => (
+                                            <Checkbox
+                                                 key={type.id}
+                                                isChecked={type.value()}
+                                                onChange={e => type.onChange(!type.value())}
+                                                >
+                                                {type.name}
+                                            </Checkbox>
+                                        ))}
+                                </Stack>
                             </CheckboxGroup>
-                            </Stack>
                         </ModalBody>
                         <ModalFooter>
                         </ModalFooter>
