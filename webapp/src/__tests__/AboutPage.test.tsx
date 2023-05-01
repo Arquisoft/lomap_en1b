@@ -13,7 +13,7 @@ jest.mock("react-router-dom", () => ({
     useNavigate: () => mockedUsedNavigate
 }));
 
-describe("NavBar", () => {
+describe("About", () => {
     test("Test the corrent render of the component", () => {
         render(
             <BrowserRouter>
@@ -23,6 +23,15 @@ describe("NavBar", () => {
 
         const titleText = screen.getByText("LoMap project"); 
         expect(titleText).toBeInTheDocument();
+
+        expect(screen.getByText('About LoMap')).toBeInTheDocument();
+        expect(screen.getByText('LoMap intends to be an easy-to-use tool for people to create, customize, and share personal maps filling them with the places they live.')).toBeInTheDocument();
+        expect(screen.getByText(/UO276188/i)).toBeInTheDocument();
+        expect(screen.getByText(/UO276670/i)).toBeInTheDocument();
+        expect(screen.getByText(/UO283720/i)).toBeInTheDocument();
+        expect(screen.getByText(/UO271407/i)).toBeInTheDocument();
+        expect(screen.getByText(/UO277412/i)).toBeInTheDocument();
+        expect(screen.getByText(/UO278249/i)).toBeInTheDocument();
 
         const subtitleText = screen.getByText("Team members");
         expect(subtitleText).toBeInTheDocument();
