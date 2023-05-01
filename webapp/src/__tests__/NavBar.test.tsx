@@ -5,6 +5,7 @@ import { render } from '../setupTests';
 import '@testing-library/jest-dom';
 
 
+
 /**
  * verifies that the "NavBar" component renders correctly 
  */
