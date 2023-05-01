@@ -1,7 +1,7 @@
 import {configureStore, ThunkAction, Action, createSlice} from '@reduxjs/toolkit';
 import {locationApi} from "./services/Location";
 import {friendApi} from "./services/Friend";
-import {displayedLocationsSlice} from "./services/DisplayedLocations";
+import {reviewApi} from "./services/Reviews";
 
 export const authSlice = createSlice({
     name: 'auth',
@@ -16,14 +16,14 @@ export const store = configureStore({
     reducer: {
         [locationApi.reducerPath]: locationApi.reducer,
         [friendApi.reducerPath]: friendApi.reducer,
-        displayedLocationsSlice: displayedLocationsSlice.reducer,
-
+        [reviewApi.reducerPath]: reviewApi.reducer,
         "auth": authSlice.reducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(
             locationApi.middleware,
-            friendApi.middleware
+            friendApi.middleware,
+            reviewApi.middleware
         ),
 });
 

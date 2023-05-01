@@ -2,74 +2,76 @@ import {Request, Response} from "express";
 import {
     setThing,
     saveSolidDatasetAt,
-    getPodUrlAll, getSolidDataset, getThingAll
+    getPodUrlAll,
+    getThingAll,
+    getThing,
+    Thing,
+    getUrlAll,
+    getWebIdDataset
 } from "@inrupt/solid-client";
-import {getSessionFromStorage} from "@inrupt/solid-client-authn-node";
-import {friendToThing, thingToFriend} from "../builders/friendBuilder";
+import {Session} from "@inrupt/solid-client-authn-node";
+import {friendToThing, thingToFriend, urlToFriend} from "../builders/friendBuilder";
 import {validateFriend, validateFriendThing} from "../validators/friendValidator";
 import {Friend} from "../types";
+import {FOAF} from "@inrupt/vocab-common-rdf";
+import {getOrCreateDataset} from "./util/podAccessUtil";
+import {InvalidRequestBodyError, PodProviderError} from "./util/customErrors";
+import MongoService from "./MongoService"
 
 export default {
 
-    getFriends : async function (req:Request, res:Response){
-            const session = await getSessionFromStorage(req.session.solidSessionId!);
-            if(session==undefined)return res.send('error')
+    getFriends : async function (session:Session){
+        let friendsURL = await getFriendsURL(session.info.webId);
+        if(friendsURL == undefined) throw new PodProviderError("Unable to get the contacts dataset URL.")
 
-            let friendsURL = await getFriendsURL(session.info.webId);
-            if(friendsURL == undefined) return res.send("error");
+        //Get friends from contacts
+        let friendsDataset = await getOrCreateDataset(friendsURL, session)
+        if(friendsDataset == undefined) throw new PodProviderError("Unable to get the contacts dataset.")
+        friendsDataset = friendsDataset!
 
-            //Get friends from contacts
-            let friendsDataset =  await getSolidDataset(
-                friendsURL,
-                {fetch: session.fetch}          // fetch from authenticated session
-            );
+        //Get friends from profile
+        const profile = await getWebIdDataset(decodeURIComponent(session.info.webId!));
+        const profileThing = getThing(profile, decodeURIComponent(session.info.webId!));
+        const profileFriends = getUrlAll(profileThing as Thing, FOAF.knows);
 
-            //Get friends from profile
-            //TODO
-            //Get friends from extended profile
-            //TODO
-            //const profiles = await getProfileAll(webId,{ fetch:session!.fetch });
-            //const webIDProfileSolidDataset = profiles.webIdProfile;
-            //const webIdThing = getThing(webIDProfileSolidDataset, webId);
-            //const friends = getUrlAll(webIdThing as Thing, FOAF.knows);
+        //Get friends from extended profile
+        //TODO
 
-            return res.send(
-                getThingAll(friendsDataset)
-                    .filter(friendThing=>validateFriendThing(friendThing))
-                    .map(friendThing=>thingToFriend(friendThing)))
+        return await Promise.all(
+            getThingAll(friendsDataset)
+                .filter(friendThing=>validateFriendThing(friendThing))
+                .map(async friendThing=>await thingToFriend(friendThing, true))
+                .concat(
+                    profileFriends.map(async webId =>await urlToFriend(webId, false)))
+            )
     },
 
-    addFriend : async function (req:Request, res:Response){
-        const session = await getSessionFromStorage(req.session.solidSessionId!)
-        if(session==undefined) return res.send('error')
+    addFriend : async function (friend:Friend, session:Session){
 
-        let friend: Friend = req.body.location;
-        if(!validateFriend(friend)){
-            res.send('error')
-        }
+        if(!validateFriend(friend)) throw new InvalidRequestBodyError("Not valid friendship.");
+        let friendsURL = await getFriendsURL(session.info.webId);
+        if(friendsURL == undefined) throw new PodProviderError("Unable to get the contacts dataset URL.");
 
-        let locationsURL = await getFriendsURL(session.info.webId);
-        if(locationsURL == undefined) return res.send("error")
+        let friendsDataset = await getOrCreateDataset(friendsURL, session);
+        if(friendsDataset == undefined) throw new PodProviderError("Unable to get the contacts dataset.");
+        friendsDataset = friendsDataset!;
 
+        const friendThing = friendToThing(friend);
+        friendsDataset = setThing(friendsDataset, friendThing);
 
-        const friendThing = friendToThing(friend)
-        let friendsSolidDataset = await getSolidDataset(
-            locationsURL,
-            {fetch: session.fetch}
-        );
+        await Promise.all([
+            saveSolidDatasetAt(
+                friendsURL,
+                friendsDataset,
+                {fetch: session.fetch}
+            ),
+            MongoService.addFriend(friend.webId , session.info.webId!)
+        ])
 
-        friendsSolidDataset = setThing(friendsSolidDataset, friendThing);
-        let newDataset = await saveSolidDatasetAt(
-            locationsURL,
-            friendsSolidDataset,
-            {fetch: session.fetch}             // fetch from authenticated Session
-        );
-
-        return res.send(getThingAll(newDataset).map(locationThing=>thingToFriend(locationThing)))
+        return friendThing.url;
     },
 
     deleteFriend : async function(_req:Request, _res:Response){
-
     }
 
 }
@@ -78,6 +80,5 @@ async function getFriendsURL(webId:string | undefined){
     if(webId == undefined) return undefined
     let webID = decodeURIComponent(webId)
     const podURL = await getPodUrlAll(webID);
-    console.log(podURL)
-    return  podURL + "contacts/";
+    return  podURL + "contacts/friends";
 }
