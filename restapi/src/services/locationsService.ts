@@ -16,6 +16,7 @@ export default {
 
     saveLocation: async function (location:Location, session:Session){
         if(!validateLocation(location)) throw new InvalidRequestBodyError("Not valid location.")
+        location.owner = session.info.webId!
 
         let locationsURL = await getLocationsURL(session.info.webId);
         if(locationsURL == undefined) throw new PodProviderError("Unable to get the locations dataset URL.")
@@ -33,7 +34,7 @@ export default {
                 locationsURL,
                 locationsDataset,
                 {fetch: session.fetch}),
-            MongoService.addLocation(location, session.info.webId!)
+            MongoService.addLocation(location)
         ])
 
         return locationThing.url
@@ -52,9 +53,9 @@ export default {
                 .map(locationThing=>thingToLocation(locationThing))
                 .concat(await MongoService.getLocationsSharedWithUser(session.info.webId!))
 
-        console.log("Shared locations(LocationsService.ts)")
+        console.log("Locations(LocationsService.ts)")
         console.log(locations)
-        console.log("Shared locations")
+        console.log("Locations")
         return locations
     },
 

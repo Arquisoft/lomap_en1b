@@ -7,7 +7,8 @@ export const ReviewRepository = {
             score : review.score,
             comment : review.comment,
             location : review.markerId,
-            encodedPhoto : review.encodedPhoto
+            encodedPhoto : review.encodedPhoto,
+            owner : review.owner
         })
 
         newReview.save()
@@ -30,7 +31,8 @@ export const ReviewRepository = {
             markerId: review.markerId,
             comment: review.comment,
             score: review.score,
-            encodedPhoto: review.encodedPhoto
+            encodedPhoto: review.encodedPhoto,
+            owner: review.owner
         }))
         console.log("REVIEWS REPOSItORy")
         console.log(reviews)

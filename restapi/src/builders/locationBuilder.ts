@@ -15,9 +15,9 @@ export function thingToLocation(locationThing:Thing) : Location {
         locationType: getStringNoLocale(locationThing, SCHEMA_INRUPT.description)! as LocationType,
         latitude: getDecimal(locationThing, SCHEMA_INRUPT.latitude)!,
         longitude: getDecimal(locationThing, SCHEMA_INRUPT.longitude)!,
-        isShared: false,
-        isOwnLocation: false,
-        owner:""
+        isShared: false,        //sacarlo del pod
+        isOwnLocation: true,   // true porque si lo sacas del pod, si o si tiene que ser tuyo
+        owner:""                //sacarlo del pod
     }
 }
 //TODO: añadir owner

@@ -48,6 +48,8 @@ export default {
 
         const imageURL = await ImagesService.saveImage(review.encodedPhoto, session);
 
+        review.owner = session.info.webId!
+
         const reviewThing = reviewToThing(review, session.info.webId!, imageURL);
         reviewsDataset = setThing(reviewsDataset, reviewThing);
         await Promise.all([

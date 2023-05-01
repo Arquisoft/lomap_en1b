@@ -33,7 +33,7 @@ LocationSchema.statics.getSharedLocationsFromUsers = function(users : [string]):
 };
 
 LocationSchema.methods.removeSharedLocation = function(locationId: string) {
-    this.deleteOne({ id: locationId })
+    this.deleteOne({ id: locationId }).save()
 }
 
 export const LocationModel = model('Location', LocationSchema)

@@ -85,10 +85,10 @@ export function LocationMarkerWithStore() {
                                     longitude: lngi,
                                     name: name,
                                     locationType: category as LocationType,
-                                    id: lati + " - " + lngi,
+                                    isOwnLocation:true,
                                     isShared: isShared,
-                                    owner: "",
-                                    isOwnLocation:true
+                                    id: "",
+                                    owner: ""
                                 };
 
                                 const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -103,6 +103,8 @@ export function LocationMarkerWithStore() {
                                     });
                                 };
                                 handleSubmit(event)
+
+                                //set default values
                                 setName('')
                                 setCategory('bar')
                                 setShared(false)
@@ -194,6 +196,7 @@ export default function MapElement(): JSX.Element {
                         if(loc.isShared && showSharedLocations == false) return false
                         if(loc.isOwnLocation && showMyLocations == false) return false
                         if(loc.isOwnLocation == false && showFriendLocations == false) return false
+
                         if(loc.locationType == LocationType.restaurant && showRestaurants) return true
                         if(loc.locationType == LocationType.bar && showBars) return true
                         if(loc.locationType == LocationType.shop && showShops) return true

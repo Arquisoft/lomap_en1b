@@ -151,7 +151,15 @@ export function AddCommentForm(marker: MapMarker) {
                             <form id={"formMarker"} onSubmit = {
                                 (event) => {
                                     event.preventDefault();
-                                    const review : Review = {markerId:marker.id, comment:textComment, photo: file ,score:rating, encodedPhoto: "", owner:""};
+                                    const review : Review =
+                                        {
+                                            markerId:marker.id,
+                                            comment:textComment,
+                                            photo: file ,
+                                            score:rating,
+                                            encodedPhoto: "",
+                                            owner:""
+                                        };
 
                                     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
                                         event.preventDefault();
