@@ -64,7 +64,19 @@ export function LocationMarkerWithStore() {
         },
 
     })
-
+    const checkAndClose = () => {
+        if(name.trim().length > 0 && category.trim().length > 0) {
+            onClose();
+        } else {
+            toast({
+                title: 'Marker not added',
+                description: "Locations must have a non blank name, please try again.",
+                status: 'warning',
+                duration: 7000,
+                isClosable: true,
+            });
+        }
+    };
     //Use .map to iterate and generate the corresponding markers
     //This need to be optimiced because I think it generates again
     //all the markers on top of each other
@@ -79,6 +91,7 @@ export function LocationMarkerWithStore() {
                     <ModalBody>
                         <form id={"formMarker"} onSubmit={
                             (event) => {
+                            if(name.trim().length > 0 && category.trim().length > 0) {
                                 event.preventDefault();
                                 const marker: MapMarker = {
                                     latitude: lati,
@@ -98,7 +111,7 @@ export function LocationMarkerWithStore() {
                                         title: 'Marker Added',
                                         description: "The location has been added successfully",
                                         status: 'success',
-                                        duration: 7000,
+                                        duration: 3000,
                                         isClosable: true,
                                     });
                                 };
@@ -106,7 +119,7 @@ export function LocationMarkerWithStore() {
                                 setName('')
                                 setCategory('bar')
                                 setShared(false)
-                            }}>
+                            }}}>
                             <Stack spacing={2} direction='column'>
                                 <FormControl isRequired={true}>
                                     <FormLabel>Name</FormLabel>
@@ -134,7 +147,7 @@ export function LocationMarkerWithStore() {
                         </form>
                     </ModalBody>
                     <ModalFooter>
-                        <Button form={"formMarker"} type={"submit"} onClick={onClose}>Place Marker</Button>
+                        <Button form={"formMarker"} type={"submit"} onClick={checkAndClose}>Place Marker</Button>
                     </ModalFooter>
                 </ModalContent>
             </ModalOverlay>
@@ -153,7 +166,6 @@ export default function MapElement(): JSX.Element {
     const [showShops, setShowShops] = useState(true)
     const [showSights, setShowSights] = useState(true)
     const [showMonuments, setShowMonuments] = useState(true)
-    const [showSharedLocations, setShowSharedLocations] = useState(true)
     const [showMyLocations, setShowMyLocations] = useState(true)
     const [showFriendLocations, setShowFriendLocations] = useState(true)
 
@@ -171,7 +183,6 @@ export default function MapElement(): JSX.Element {
                         showShops={() => showShops} setShowShops={setShowShops}
                         showSights={() => showSights} setShowSights={setShowSights}
                         showMonuments={() => showMonuments} setShowMonuments={setShowMonuments}
-                        showSharedLocations={() => showSharedLocations} setShowSharedLocations={setShowSharedLocations}
                         showMyLocations={() => showMyLocations} setShowMyLocations={setShowMyLocations}
                         showFriendLocations={() => showFriendLocations} setShowFriendLocations={setShowFriendLocations}
                     />
@@ -181,6 +192,8 @@ export default function MapElement(): JSX.Element {
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        noWrap={true}
+                        maxZoom={19}
                     />
                     {isLoading
                         ?
@@ -191,7 +204,6 @@ export default function MapElement(): JSX.Element {
                         </Alert>) :
                     <>
                     ({locations?.filter( loc => {
-                        if(loc.isShared && showSharedLocations == false) return false
                         if(loc.isOwnLocation && showMyLocations == false) return false
                         if(loc.isOwnLocation == false && showFriendLocations == false) return false
                         if(loc.locationType == LocationType.restaurant && showRestaurants) return true
@@ -237,8 +249,6 @@ interface FilterModalProps {
     setShowSights : React.Dispatch<React.SetStateAction<boolean>>,
     showMonuments : () => boolean,
     setShowMonuments  : React.Dispatch<React.SetStateAction<boolean>>,
-    showSharedLocations  : () => boolean,
-    setShowSharedLocations : React.Dispatch<React.SetStateAction<boolean>>,
     showMyLocations  : () => boolean,
     setShowMyLocations : React.Dispatch<React.SetStateAction<boolean>>,
     showFriendLocations  : () => boolean,
@@ -255,14 +265,13 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
             { id: "shops", name: "Shops", value: props.showShops, onChange: props.setShowShops },
             { id: "sights", name: "Sights", value: props.showSights, onChange: props.setShowSights },
             { id: "monuments", name: "Monuments", value: props.showMonuments, onChange: props.setShowMonuments },
-            { id: "sharedLocations", name: "Public Locations", value: props.showSharedLocations, onChange: props.setShowSharedLocations },
             { id: "myLocations", name: "My Locations", value: props.showMyLocations, onChange: props.setShowMyLocations },
             { id: "friendLocations", name: "Friend Locations", value: props.showFriendLocations, onChange: props.setShowFriendLocations }
         ]
     };
 
     const propsChecked = (props.showBars() && props.showRestaurants() && props.showShops()
-    && props.showMonuments() && props.showSharedLocations() && props.showSights());
+    && props.showMonuments() && props.showSights());
 
     return (
         <>
