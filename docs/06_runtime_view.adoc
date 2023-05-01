@@ -1,70 +1,41 @@
 [[section-runtime-view]]
 == Runtime View
 
-
-[role="arc42help"]
-****
-.Contents
-The runtime view describes concrete behavior and interactions of the system’s building blocks in form of scenarios from the following areas:
-
-* important use cases or features: how do building blocks execute them?
-* interactions at critical external interfaces: how do building blocks cooperate with users and neighboring systems?
-* operation and administration: launch, start-up, stop
-* error and exception scenarios
-
-Remark: The main criterion for the choice of possible scenarios (sequences, workflows) is their *architectural relevance*. It is *not* important to describe a large number of scenarios. You should rather document a representative selection.
-
-.Motivation
-You should understand how (instances of) building blocks of your system perform their job and communicate at runtime.
-You will mainly capture scenarios in your documentation to communicate your architecture to stakeholders that are less willing or able to read and understand the static models (building block view, deployment view).
-
-.Form
-There are many notations for describing scenarios, e.g.
-
-* numbered list of steps (in natural language)
-* activity diagrams or flow charts
-* sequence diagrams
-* BPMN or EPCs (event process chains)
-* state machines
-* ...
-
-****
-
-=== User registration
-* The user enters the system for the first time and registers their personal data to create an account and start ussing the webapp.
-** The user will be able to fill a form with their data that is saved on their private POD.
-
-
 === User Login
-* The user already registered on the system and wants to log in with their user and password to acess the webapp.
-** The user will be able to fill a form with their user and password that will be sent to the server to be authenticated and allow or deny access.
+* The user wants to log in with their POD to access the webapp.
+** The user will be able to fill a form that will redirect him to its POD's provider in order to give the application access to its POD's information or deny it.
+** The structure of the login is not as simple as a typical login flow, since it is not managed by our application but by the users Solid POD provider. The information flow works as follows:
+
+image:6-RuntimeView/Login flow.drawio.png
 
 
 === Adding a Location
 * The user wants to add the location restaurant to the webapp and see it on the map.
-** The user will be able to select a location category and the coordinates for the location to be placed and seen on their map and it will be saved on their POD.
+** The user will click on a place on the map and a form will be displayed where the user will be able to select a location category and the name for the location to be placed and seen on their map and it will be saved on their POD.
 
 
 === Reviewing information about a place
 * The user wants to select a friend's added location and see the pictures they added to it.
-** Locations made public or shared with the user will be able to be accesed by the user to review aditional information that the creator added to the place.
+** Locations made public or shared with the user will be able to be accessed by the user to review additional information that the creator added to the place.
+** When accessing any shared resource (not only shared locations, but reviews as well), the information flow does not go through only the user´s pod, but through our database as well. This database´s intention is not to manage the user´s data (the "master" data is always the one stored in the pod), but improve performance by reducing the calls to external places.
 
+image:6-RuntimeView/Cache Flow.drawio.png[Flow of information when adding and accessing any shared resource]
 
-=== Changing privacy settings
+=== Changing privacy settings (Not implemented yet)
 * The user doesn't want their friends seeing the locations she added to the map so they acess the settings of the webapp to disable sharing them.
 ** The different settings about what information on the places and the user is accesible by their friends will be able to be changed, giving different options for each parameter.
 
 
 === Adding a new friend
 * A user navigating the app wants to search and add a concrete friend to their friend list.
-** The user will be able to write the user of a friend that, if in the database, will be added to their personal friend list and the connection stored on the database.
+** The user will be able to write the WebId of a friend's POD and also a NickName just to be similar to an agenda.
 
 
-=== Deleting a friend
+=== Deleting a friend (Not implemented yet)
 * A user wants to remove a friend from their friend list.
-** The user will be given the option to remove a frient from their list, if they do the system wont consider them a friend and all places shared with them will no longer be shared.
+** The user will be given the option to remove a friend from their list, if they do the system wont consider them a friend and all places shared with them will no longer be shared.
 
 
-=== Creating a friend group
+=== Creating a friend group (Not implemented yet)
 * The user wants to create a group of friends and manage privacy on the group.
 ** The group of friends will be treated as a single friend, after creation it will be stored on the database and the information that is shared or not will affect the whole group.

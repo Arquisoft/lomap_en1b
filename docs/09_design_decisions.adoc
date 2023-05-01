@@ -2,29 +2,6 @@
 == Design Decisions
 
 
-[role="arc42help"]
-****
-.Contents
-Important, expensive, large scale or risky architecture decisions including rationals.
-With "decisions" we mean selecting one alternative based on given criteria.
-
-Please use your judgement to decide whether an architectural decision should be documented
-here in this central section or whether you better document it locally
-(e.g. within the white box template of one building block).
-
-Avoid redundancy. Refer to section 4, where you already captured the most important decisions of your architecture.
-
-.Motivation
-Stakeholders of your system should be able to comprehend and retrace your decisions.
-
-.Form
-Various options:
-
-* List or table, ordered by importance and consequences or:
-* more detailed in form of separate sections per decision
-* ADR (architecture decision record) for every important decision
-****
-
 === Technologies
 
 .Typescript
@@ -75,10 +52,28 @@ Cons::
 
 
 === Architecture
-.SOLID pods connection to the WebApp
-Reason:: The application will be divided into two big modules: WebApp (front-end) and API (back-end). We have the option of connecting the SOLID pods to any of the two modules. Our decision is to connect it to the WebApp.
+.SOLID pods connection to the RestAPI
+Reason:: The application will be divided into two big modules: WebApp (front-end) and API (back-end). We have the option of connecting the SOLID pods to any of the two modules. Our decision is to connect it to the RestAPI.
 Pros::
-* More resources of integration with React.
-* It will reduce overhead.
+* Business logic isolation in the WebAPP.
 Cons::
-* It will add complexity to the WebApp module.
+* Not many examples of SOLID Pod access from the server side.
+
+.Local database used as cache
+Reason:: After developing the first prototype of our application, we realised that around 80% of the response time of the server was due to the delay in retrieving data from the user´s Pod. In order to improve performance, we decided to store all the information in the user´s pod and keep it as the "master" information, but to store a copy in a local database and use it when accessing shared resources (information from other users' pods).
+Pros::
+* Improved performance.
+* Data redundancy.
+* The user privacy is not affected, only data that the user wants to share is stored.
+Cons::
+* Only improves performance when accessing other users´ data.
+* Adds complexity to the RestAPI.
+image:
+
+.Location filters in the WebAPP
+Reason:: In order to reduce the number of calls to the RestAPI and consequently the number of calls to external sites (Pod Providers), the filters will be executed in the WebAPP cache (store module).
+Pros::
+* Reduced response time when applying filters.
+Cons::
+* Implementation of some business logic in the WebAPP.
+
