@@ -1,39 +1,12 @@
 [[section-runtime-view]]
 == Runtime View
 
-
-[role="arc42help"]
-****
-.Contents
-The runtime view describes concrete behavior and interactions of the system’s building blocks in form of scenarios from the following areas:
-
-* important use cases or features: how do building blocks execute them?
-* interactions at critical external interfaces: how do building blocks cooperate with users and neighboring systems?
-* operation and administration: launch, start-up, stop
-* error and exception scenarios
-
-Remark: The main criterion for the choice of possible scenarios (sequences, workflows) is their *architectural relevance*. It is *not* important to describe a large number of scenarios. You should rather document a representative selection.
-
-.Motivation
-You should understand how (instances of) building blocks of your system perform their job and communicate at runtime.
-You will mainly capture scenarios in your documentation to communicate your architecture to stakeholders that are less willing or able to read and understand the static models (building block view, deployment view).
-
-.Form
-There are many notations for describing scenarios, e.g.
-
-* numbered list of steps (in natural language)
-* activity diagrams or flow charts
-* sequence diagrams
-* BPMN or EPCs (event process chains)
-* state machines
-* ...
-
-****
-
-
 === User Login
-* The user wants to log in with their POD to acess the webapp.
+* The user wants to log in with their POD to access the webapp.
 ** The user will be able to fill a form that will redirect him to its POD's provider in order to give the application access to its POD's information or deny it.
+** The structure of the login is not as simple as a typical login flow, since it is not managed by our application but by the users Solid POD provider. The information flow works as follows:
+
+image:6-RuntimeView/Login flow.drawio.png
 
 
 === Adding a Location
@@ -41,10 +14,12 @@ There are many notations for describing scenarios, e.g.
 ** The user will click on a place on the map and a form will be displayed where the user will be able to select a location category and the name for the location to be placed and seen on their map and it will be saved on their POD.
 
 
-=== Reviewing information about a place (Not implemented yet)
+=== Reviewing information about a place
 * The user wants to select a friend's added location and see the pictures they added to it.
-** Locations made public or shared with the user will be able to be accesed by the user to review aditional information that the creator added to the place.
+** Locations made public or shared with the user will be able to be accessed by the user to review additional information that the creator added to the place.
+** When accessing any shared resource (not only shared locations, but reviews as well), the information flow does not go through only the user´s pod, but through our database as well. This database´s intention is not to manage the user´s data (the "master" data is always the one stored in the pod), but improve performance by reducing the calls to external places.
 
+image:6-RuntimeView/Cache Flow.drawio.png[Flow of information when adding and accessing any shared resource]
 
 === Changing privacy settings (Not implemented yet)
 * The user doesn't want their friends seeing the locations she added to the map so they acess the settings of the webapp to disable sharing them.

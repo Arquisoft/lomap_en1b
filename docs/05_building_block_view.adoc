@@ -32,11 +32,23 @@ image:5-BuildingBlock/BuildingBlockLvl2.drawio.png["Building block level 2"]
 Component responsible for rendering the GUI.
 
 .Solid access
-Component in charge of accessing the user solid POD. Right now this component is in the Web App module, but it could change during the development of the project.
-
+Component in charge of accessing the user solid POD. The POD accessing logic is completly transparent for the WebAPP, only the RestAPI has to manage that connection.
 
 .Facade
 Component in charge of receiving the petitions and manage them. Responsible for the business logic.
 
 .DB access
 Component in charge of accessing the database. Reads, stores, updates and deletes information.
+
+==== Level 3
+Let´s now have a closer look at both the WebAPP and RestAPI individually, showing the information flow and the communication between the different modules.
+
+.WebAPP
+Here we can see that the WebAPP actually has a middle component between the views and the RestAPI access components, responsible for cache information in the client in order to improve performance.
+
+image:5-BuildingBlock/BuildingBlockLvl3-WebAPP.drawio.png[Building block level 3, WebAPP.]
+
+.RestAPI
+Here is a more detailed explanation of the RestAPI structure. We can see that the facade is implemented in a module with several routers. Those routers access the services, which apart from accessing the Solid POD, are in charge of data validation and transformation. Those services are also in charge of managing the database access.
+
+image:5-BuildingBlock/BuildingBlockLvl3-RestAPI.drawio.png[Building block level 3, RestAPI]
