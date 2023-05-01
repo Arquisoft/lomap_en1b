@@ -6,7 +6,7 @@ export type MapMarker = {
     locationType:LocationType,
     latitude:number,
     longitude:number,
-    shared: boolean
+    isShared: boolean
 };
 
 export type Review = {
@@ -14,6 +14,7 @@ export type Review = {
     comment:string,
     photo:File,
     score:double
+    encodedPhoto:string
 }
 
 

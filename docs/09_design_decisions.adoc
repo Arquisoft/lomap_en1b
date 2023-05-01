@@ -63,6 +63,15 @@ Pros::
 Cons::
 * Although relational operations are available, they are not as optimized as in a traditional database.
 
+.Chakra UI
+Reason:: the weight of the package was optimal and it is intuitive.
+Pros:: 
+* It has a great variety of components and they are very useful.
+* Accessibility.
+* Easy-to-understand documentation.
+Cons::
+* It is not possible to style some of the components it provides.
+* We have not found many examples of using the component templates it offers.
 
 
 === Architecture

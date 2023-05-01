@@ -1,7 +1,7 @@
 import {MapMarker, Review} from "../../types";
 import {
     Box,
-    Button, Checkbox,
+    Button,
     Drawer,
     DrawerBody,
     DrawerCloseButton,
@@ -15,24 +15,25 @@ import {
     ModalCloseButton,
     ModalContent, ModalFooter,
     ModalHeader,
-    ModalOverlay, Select,
+    ModalOverlay,
     Stack, Text, Textarea, Image,
-    useDisclosure, Flex, HStack, DrawerFooter, Spacer, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverHeader, PopoverBody, PopoverCloseButton
+    useDisclosure, Flex, DrawerFooter, Spacer, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverHeader, PopoverBody, PopoverCloseButton
 } from "@chakra-ui/react";
 import React, {ChangeEvent, useState} from "react";
-import {useDispatch} from "react-redux";
 // @ts-ignore
 import ReactStars from "react-rating-stars-component";
+import {useAddReviewMutation, useGetReviewsQuery} from "../../app/services/Reviews";
 
 export default function DetailsDrawer(marker: MapMarker) {
+    console.log("[MARKER_ID: " + marker.id + "]");
+
+    const {data: reviews, error, isLoading} = useGetReviewsQuery(marker.id);
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const btnRef = React.useRef()
-    const reviews : Review[] = [{markerId:"a", comment:"prueba", photo:new File([],"nombre"),score:2.5 }];
 
     return (
         <>
             <Button colorScheme='teal' onClick={onOpen}>
-                Details
+                Reviews
             </Button>
             <Drawer
                 isOpen={isOpen}
@@ -52,11 +53,12 @@ export default function DetailsDrawer(marker: MapMarker) {
                             <Box>
                                 <h1>Reviews</h1>
                                 <Stack spacing={'24px'} direction='column'>
-                                    {reviews.map( (review) => (
+                                    {reviews?.map( (review) => (
                                         <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden'>
-                                            <Image src={review.photo.name} loading={"lazy"} fallbackSrc='https://via.placeholder.com/150'/>
-                                            <ReactStars count={5} value={review.score} isHalf={true} size={28} activeColor="#ffd700" edit={false}/>
-                                            {review.comment}
+                                            {review.encodedPhoto!="" ?<Image src={`data:image/jpg;base64,${review.encodedPhoto}`} loading={"lazy"} fallbackSrc='https://via.placeholder.com/150'/> : <></> }
+                                            {review.score >0 ? <ReactStars count={5} value={review.score} isHalf={true} size={28} activeColor="#ffd700" edit={false}/> : <></> }
+                                            {review.comment.length != 0 ?<Box borderWidth='0.5px' >{review.comment}</Box> : <></> }
+
                                         </Box>
                                         ))}
                                 </Stack>
@@ -69,7 +71,7 @@ export default function DetailsDrawer(marker: MapMarker) {
                                          id={marker.id}
                                          latitude={marker.latitude}
                                          longitude={marker.longitude}
-                                         shared={marker.shared}/>
+                                         isShared={marker.isShared}/>
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
@@ -78,14 +80,14 @@ export default function DetailsDrawer(marker: MapMarker) {
 }
 
 export function AddCommentForm(marker: MapMarker) {
-    const dispatch = useDispatch();
+    const [addReviewMutation, {isLoading, isError, error}] = useAddReviewMutation();
     const {isOpen, onClose, onOpen} = useDisclosure();
 
     const initialRef = React.useRef(null)
-    let [textComment, setTextComment] = React.useState('')
-    let [rating, changeRating] = React.useState(0)
+    let [textComment, setTextComment] = React.useState("")
+    let [rating, changeRating] = React.useState(0.0)
 
-    const [file, setFile] = useState(new File([],"a"));
+    const [file, setFile] = useState(new File([],""));
     const handleSetFile = (event: ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
         if(files != null && files.length > 0) {
@@ -93,9 +95,18 @@ export function AddCommentForm(marker: MapMarker) {
         }
     };
 
+    const resetAndOpen = () => {
+        onOpen()
+        setTextComment("");
+        changeRating(0.0);
+        setFile(new File([],""));
+    }
+
+    const notAnySet = textComment.trim().length == 0 && file.name.trim() == "" && rating==0.0;
+
     return  (
         <>
-            <Button colorScheme='teal' onClick={onOpen}>
+            <Button colorScheme='teal' onClick={resetAndOpen}>
                 Add a Review
             </Button>
 
@@ -112,13 +123,41 @@ export function AddCommentForm(marker: MapMarker) {
                             <form id={"formMarker"} onSubmit = {
                                 (event) => {
                                     event.preventDefault();
-                                    const review : Review = {markerId:marker.id, comment:textComment, photo: file,score:rating};
+                                    const review : Review = {markerId:marker.id, comment:textComment, photo: file ,score:rating, encodedPhoto: ""};
 
                                     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
                                         event.preventDefault();
+                                        if(review.photo) {
+                                            getBase64(file)
+                                                .then(result => {
+                                                    review.encodedPhoto = result;
+                                                    addReviewMutation(review);
+                                                })
+                                                .catch(err => {
+                                                    console.log(err);
+                                                });
+                                        }
                                     };
+
+                                    const getBase64 = (file:File) => {
+                                        return new Promise<string>(resolve => {
+                                            let encoded = "";
+                                            let reader = new FileReader();
+                                            reader.readAsDataURL(file);
+                                            reader.onload = () => {
+                                                encoded = reader.result as string;
+                                                const base64String = (reader.result as string).replace('data:', '').replace(/^.+,/, '');
+                                                resolve(base64String);
+                                            };
+                                        });
+                                    };
+
                                     handleSubmit(event)
                                 }}>
+                                {(file.name != "") &&
+                                    <Image src={URL.createObjectURL(file)} loading={"lazy"}
+                                           fallbackSrc='https://via.placeholder.com/150'/>
+                                }
                                 <Box borderColor="gray.300" borderStyle="dashed" borderWidth="2px"
                                     rounded="md" shadow="sm" role="group" transition="all 150ms ease-in-out"
                                     _hover={{
@@ -154,9 +193,6 @@ export function AddCommentForm(marker: MapMarker) {
                                             accept="image/*"
                                             onChange={(event)=>handleSetFile(event)}
                                         />
-                                        <image>
-
-                                        </image>
                                     </Box>
                                 </Box>
                                 <Stack spacing={2} direction='column'>
@@ -183,7 +219,8 @@ export function AddCommentForm(marker: MapMarker) {
                             </form>
                         </ModalBody>
                         <ModalFooter>
-                            <Button form={"formMarker"} type={"submit"} onClick={onClose}>Submit</Button>
+                            <Button form={"formMarker"} type={"submit"} onClick={onClose}
+                                    isDisabled={notAnySet}>Submit</Button>
                         </ModalFooter>
                     </ModalContent>
                 </ModalOverlay>

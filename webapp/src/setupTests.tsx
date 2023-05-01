@@ -1,31 +1,35 @@
-// jest-dom adds custom jest matchers for asserting on DOM nodes.
-// allows you to do things like:
-// expect(element).toHaveTextContent(/react/i)
-// learn more: https://github.com/testing-library/jest-dom
-import '@testing-library/jest-dom/extend-expect';
-import React, { ReactElement, FC } from 'react';
-import { Provider } from 'react-redux';
-import { ChakraProvider } from '@chakra-ui/react';
-import { render, RenderOptions } from '@testing-library/react';
-import { store } from './app/store';
+import React, { PropsWithChildren } from 'react'
+import { render } from '@testing-library/react'
+import type { RenderOptions } from '@testing-library/react'
+import type { PreloadedState } from '@reduxjs/toolkit'
+import { Provider } from 'react-redux'
 
-type WrapperProps = {
-    children: ReactElement;
-};
+import {setupStore} from './app/store'
+import type { AppStore, RootState } from './app/store'
+import {ChakraProvider} from "@chakra-ui/react";
 
-const AllTheProviders: FC<WrapperProps> = ({ children }) => {
-    return (
-        <Provider store={store}>
+interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
+    preloadedState?: PreloadedState<RootState>
+    store?: AppStore
+}
+
+function customRender (
+    ui: React.ReactElement,
+    {
+        preloadedState = {},
+        // Automatically create a store instance if no store was passed in
+        store = setupStore(preloadedState),
+        ...renderOptions
+    }: ExtendedRenderOptions = {}
+) {
+    function Wrapper({ children }: PropsWithChildren<{}>): JSX.Element {
+        return (<Provider store={store}>
             <ChakraProvider>
-                    {children}
+                {children}
             </ChakraProvider>
-        </Provider>
-    );
-};
+        </Provider>)
+    }
+    return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) }
+}
 
-const customRender = (ui: ReactElement, options?: Omit<RenderOptions, 'queries'>) =>
-    render(ui, { wrapper: AllTheProviders, ...options });
-
-export * from '@testing-library/react';
-
-export { customRender as render };
+export {customRender as render }
