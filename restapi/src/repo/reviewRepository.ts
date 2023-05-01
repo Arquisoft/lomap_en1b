@@ -4,10 +4,10 @@ import {Review} from '../types';
 export const ReviewRepository = {
     async createReview(review: Review) {
         const newReview = new ReviewModel({
-            stars : review.score,
+            score : review.score,
             comment : review.comment,
             location : review.markerId,
-            images : review.encodedPhoto
+            encodedPhoto : review.encodedPhoto
         })
 
         newReview.save()
@@ -32,7 +32,9 @@ export const ReviewRepository = {
             score: review.score,
             encodedPhoto: review.encodedPhoto
         }))
-
+        console.log("REVIEWS REPOSItORy")
+        console.log(reviews)
+        console.log("REVIEWS REPOSItORy")
         return reviews
 
     },

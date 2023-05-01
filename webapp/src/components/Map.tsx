@@ -81,7 +81,7 @@ export function LocationMarkerWithStore() {
                             (event) => {
                                 event.preventDefault();
                                 const marker : MapMarker = {latitude : lati, longitude : lngi,
-                                    name: name,locationType: category as LocationType, id: lati + " - " + lngi,shared: isShared};
+                                    name: name,locationType: category as LocationType, id: lati + " - " + lngi,isShared: isShared};
 
                                 const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
                                     event.preventDefault();
@@ -164,12 +164,13 @@ export default function MapElement(): JSX.Element {
                     />
 
                     {locations?.filter( loc => {
+                        if(loc.isShared && showSharedLocations == false) return false
                         if(loc.locationType == LocationType.restaurant && showRestaurants) return true
                         if(loc.locationType == LocationType.bar && showBars) return true
                         if(loc.locationType == LocationType.shop && showShops) return true
                         if(loc.locationType == LocationType.sight && showSights) return true
                         if(loc.locationType == LocationType.monument && showMonuments) return true
-                        if(loc.shared && showSharedLocations) return true
+
                     })
                         .map((location: MapMarker) => (
                         <Marker key={location.id}
@@ -181,7 +182,7 @@ export default function MapElement(): JSX.Element {
                                               id={location.id}
                                               latitude={location.latitude}
                                               longitude={location.longitude}
-                                              shared={location.shared}
+                                              isShared={location.isShared}
                                 />
                             </Popup>
                         </Marker>
@@ -296,7 +297,7 @@ export function PopupContent(marker: MapMarker){
                                    id={marker.id}
                                    latitude={marker.latitude}
                                    longitude={marker.longitude}
-                                   shared={marker.shared}/>
+                                   isShared={marker.isShared}/>
                 </ButtonGroup>
             </CardFooter>
         </Card>

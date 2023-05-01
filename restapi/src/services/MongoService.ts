@@ -1,5 +1,4 @@
 import {Review, Location} from "../types"
-import {MapMarker} from "../../../webapp/src/types"
 import {ReviewRepository} from "../repo/reviewRepository"
 import {SharedLocationRepository} from "../repo/sharedLocationRepository"
 import {SharedListRepository} from "../repo/sharedListRepository"
@@ -33,8 +32,7 @@ export default {
     },
 
     addLocation: async function (newLocation : Location, userWebId : string){
-        let isShared = (newLocation as unknown as MapMarker).shared
-        if(isShared) await SharedLocationRepository.addSharedLocation(newLocation, userWebId)
+        if(newLocation.isShared) await SharedLocationRepository.addSharedLocation(newLocation, userWebId)
     },
 
     removeLocation: async function (locationId : string){
