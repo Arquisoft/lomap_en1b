@@ -1,7 +1,9 @@
 import NavBar from "../components/NavBar";
 import { screen  } from "@testing-library/react"
 import {BrowserRouter} from "react-router-dom";
-import { render } from '../setupTests'
+import { render } from '../setupTests';
+import '@testing-library/jest-dom';
+import { NavLink } from 'react-router-dom';
 
 
 /**
@@ -20,21 +22,20 @@ describe("NavBar", () => {
                 <NavBar />
             </BrowserRouter>
         )
+        //only tanking into account when the user is not registered
+
         const homeButton = screen.getByText("Home"); // home button
         expect(homeButton).toBeInTheDocument();
 
         const LoginButton = screen.getByText("Login"); // login button
         expect(LoginButton).toBeInTheDocument();
 
-        const FriendsButton = screen.getByText("Friends"); // friends button
-        expect(FriendsButton).toBeInTheDocument();
-
         const AboutButton = screen.getByText("About"); // about button
         expect(AboutButton).toBeInTheDocument();
 
 
 
-        const buttons = screen.getAllByRole('button');
-        expect(buttons.length).toBe(4);
+        const buttons = screen.getAllByRole("link");
+        expect(buttons.length).toBe(3);
     })
 })
