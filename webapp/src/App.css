@@ -1,34 +1,48 @@
-.App {
-  text-align: center;
+/* GENERAL APP STYLES */
+
+:root { /*TODO: Define the color palette for the app */
+  --primary-color: #FFFFFF;
+  --primary-color-alt: #FFFFFF;
+  --secondary-color: #FFFFFF;
+  --secondary-color-alt: #FFFFFF;
+}
+
+/* User notifications (Errors, warnings, success, ... */
+:root {
+  --error-color: #ff5353;
+  --warning-color: #e8d462;
+  --success-color: #a3e05c;
 }
 
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+
+
+
+/* Specificity 100 */
+#logo_img {
+  max-height: 2em;
+  max-width: 100%;
+  height: auto;
+  width: auto;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+
+/* Specificity 002 */
+.menu ul {
+  background-color: #4299e1;
+  color: #000000;
+  text-align: start;
+
+  font-size: 1.75em;
+  font-family: sans-serif;
+  padding: 0;
+
+  list-style: none;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 2rem;
+
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+nav {
+  font-size: 1.75em;
 }

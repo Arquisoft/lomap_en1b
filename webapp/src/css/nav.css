@@ -1,0 +1,16 @@
+.nav_link:hover {
+  background-color: #6baefa;
+  border-radius: 0.5em;
+
+}
+
+.nav_link {
+  padding: 0.25em;
+}
+
+#navBar {
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  background-color: #FFFFFF;
+}

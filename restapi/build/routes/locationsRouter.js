@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const locationsService_1 = __importDefault(require("../podsAccess/locationsService"));
+const locationsService_1 = __importDefault(require("../services/locationsService"));
 const locationsRouter = express_1.default.Router();
 locationsRouter.get("/", locationsService_1.default.getOwnLocations);
 locationsRouter.post("/", locationsService_1.default.saveLocation);

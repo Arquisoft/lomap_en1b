@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.buildTestLocationThing = exports.locationToThing = exports.thingToLocation = void 0;
+exports.locationToThing = exports.thingToLocation = void 0;
 const solid_client_1 = require("@inrupt/solid-client");
 const vocab_common_rdf_1 = require("@inrupt/vocab-common-rdf");
 function thingToLocation(locationThing) {
@@ -23,13 +23,3 @@ function locationToThing(location) {
         .build();
 }
 exports.locationToThing = locationToThing;
-function buildTestLocationThing() {
-    return (0, solid_client_1.buildThing)((0, solid_client_1.createThing)({ name: "Location2" }))
-        .addStringNoLocale(vocab_common_rdf_1.SCHEMA_INRUPT.name, 'nuevaLocalizacion2')
-        .addStringNoLocale(vocab_common_rdf_1.SCHEMA_INRUPT.description, "bar")
-        .addDecimal(vocab_common_rdf_1.SCHEMA_INRUPT.latitude, 1)
-        .addDecimal(vocab_common_rdf_1.SCHEMA_INRUPT.longitude, 2)
-        .addUrl(vocab_common_rdf_1.RDF.type, "https://schema.org/Place")
-        .build();
-}
-exports.buildTestLocationThing = buildTestLocationThing;

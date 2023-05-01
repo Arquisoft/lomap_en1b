@@ -1,37 +1,85 @@
-import React, { useState, useEffect } from 'react';
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Container from '@mui/material/Container';
-import EmailForm from './components/EmailForm';
-import Welcome from './components/Welcome';
-import UserList from './components/UserList';
-import  {getUsers} from './api/api';
-import {User} from './shared/shareddtypes';
+import React from 'react';
+import { Outlet } from 'react-router-dom'
+
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+
 import './App.css';
+import LoginForm from './components/Login';
+import MapElement from './components/Map';
 
-function App(): JSX.Element {
 
-  const [users,setUsers] = useState<User[]>([]);
+import Error404 from "./routes/404error";
 
-  const refreshUserList = async () => {
-    setUsers(await getUsers());
-  }
+import HomePage from './components/Home';
+import AboutPage from './components/About';
+import ProfileView from './components/ProfileView';
+import ConfirmLogin from './components/ConfirmLogin';
+import CheckLogin from './components/CheckLogin';
+import FriendsView from './components/FriendsPage/FriendsView';
 
-  useEffect(()=>{
-    refreshUserList();
-  },[]);
+import NavBar from './components/NavBar';
 
-  return (
-    <>
-      <Container maxWidth="sm">
-        <Welcome message="ASW students"/>
-        <Box component="div" sx={{ py: 2}}>This is a basic example of a React application using Typescript. You can add your email to the list filling the form below.</Box>
-        <EmailForm OnUserListChange={refreshUserList}/>        
-        <UserList users={users}/>
-        <Link href="https://github.com/arquisoft/lomap_en1b">Source code</Link>
-      </Container>
-    </>
-  );
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <> <NavBar /><Outlet /> </>,
+    children: [
+
+      // vvv Public routes vvv
+      {
+        path: "/login/confirm",
+        element: <ConfirmLogin />,
+        errorElement: <Error404 />,
+      },
+      {
+        path: "/login",
+        element: <LoginForm />,
+        errorElement: <Error404 />,
+      },
+      {
+        path: "/",
+        element: <HomePage />,
+        errorElement: <HomePage />,
+      },
+      {
+        path: "/about",
+        element: <AboutPage />,
+      },
+      //Protected routes
+      {
+        path: "/",
+        element: <CheckLogin />,
+        children: [
+          {
+            path: "/map",
+            element: <MapElement />,
+
+          },
+          {
+            path: "/friends",
+            element: <FriendsView />,
+          },
+          {
+            path: "/profile",
+            element:<ProfileView />,
+          },
+        ]
+      },
+    ]
+  },
+]);
+
+
+
+
+
+function App() {
+  return (<RouterProvider router={router} />);
 }
+
+
+
 
 export default App;

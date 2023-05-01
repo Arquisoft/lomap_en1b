@@ -40,6 +40,7 @@ exports.default = {
         return __awaiter(this, void 0, void 0, function* () {
             // If we get here, the user has logged in successfully
             // Recover session information
+            console.log(req.session.solidSessionId);
             const session = yield (0, solid_client_authn_node_1.getSessionFromStorage)(req.session.solidSessionId);
             // Complete login process using the data appended by the Solid Identity Provider
             try {
@@ -51,7 +52,7 @@ exports.default = {
             }
             // Session now contains an authenticated Session instance.
             if (session.info.isLoggedIn) {
-                return res.redirect("http://localhost:3000/login/confirm");
+                return res.redirect("http://localhost:3000/map");
             }
             return res.sendStatus(401);
         });
@@ -60,7 +61,7 @@ exports.default = {
         return __awaiter(this, void 0, void 0, function* () {
             const session = yield (0, solid_client_authn_node_1.getSessionFromStorage)(req.session.solidSessionId);
             yield session.logout();
-            res.redirect("http://localhost:3000");
+            res.send('Logged out');
         });
     },
     initTestLogin: function (req, res) {
