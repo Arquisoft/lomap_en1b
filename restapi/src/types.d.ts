@@ -7,14 +7,16 @@ export type Location = {
     latitude:number,
     longitude:number
     isShared:boolean,
-    isOwnLocation:boolean
+    isOwnLocation:boolean,
+    owner:string
 };
 
 export type Review = {
     markerId:string,
     comment:string,
     score:double,
-    encodedPhoto:string
+    encodedPhoto:string,
+    owner:string
 }
 
 export type Friend = {

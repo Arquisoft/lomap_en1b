@@ -25,7 +25,7 @@ import {
     Text,
     useDisclosure,
     CardFooter,
-    ButtonGroup
+    ButtonGroup, Spinner, AlertIcon, AlertTitle, AlertDescription, Alert, useToast, createStandaloneToast
 } from '@chakra-ui/react';
 import "../css/react_leaflet.css";
 import 'leaflet/dist/leaflet.css';
@@ -38,7 +38,6 @@ import {LocationType} from "../locationType";
 import DetailsDrawer from './mapComponents/LocationReviewsView'
 
 export function LocationMarkerWithStore() {
-    // const [position, setPosition] : LatLng = {lat: 0, lng: 0};
     const dispatch = useDispatch();
     const [lati, setLat] = useState(0);
     const [lngi, setLng] = useState(0);
@@ -48,9 +47,11 @@ export function LocationMarkerWithStore() {
     const initialRef = React.useRef(null)
     var [name, setName] = React.useState('')
     var [category, setCategory] = React.useState('bar')
-    var [details, setDetails] = React.useState('')
     var [isShared, setShared] = React.useState(false)
 
+    var [locationAdded, setLocationAdded] = React.useState(false)
+    const { ToastContainer, toast } = createStandaloneToast()
+    const idToast = 'addedLocSuccess-Toast'
 
     const map = useMapEvents({
         click: (e) => {
@@ -60,7 +61,6 @@ export function LocationMarkerWithStore() {
             onOpen();
             setName('')
             setCategory('bar')
-            setDetails('')
             setShared(false)
         },
 
@@ -70,60 +70,82 @@ export function LocationMarkerWithStore() {
     //This need to be optimiced because I think it generates again
     //all the markers on top of each other
     return  (
-        <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef} isCentered={true} size={'lg'}>
-            <ModalOverlay>
-                <ModalContent>
-                    <ModalHeader>
-                        <ModalCloseButton/>
-                    </ModalHeader>
-                    <ModalBody>
-                        <form id={"formMarker"} onSubmit = {
-                            (event) => {
-                                event.preventDefault();
-                                const marker : MapMarker = {latitude : lati, longitude : lngi,
-                                    name: name,locationType: category as LocationType, id: lati + " - " + lngi,isShared: isShared};
+        <>
+        {locationAdded && !toast.isActive(idToast) ?
+                (setLocationAdded(false),toast({
+                        id: idToast,
+                        title: 'Marker Added',
+                        description: "New Location added succesfully.",
+                        status: 'success',
+                        duration: 3000,
+                        isClosable: true,
+                    })) :
+                (<Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef} isCentered={true} size={'lg'}>
+                    <ModalOverlay>
+                        <ModalContent>
+                            <ModalHeader>
+                                <ModalCloseButton/>
+                            </ModalHeader>
+                            <ModalBody>
+                                <form id={"formMarker"} onSubmit={
+                                    (event) => {
+                                        event.preventDefault();
+                                        const marker: MapMarker = {
+                                            latitude: lati,
+                                            longitude: lngi,
+                                            name: name,
+                                            locationType: category as LocationType,
+                                            id: lati + " - " + lngi,
+                                            isShared: isShared,
+                                            owner: ""
+                                        };
 
-                                const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-                                    event.preventDefault();
-                                    addLocationMutation(marker);
-                                };
-                                handleSubmit(event)
-                                setName('')
-                                setCategory('bar')
-                                setDetails('')
-                                setShared(false)
-                            }}>
-                            <Stack spacing={2} direction='column'>
-                                <FormControl isRequired={true}>
-                                    <FormLabel>Name</FormLabel>
-                                    <Input value={name} type={"text"} ref={initialRef}
-                                           onChange={(e)=>setName(e.currentTarget.value)}/>
-                                </FormControl>
-                                <FormControl isRequired={true}>
-                                    <FormLabel>Category</FormLabel>
-                                    <Select value={category} onChange={(e)=>setCategory(e.currentTarget.value)}>
-                                        <option>bar</option>
-                                        <option>restaurant</option>
-                                        <option>shop</option>
-                                        <option>sight</option>
-                                        <option>monument</option>
-                                    </Select>
-                                </FormControl>
-                                <FormControl isRequired={false}>
-                                    <Checkbox isChecked={isShared}
-                                        onChange={(e) => setShared(e.target.checked)}>
-                                        Public
-                                    </Checkbox>
-                                </FormControl>
-                            </Stack>
-                        </form>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button form={"formMarker"} type={"submit"} onClick={onClose}>Place Marker</Button>
-                    </ModalFooter>
-                </ModalContent>
-            </ModalOverlay>
-        </Modal>
+                                        const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+                                            event.preventDefault();
+                                            addLocationMutation(marker);
+                                            if(!isError) {
+                                                setLocationAdded(true);
+                                            }
+                                        };
+                                        handleSubmit(event)
+                                        setName('')
+                                        setCategory('bar')
+                                        setShared(false)
+                                    }}>
+                                    <Stack spacing={2} direction='column'>
+                                        <FormControl isRequired={true}>
+                                            <FormLabel>Name</FormLabel>
+                                            <Input value={name} type={"text"} ref={initialRef}
+                                                   onChange={(e) => setName(e.currentTarget.value)}/>
+                                        </FormControl>
+                                        <FormControl isRequired={true}>
+                                            <FormLabel>Category</FormLabel>
+                                            <Select value={category}
+                                                    onChange={(e) => setCategory(e.currentTarget.value)}>
+                                                <option>bar</option>
+                                                <option>restaurant</option>
+                                                <option>shop</option>
+                                                <option>sight</option>
+                                                <option>monument</option>
+                                            </Select>
+                                        </FormControl>
+                                        <FormControl isRequired={false}>
+                                            <Checkbox isChecked={isShared}
+                                                      onChange={(e) => setShared(e.target.checked)}>
+                                                Public
+                                            </Checkbox>
+                                        </FormControl>
+                                    </Stack>
+                                </form>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button form={"formMarker"} type={"submit"} onClick={onClose}>Place Marker</Button>
+                            </ModalFooter>
+                        </ModalContent>
+                    </ModalOverlay>
+                </Modal>)
+        }
+        </>
     );
 }
 
@@ -162,8 +184,15 @@ export default function MapElement(): JSX.Element {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-
-                    {locations?.filter( loc => {
+                    {isLoading
+                        ?
+                        (<Alert zIndex={'1400'} status={'info'} variant='solid'>
+                            <AlertIcon  height='50px'/>
+                            <AlertTitle fontSize={17}>Loading markers </AlertTitle>
+                            <AlertDescription> <Spinner thickness='3.2px' size={'lg'}></Spinner></AlertDescription>
+                        </Alert>) :
+                    <>
+                    ({locations?.filter( loc => {
                         if(loc.isShared && showSharedLocations == false) return false
                         if(loc.locationType == LocationType.restaurant && showRestaurants) return true
                         if(loc.locationType == LocationType.bar && showBars) return true
@@ -183,10 +212,13 @@ export default function MapElement(): JSX.Element {
                                               latitude={location.latitude}
                                               longitude={location.longitude}
                                               isShared={location.isShared}
+                                              owner={location.owner}
                                 />
                             </Popup>
                         </Marker>
-                    ))}
+                    ))})
+                    </>
+                    }
                 </MapContainer>
             </Stack>
         </Flex>
@@ -268,38 +300,46 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
 }
 
 export function PopupContent(marker: MapMarker){
+
+    const deleteAction = ()=> {
+
+    }
     return(
-        <Card size={'sm'}>
-            <CardBody>
-                <Stack divider={<StackDivider />} spacing='4' minWidth={'sm'}>
-                    <Box>
-                        <Heading size='sm' textTransform='uppercase'>
-                            Name
-                        </Heading>
-                        <Text pt='2' fontSize='sm'>
-                            {marker.name}
-                        </Text>
-                    </Box>
-                    <Box>
-                        <Heading size='sm' textTransform='uppercase'>
-                            Category
-                        </Heading>
-                        <Text pt='2' fontSize='sm'>
-                            {marker.locationType}
-                        </Text>
-                    </Box>
-                </Stack>
-            </CardBody>
-            <CardFooter>
-                <ButtonGroup spacing='2'>
-                    <DetailsDrawer name={marker.name}
-                                   locationType={marker.locationType}
-                                   id={marker.id}
-                                   latitude={marker.latitude}
-                                   longitude={marker.longitude}
-                                   isShared={marker.isShared}/>
-                </ButtonGroup>
-            </CardFooter>
-        </Card>
+            <Card size={'sm'}>
+                <CardBody>
+                    <Stack divider={<StackDivider />} spacing='4' minWidth={'sm'}>
+                        <Box>
+                            <Heading size='sm' textTransform='uppercase'>
+                                Name
+                            </Heading>
+                            <Text pt='2' fontSize='sm'>
+                                {marker.name}
+                            </Text>
+                        </Box>
+                        <Box>
+                            <Heading size='sm' textTransform='uppercase'>
+                                Category
+                            </Heading>
+                            <Text pt='2' fontSize='sm'>
+                                {marker.locationType}
+                            </Text>
+                        </Box>
+                    </Stack>
+                </CardBody>
+                <CardFooter>
+                    <ButtonGroup spacing='2'>
+                        <DetailsDrawer name={marker.name}
+                                       locationType={marker.locationType}
+                                       id={marker.id}
+                                       latitude={marker.latitude}
+                                       longitude={marker.longitude}
+                                       isShared={marker.isShared}
+                                       owner={marker.owner}/>
+                        {marker.owner=="" ?<Button colorScheme={"red"} onClick={deleteAction}>
+                            Delete marker
+                        </Button> : <></> }
+                    </ButtonGroup>
+                </CardFooter>
+            </Card>
     )
 }

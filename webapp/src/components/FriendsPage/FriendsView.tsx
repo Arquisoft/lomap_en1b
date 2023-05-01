@@ -129,7 +129,7 @@ export default function FriendsView(): JSX.Element {
             Your friends
           </Heading>
           {isLoading
-              ? (<h2>Cargando amigos <Spinner></Spinner> </h2>)
+              ? (<h2>Loading friends <Spinner></Spinner> </h2>)
               : (<Table variant="striped" colorScheme="black" size="sm">
                             <Thead>
                               <Tr>
