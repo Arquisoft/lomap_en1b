@@ -95,7 +95,8 @@ export default function DetailsDrawer(marker: MapMarker) {
                                          latitude={marker.latitude}
                                          longitude={marker.longitude}
                                          isShared={marker.isShared}
-                                         owner={marker.owner}/>
+                                         owner={marker.owner}
+                                         isOwnLocation={marker.isOwnLocation}/>
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
@@ -137,17 +138,7 @@ export function AddCommentForm(marker: MapMarker) {
             <Button colorScheme='teal' onClick={resetAndOpen}>
                 Add a Review
             </Button>
-
-            {reviewAdded && !toast.isActive(idToast) ?
-                (setReviewAdded(false),toast({
-                    id: idToast,
-                    title: 'Review Added',
-                    description: "Your review has been added succesfully.",
-                    status: 'success',
-                    duration: 3000,
-                    isClosable: true,
-                })) :
-                (<Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef} isCentered={true} size={'lg'}>
+                <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef} isCentered={true} size={'lg'}>
                 <ModalOverlay>
                     <ModalContent>
                         <ModalHeader fontSize={24}>
@@ -169,7 +160,13 @@ export function AddCommentForm(marker: MapMarker) {
                                                 .then(result => {
                                                     review.encodedPhoto = result;
                                                     addReviewMutation(review);
-                                                    setReviewAdded(true);
+                                                    toast({
+                                                        title: 'Review Added',
+                                                        description: "Your review has been added successfully",
+                                                        status: 'success',
+                                                        duration: 7000,
+                                                        isClosable: true,
+                                                    });
                                                 })
                                                 .catch(err => {
                                                     console.log(err);
@@ -262,7 +259,7 @@ export function AddCommentForm(marker: MapMarker) {
                         </ModalFooter>
                     </ModalContent>
                 </ModalOverlay>
-            </Modal>)}
+            </Modal>
         </>
     );
 }

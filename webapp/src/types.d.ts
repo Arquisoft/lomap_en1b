@@ -7,7 +7,8 @@ export type MapMarker = {
     latitude:number,
     longitude:number,
     isShared: boolean,
-    owner:string
+    owner: string,
+    isOwnLocation: boolean
 };
 
 export type Review = {
