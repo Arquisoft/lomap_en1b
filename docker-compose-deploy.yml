@@ -3,10 +3,10 @@ services:
   restapi:
     image: ghcr.io/arquisoft/lomap_en1b/restapi:latest
     ports:
-      - "5000:5000"
+      - "8082:8082"
   webapp:
     image: ghcr.io/arquisoft/lomap_en1b/webapp:latest
     ports:
-      - "3000:3000"
+      - "80:80"
     depends_on: 
       - restapi
