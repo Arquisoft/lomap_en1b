@@ -16,10 +16,11 @@ export function thingToLocation(locationThing:Thing) : Location {
         latitude: getDecimal(locationThing, SCHEMA_INRUPT.latitude)!,
         longitude: getDecimal(locationThing, SCHEMA_INRUPT.longitude)!,
         isShared: false,
-        isOwnLocation: false
+        isOwnLocation: false,
+        owner:""
     }
 }
-
+//TODO: añadir owner
 export function locationToThing(location:Location):Thing{
     return buildThing(createThing())
         .addStringNoLocale(SCHEMA_INRUPT.name, location.name)
