@@ -41,7 +41,7 @@ Cons::
 * Although relational operations are available, they are not as optimized as in a traditional database.
 
 .Chakra UI
-Reason:: the weight of the package was optimal and it is intuitive.
+Reason:: The weight of the package was optimal and it is intuitive.
 Pros:: 
 * It has a great variety of components and they are very useful.
 * Accessibility.
@@ -50,6 +50,13 @@ Cons::
 * It is not possible to style some of the components it provides.
 * We have not found many examples of using the component templates it offers.
 
+.Inrupt solid libraries
+Reason:: Managing the pods with ease
+Pros::
+* Greatly reduces the necessary code to do basic operation with tho user's pod.
+Cons::
+* We have an extra dependency that could be avoided.
+* Some basic functionality that we need is not implemented in the library.
 
 === Architecture
 .SOLID pods connection to the RestAPI

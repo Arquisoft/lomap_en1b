@@ -2,7 +2,7 @@
 == Solution Strategy
 
 === Technology decisions
-This are the technologies that we have decided to use, some of them may vary in future iterations of the poyect:
+These are the technologies that we have decided to use, some of them may vary in future iterations of the project:
 
 * SOLID PODs for security
 * TypeScript as programming language
@@ -31,6 +31,7 @@ image:4-SolutionStrategy/Mongo Schema.drawio.png[Mongo schema]
 
 image:4-SolutionStrategy/Pod Schema.drawio.png[Pod schema]
 
+* Friendships will work without a friendships invite system. When a user adds a friend, it is allowing that friend to see his/her shared resources, and asking the application to fetch the other user's resources. If the other user also adds the first one as a friend, he/she will be able to see the resources, but they will not be retrieved if one of them dos not.
 
 === Organizational decisions
 * All developments will be recorded in an issue and added to the kanban board of the project, where its state will be updated periodically.
@@ -46,7 +47,7 @@ The main quality attributes that we will focus on are the following:
 |Quality goal|Scenario|Solution approach
 |Privacy|Any user using our application will feel their data is secure | We will use SOLID Pods to ensure that user's data is not compromised.
 |Usability|All users, regardless of their level, are able to navigate and use the application correctly|We will use UX conventions to ensure that the app has its components presented in a familiar way
-|Accessibility|All users, regardless of their physical and mental capabilities should be able to use the application.|We are going to use external accesibility tools.
+|Accessibility|All users, regardless of their physical and mental capabilities should be able to use the application.|We are going to use external accessibility tools.
 |===
 
 
