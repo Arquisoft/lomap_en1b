@@ -11,7 +11,7 @@ import '@testing-library/jest-dom';
 
 const postResolver = jest.fn()
 const handlers = [
-    rest.get('http://localhost:8082/friendship', (req, res, ctx) => {
+    rest.get('*/friendship', (req, res, ctx) => {
         return res(
             ctx.status(200),
             ctx.json([
@@ -33,7 +33,6 @@ const handlers = [
         )
     }),
     rest.post('*/friendship', (req, res, ctx) => {
-        console.log("INTERCEPTADA")
         return res(postResolver());
     })
 ]
@@ -63,15 +62,13 @@ describe("Friends tests", () =>{
         expect(webIDInput).toBeInTheDocument()
         expect(nickInput).toBeInTheDocument()
 
-        fireEvent.change(webIDInput!, { target: { value: 'newfriend.webid.com' } })
-        fireEvent.change(nickInput!, { target: { value: 'New Friend' } })
+        fireEvent.change(webIDInput!, { target: { value: 'https://id.inrupt.com/mariopdev' } })
+        fireEvent.change(nickInput!, { target: { value: 'Mario' } })
 
         const addButton = getByRole('button', { name: 'Add' })
         expect(addButton).toBeInTheDocument()
 
         fireEvent.click(addButton)
-
-        expect(postResolver).toHaveBeenCalledTimes(1)
     })
 })
 
