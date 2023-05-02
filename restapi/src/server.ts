@@ -19,9 +19,13 @@ declare module 'express-session' {
 
 //const connString = process.env.MONGO_CONN_STRING;
 //FIXME: I will use this to try the connections
+/*
 const connString = 'mongodb+srv://admin:' +
     'admin@musicstoreapp.cew3gcy.mongodb.net/' +
     'prueba?retryWrites=true&w=majority';
+
+ */
+const connString = 'mongodb://localhost:27017/LoMap'
 
 if(connString == undefined) throw new Error("MongoDB connection string is undefined")
 

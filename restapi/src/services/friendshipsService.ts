@@ -36,7 +36,7 @@ export default {
 
         //Get friends from extended profile
         //TODO
-
+/*
         return await Promise.all(
             getThingAll(friendsDataset)
                 .filter(friendThing=>validateFriendThing(friendThing))
@@ -44,6 +44,20 @@ export default {
                 .concat(
                     profileFriends.map(async webId =>await urlToFriend(webId, false)))
             )
+
+ */
+        let aux = Promise.all(
+            getThingAll(friendsDataset)
+                .filter(friendThing=>validateFriendThing(friendThing))
+                .map(async friendThing=>await thingToFriend(friendThing, true))
+                .concat(
+                    profileFriends.map(async webId =>await urlToFriend(webId, false)))
+        )
+
+        console.log("Friendship")
+        console.log(aux)
+        console.log("Friendship")
+        return aux
     },
 
     addFriend : async function (friend:Friend, session:Session){
