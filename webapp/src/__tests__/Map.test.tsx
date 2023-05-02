@@ -3,8 +3,8 @@ import {render} from "../setupTests";
 import MapElement from "../components/Map";
 import {rest} from "msw";
 import {setupServer} from "msw/node";
-import {waitFor} from "@testing-library/react";
-
+import {fireEvent, screen, waitFor} from "@testing-library/react";
+import '@testing-library/jest-dom';
 
 const handlers = [
     rest.get('http://localhost:8082/location', (req, res, ctx) => {
@@ -48,7 +48,15 @@ describe("Map tests", () =>{
             const markers = container.querySelectorAll('.leaflet-marker-icon');
             expect(markers.length).toBe(2);
         });
-
     })
 
+    test('Pressing the filter button, a modal to filter should appear', async () => {
+        render(<MapElement />);
+
+        const filterButton = screen.getByText("Filter Locations");
+        fireEvent.click(filterButton);
+
+        const modalContent = await screen.findByRole("dialog");
+        expect(modalContent).toHaveClass("chakra-modal__content");
+    })
 })
