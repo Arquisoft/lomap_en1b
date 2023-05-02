@@ -1,16 +1,18 @@
-import express, {Router, Response, Request} from 'express'
-import locationsService from "../services/locationsService";
+import express, {Request, Response, Router} from "express";
+import reviewsService from "../services/reviewsService";
 import {getSessionFromStorage} from "@inrupt/solid-client-authn-node";
 import {InvalidRequestBodyError, PodProviderError} from "../services/util/customErrors";
 
-const locationsRouter: Router = express.Router()
+const reviewsRouter: Router = express.Router();
 
-    locationsRouter.get("/", async (req:Request, res:Response) => {
+
+    reviewsRouter.get("/:locationID", async (req:Request, res:Response)=> {
         const session = await getSessionFromStorage(req.session.solidSessionId!);
         if(session==undefined) return res.status(401).send("Invalid access.");
 
         try {
-            return res.status(200).send(await locationsService.getLocations(session));
+            const locationID:string = req.params.locationID;
+            return res.send(await reviewsService.getReviewsForLocation(locationID));
         } catch (error:any){
             if(error instanceof InvalidRequestBodyError){
                 return res.status(400).send(error.message);
@@ -21,13 +23,11 @@ const locationsRouter: Router = express.Router()
         }
     });
 
-    locationsRouter.post("/", async (req:Request, res:Response)=> {
+    reviewsRouter.post("/", async (req, res)=>{
         const session = await getSessionFromStorage(req.session.solidSessionId!);
         if(session==undefined) return res.status(401).send("Invalid access.");
-
         try {
-            const result = await locationsService.saveLocation(req.body.location, session)
-            return res.status(200).send(result);
+            return res.send(reviewsService.addReview(await req.body.review, session));
         } catch (error:any){
             if(error instanceof InvalidRequestBodyError){
                 return res.status(400).send(error.message);
@@ -38,4 +38,6 @@ const locationsRouter: Router = express.Router()
         }
     });
 
-export default locationsRouter;
+    reviewsRouter.delete("/", reviewsService.deleteReview);
+
+export default reviewsRouter;

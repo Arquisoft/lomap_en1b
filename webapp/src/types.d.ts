@@ -6,8 +6,16 @@ export type MapMarker = {
     locationType:LocationType,
     latitude:number,
     longitude:number,
-    shared: boolean
+    isShared: boolean
 };
+
+export type Review = {
+    markerId:string,
+    comment:string,
+    photo:File,
+    score:double
+    encodedPhoto:string
+}
 
 
 

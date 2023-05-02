@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
-export default function SocialProfileSimple() {
+export default function ProfileView() : JSX.Element {
     const navigate = useNavigate();
     return (
         <Center style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>

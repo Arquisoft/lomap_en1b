@@ -1,68 +1,61 @@
 import {
     getPodUrlAll,
-    getSolidDataset, getThingAll,
+    getThingAll,
     saveSolidDatasetAt,
     setThing
 } from "@inrupt/solid-client";
 import {Location} from "../types";
-import {Request, Response} from "express";
-import {getSessionFromStorage} from "@inrupt/solid-client-authn-node";
+import {Session} from "@inrupt/solid-client-authn-node";
 import {locationToThing, thingToLocation} from "../builders/locationBuilder"
 import {validateLocation, validateLocationThing} from "../validators/locationValidator";
-
+import {getOrCreateDataset} from "./util/podAccessUtil";
+import {InvalidRequestBodyError, PodProviderError} from "./util/customErrors";
+import MongoService from "./MongoService"
 
 export default {
 
-    saveLocation: async function (req:Request, res:Response){
-        const session = await getSessionFromStorage(req.session.solidSessionId!)
-        if(session==undefined){
-            return res.send('error')
-        }
-
-        let location : Location = req.body.location;
-        if(!validateLocation(location)){
-            res.send('error')
-        }
+    saveLocation: async function (location:Location, session:Session){
+        if(!validateLocation(location)) throw new InvalidRequestBodyError("Not valid location.")
 
         let locationsURL = await getLocationsURL(session.info.webId);
-        if(locationsURL == undefined){
-            return res.send("error")
+        if(locationsURL == undefined) throw new PodProviderError("Unable to get the locations dataset URL.")
 
-        }
-
-        let locationsSolidDataset = await getSolidDataset(
-            locationsURL,
-            {fetch: session.fetch}          // fetch from authenticated session
-        );
+        let locationsDataset = await getOrCreateDataset(locationsURL, session);
+        if(locationsDataset == undefined) throw new PodProviderError("Unable to get the locations dataset.")
+        locationsDataset = locationsDataset!
 
         const locationThing = locationToThing(location)
-        locationsSolidDataset = setThing(locationsSolidDataset, locationThing);
+        locationsDataset = setThing(locationsDataset, locationThing);
+        location.id = locationThing.url.split("/").pop()!
 
-        let newDataset = await saveSolidDatasetAt(
-            locationsURL,
-            locationsSolidDataset,
-            {fetch: session.fetch}             // fetch from authenticated Session
-        );
+        await Promise.all([
+            saveSolidDatasetAt(
+                locationsURL,
+                locationsDataset,
+                {fetch: session.fetch}),
+            MongoService.addLocation(location, session.info.webId!)
+        ])
 
-        return res.send(getThingAll(newDataset).map(locationThing=>thingToLocation(locationThing)))
+        return locationThing.url
     },
 
-    getOwnLocations: async function (req:Request, res:Response){
-        const session = await getSessionFromStorage(req.session.solidSessionId!)
-        if(session==undefined)return res.send('error')
-
+    getLocations: async function(session:Session){
         let locationsURL = await getLocationsURL(session.info.webId);
-        if(locationsURL == undefined) return res.send("error")
+        if(locationsURL == undefined) throw new PodProviderError("Unable to get the locations dataset URL.")
 
-        let locationsDataset =  await getSolidDataset(
-            locationsURL,
-            {fetch: session.fetch}          // fetch from authenticated session
-        );
+        let locationsDataset = await getOrCreateDataset(locationsURL, session);
+        if(locationsDataset == undefined) throw new PodProviderError("Unable to get the locations dataset.")
+        locationsDataset = locationsDataset!
 
-        return res.send(
-            getThingAll(locationsDataset)
+        let locations = await getThingAll(locationsDataset)
                 .filter(locationThing=>validateLocationThing(locationThing))
-                .map(locationThing=>thingToLocation(locationThing)))
+                .map(locationThing=>thingToLocation(locationThing))
+                .concat(await MongoService.getLocationsSharedWithUser(session.info.webId!))
+
+        console.log("Shared locations(LocationsService.ts)")
+        console.log(locations)
+        console.log("Shared locations")
+        return locations
     },
 
 }
@@ -71,6 +64,5 @@ async function getLocationsURL(webId: string | undefined){
     if(webId == undefined) return undefined
     let webID = decodeURIComponent(webId)
     const podURL = await getPodUrlAll(webID);
-    console.log(podURL)
-    return  podURL + "private/";
+    return  podURL + "private/lomap/reviews";
 }
