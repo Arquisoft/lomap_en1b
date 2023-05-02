@@ -19,9 +19,13 @@ declare module 'express-session' {
 
 //const connString = process.env.MONGO_CONN_STRING;
 //FIXME: I will use this to try the connections
+/*
 const connString = 'mongodb+srv://admin:' +
     'admin@musicstoreapp.cew3gcy.mongodb.net/' +
     'prueba?retryWrites=true&w=majority';
+ */
+
+const connString = "mongodb://35.180.234.117:27017/"
 
 if(connString == undefined) throw new Error("MongoDB connection string is undefined")
 
@@ -31,7 +35,7 @@ const app = express()
         saveUninitialized: true,
         resave: true
     }))
-    .use(cors({origin: "http://localhost:3000", credentials: true}))
+    .use(cors({origin: "http://lomap.mariopdev.com", credentials: true}))
     .use(express.json())
     .use('/auth', authenticationRouter)
     .use('/location', locationsRouter)

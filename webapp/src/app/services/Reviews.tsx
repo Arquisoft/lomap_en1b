@@ -3,7 +3,7 @@ import {Review} from "../../types";
 
 export const reviewApi = createApi({
     reducerPath: 'review',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8082/' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://api.lomap.mariopdev.com/' }),
     endpoints: (builder) => ({
         getReviews: builder.query<Review[], string>({
             query: (locationID) => ({
