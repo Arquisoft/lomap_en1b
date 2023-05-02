@@ -22,7 +22,6 @@ import {
 import {useGetFriendsQuery, useAddFriendMutation} from "../../app/services/Friend";
 import {Friend} from '../../types';
 import { Entry } from './Entry';
-import {Form} from "react-router-dom";
 
 export function AddFriendsView(){
   let [addFriendMutation, {isLoading, isError, error}] = useAddFriendMutation();
@@ -36,7 +35,7 @@ export function AddFriendsView(){
               Add a new friend
           </Heading>
           <HStack maxW={'100vw'}>
-              <Form id={"addFriend"} onSubmit={
+              <form id={"addFriend"} onSubmit={
                   (event) => {
                       if(webId.trim().length>0 && nickName.trim().length>0) {
                           event.preventDefault();
@@ -48,9 +47,6 @@ export function AddFriendsView(){
                           };
                           const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
                               event.preventDefault();
-                              //TODO: Remove this after testing it all works correctly
-                              console.log("webid: " + newFriend.webId);
-                              console.log("nickname: " + newFriend.nickName);
                               addFriendMutation(newFriend);
                               if (!isError) {
                                   toast({
@@ -171,8 +167,6 @@ export default function FriendsView(): JSX.Element {
 
       </Stack>
     </Container>
-
-
   );
 }
 

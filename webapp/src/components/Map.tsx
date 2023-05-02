@@ -45,7 +45,7 @@ export function LocationMarkerWithStore() {
     const {isOpen, onClose, onOpen} = useDisclosure();
     let [addLocationMutation, {isLoading, isError, error}] = useAddLocationMutation();
 
-    
+
 
     const initialRef = React.useRef(null)
     var [name, setName] = React.useState('')
@@ -127,6 +127,8 @@ export function LocationMarkerWithStore() {
                                     <FormLabel>Name</FormLabel>
                                     <Input value={name} type={"text"} ref={initialRef}
                                            onChange={(e) => setName(e.currentTarget.value)}/>
+                                    <Input data-testid="form-add-location-input" value={name} type={"text"} ref={initialRef}
+                                           onChange={(e)=>setName(e.currentTarget.value)}/>
                                 </FormControl>
                                 <FormControl isRequired={true}>
                                     <FormLabel>Category</FormLabel>
@@ -175,7 +177,7 @@ export default function MapElement(): JSX.Element {
         <Flex
             minH={'100vh'}
             align={'center'}
-            justify={'center'}>
+            justify={'center'} data-testid="map-element">
 
             <Stack>
                 <Flex>
@@ -189,7 +191,7 @@ export default function MapElement(): JSX.Element {
                         showFriendLocations={() => showFriendLocations} setShowFriendLocations={setShowFriendLocations}
                     />
                 </Flex>
-                <MapContainer center={escuela} zoom={13} scrollWheelZoom={true}>
+                <MapContainer center={escuela} zoom={13} scrollWheelZoom={true} >
                     <LocationMarkerWithStore />
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a> contributors'
@@ -276,7 +278,7 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
     && props.showMonuments() && props.showSights());
 
     return (
-        <>
+        <div role={"dialog"}>
             <Button colorScheme='blue' zIndex={'1300'} float={'right'} width={'10rem'} onClick={onOpen}>Filter
                 Locations</Button>
 
@@ -313,7 +315,7 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
                     </ModalContent>
                 </ModalOverlay>
             </Modal>
-        </>
+        </div>
     )
 }
 
@@ -363,9 +365,6 @@ export function PopupContent(marker: MapMarker){
                                        isShared={marker.isShared}
                                        owner={marker.owner}
                                        isOwnLocation={marker.isOwnLocation}/>
-                        {marker.isOwnLocation?<Button colorScheme={"red"} onClick={deleteAction}>
-                            Delete marker
-                        </Button> : <></> }
                     </ButtonGroup>
                 </CardFooter>
             </Card>

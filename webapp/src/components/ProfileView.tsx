@@ -49,12 +49,6 @@ export default function ProfileView() : JSX.Element {
                 <Text fontWeight={600} color={'gray.500'} mb={4}>
                     webId
                 </Text>
-                <Text
-                    textAlign={'center'}
-                    color={useColorModeValue('gray.700', 'gray.400')}
-                    px={3}>
-
-                </Text>
 
                 <Stack mt={8} direction={'row'} spacing={4}>
                     <Button

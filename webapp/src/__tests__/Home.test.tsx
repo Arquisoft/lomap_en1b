@@ -16,7 +16,7 @@ jest.mock("react-router-dom", () => ({
     useNavigate: () => mockedUsedNavigate
 }));
 
-describe("HomeScreen", () => {
+describe("HomeScreen tests", () => {
     test("Test the corrent render of the component", () => {
         render(
             <BrowserRouter>

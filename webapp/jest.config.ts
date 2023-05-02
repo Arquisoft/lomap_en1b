@@ -14,6 +14,7 @@ export default {
         'text',
         'text-summary',
     ],
+    testPathIgnorePatterns: ['/src/reportWebVitals.ts'],
     transformIgnorePatterns: [
         'node_modules/(?!react-leaflet)/',
     ],
