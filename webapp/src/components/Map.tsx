@@ -321,10 +321,6 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
 
 export function PopupContent(marker: MapMarker){
 
-    const deleteAction = ()=> {
-
-    }
-
     return(
             <Card size={'sm'}>
                 <CardBody>
