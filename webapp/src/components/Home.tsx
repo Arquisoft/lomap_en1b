@@ -4,7 +4,6 @@ import {
   Button,
   Text,
   VStack,
-  useBreakpointValue,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
@@ -27,7 +26,7 @@ export default function HomePage(): JSX.Element {
       <VStack
         w={'full'}
         justify={'center'}
-        px={useBreakpointValue({ base: 4, md: 8 })}
+
         bgGradient={'linear(to-r, blackAlpha.600, transparent)'}>
         <Stack maxW={'4xl'} align={'center'} spacing={1}>
           <Text
