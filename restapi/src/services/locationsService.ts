@@ -33,7 +33,10 @@ export default {
         location.id = locationThing.url.split("/").pop()!
         const profile = await getWebIdDataset(session.info.webId!);
         const profileThing = getThing(profile, session.info.webId!)!;
-        location.ownerName = getStringNoLocale(profileThing, FOAF.name)!
+        let name = getStringNoLocale(profileThing, FOAF.name)!
+        location.ownerName = (name == null || name == 'undefined' || name.trim().length <= 0)
+            ? "Pod name not defined"
+            : name
 
         await Promise.all([
             saveSolidDatasetAt(

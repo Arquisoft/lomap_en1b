@@ -33,7 +33,8 @@ export const ReviewRepository = {
             comment: review.comment,
             score: review.score,
             encodedPhoto: review.encodedPhoto,
-            owner: review.owner
+            owner: review.owner,
+            ownerName: review.ownerName
         }))
         console.log("REVIEWS REPOSItORy")
         console.log(reviews)

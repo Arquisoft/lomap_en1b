@@ -44,7 +44,7 @@ import {useAddReviewMutation, useGetReviewsQuery} from "../../app/services/Revie
 export default function DetailsDrawer(marker: MapMarker) {
     console.log("[MARKER_ID: " + marker.id + "]");
 
-    const {data: reviews, error, isLoading} = useGetReviewsQuery(marker.id);
+    const {data: reviews, error, isLoading, isFetching} = useGetReviewsQuery(marker.id);
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     return (
@@ -68,12 +68,13 @@ export default function DetailsDrawer(marker: MapMarker) {
                     <DrawerBody>
                         <Stack spacing='24px'>
                             <Box>
-                                {isLoading
+
+                                {isLoading ||isFetching
                                     ? (<h2>Loading reviews <Spinner></Spinner> </h2>) :
                                     (<Stack spacing={'24px'} direction='column'>
                                         ({reviews?.map((review) => (
                                         <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden'>
-                                            <Box borderWidth='0.5px' fontSize={15} fontWeight={"semibold"}>{review.owner}</Box>
+                                            <Box borderWidth='0.5px' fontSize={15} fontWeight={"semibold"}>{review.ownerName}</Box>
                                             {review.encodedPhoto!="" ?<Box borderWidth='0.5px' >
                                                 <Image src={`data:image/jpg;base64,${review.encodedPhoto}`} loading={"lazy"}
                                                     fallbackSrc='https://via.placeholder.com/150'/></Box> : <></> }
@@ -96,6 +97,7 @@ export default function DetailsDrawer(marker: MapMarker) {
                                          longitude={marker.longitude}
                                          isShared={marker.isShared}
                                          owner={marker.owner}
+                                         ownerName={marker.ownerName}
                                          isOwnLocation={marker.isOwnLocation}/>
                     </DrawerFooter>
                 </DrawerContent>
@@ -158,7 +160,8 @@ export function AddCommentForm(marker: MapMarker) {
                                             photo: file ,
                                             score:rating,
                                             encodedPhoto: "",
-                                            owner:""
+                                            owner:"",
+                                            ownerName:""
                                         };
 
                                     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -271,7 +274,6 @@ export function AddCommentForm(marker: MapMarker) {
         </>
     );
 }
-
 export function InformationPopup(){
     return(
         <>

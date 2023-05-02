@@ -53,7 +53,11 @@ export default {
         review.owner = session.info.webId!
         const profile = await getWebIdDataset(session.info.webId!);
         const profileThing = getThing(profile, session.info.webId!)!;
-        review.ownerName = getStringNoLocale(profileThing, FOAF.name)!
+        let name = getStringNoLocale(profileThing, FOAF.name)!
+        review.ownerName = (name == null || name == 'undefined' || name.trim().length <= 0)
+            ? "Pod name not defined"
+            : name
+
 
         const reviewThing = reviewToThing(review, session.info.webId!, imageURL);
         reviewsDataset = setThing(reviewsDataset, reviewThing);

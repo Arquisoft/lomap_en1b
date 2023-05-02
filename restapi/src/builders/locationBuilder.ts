@@ -21,7 +21,6 @@ export function thingToLocation(locationThing:Thing, ownerName:string) : Locatio
         ownerName:ownerName //sacarlo del pod
     }
 }
-//TODO: añadir owner
 export function locationToThing(location:Location):Thing{
     return buildThing(createThing())
         .addStringNoLocale(SCHEMA_INRUPT.name, location.name)

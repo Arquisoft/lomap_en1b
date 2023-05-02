@@ -9,7 +9,9 @@ export async function urlToUserData(webId:string): Promise<UserData>{
     const profile = await getWebIdDataset(webId);
     const profileThing = getThing(profile, webId)!;
     let name = getStringNoLocale(profileThing, FOAF.name)!
-    name = (name == null) ? "Pod name not defined": name
+    name = (name == null || name == 'undefined' || name.trim().length <= 0)
+        ? "Pod name not defined"
+        : name
 
     return {
         name:name,

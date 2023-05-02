@@ -11,21 +11,25 @@ import {FOAF, RDF, RDFS} from "@inrupt/vocab-common-rdf";
 
 export async function thingToFriend(friendThing:Thing, loMapFriend:boolean): Promise<Friend> {
     const webId = getUrl(friendThing, RDFS.seeAlso)!
-    return urlToFriend(webId, loMapFriend);
+    const nick = getStringNoLocale(friendThing, FOAF.nick)
+    return urlToFriend(webId, loMapFriend, nick!);
 }
 
-export async function urlToFriend(webId:string, loMapFriend:boolean): Promise<Friend>{
+export async function urlToFriend(webId:string, loMapFriend:boolean, nick:string): Promise<Friend>{
     const profile = await getWebIdDataset(webId);
     const profileThing = getThing(profile, webId)!;
 
-    const name = getStringNoLocale(profileThing, FOAF.name)!
-    const nickName = getStringNoLocale(profileThing, FOAF.nick)!
+    let name = getStringNoLocale(profileThing, FOAF.name)!
+    name = name = (name == null || name == 'undefined' || name.trim().length <= 0)
+        ? "No name"
+        : name
+
     const profilePic = ""
 
     return {
         name:name,
         webId:webId,
-        nickName:nickName,
+        nickName:nick,
         profilePic:profilePic,
         loMapOnly:loMapFriend
     }

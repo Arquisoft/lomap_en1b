@@ -105,7 +105,7 @@ export function AddFriendsView(){
 }
 
 export default function FriendsView(): JSX.Element {
-  let { data: friends, error, isLoading } = useGetFriendsQuery();
+  let { data: friends, error, isLoading, isFetching } = useGetFriendsQuery();
 
   return (
     <Container maxW={'100vw'} >
@@ -128,7 +128,7 @@ export default function FriendsView(): JSX.Element {
           <Heading lineHeight={1.1} fontSize={{ base: '1xl', md: '3xl' }} color={'orange.400'} paddingTop={'1.5'}>
             Your friends
           </Heading>
-          {isLoading
+          {isLoading || isFetching
               ? (<h2>Loading friends <Spinner></Spinner> </h2>)
               : (<Table variant="striped" colorScheme="black" size="sm">
                             <Thead>

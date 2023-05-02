@@ -9,6 +9,7 @@ export type MapMarker = {
     isShared: boolean,
     owner: string,
     isOwnLocation: boolean
+    ownerName:string
 };
 
 export type Review = {
@@ -18,6 +19,7 @@ export type Review = {
     score:double,
     encodedPhoto:string,
     owner:string
+    ownerName:string
 }
 
 export type UserData = {

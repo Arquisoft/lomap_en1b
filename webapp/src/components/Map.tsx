@@ -88,7 +88,8 @@ export function LocationMarkerWithStore() {
                                     isOwnLocation:true,
                                     isShared: isShared,
                                     id: "",
-                                    owner: ""
+                                    owner: "",
+                                    ownerName: ""
                                 };
 
                                 const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -216,6 +217,7 @@ export default function MapElement(): JSX.Element {
                                               longitude={location.longitude}
                                               isShared={location.isShared}
                                               owner={location.owner}
+                                              ownerName={location.ownerName}
                                               isOwnLocation={location.isOwnLocation}
                                 />
                             </Popup>
@@ -340,7 +342,7 @@ export function PopupContent(marker: MapMarker){
                                 Created by
                             </Heading>
                             <Text pt='2' fontSize='md'>
-                                {marker.owner}
+                                {marker.ownerName}
                             </Text>
                         </Box>
                     </Stack>
@@ -354,6 +356,7 @@ export function PopupContent(marker: MapMarker){
                                        longitude={marker.longitude}
                                        isShared={marker.isShared}
                                        owner={marker.owner}
+                                       ownerName={marker.ownerName}
                                        isOwnLocation={marker.isOwnLocation}/>
                         {marker.isOwnLocation?<Button colorScheme={"red"} onClick={deleteAction}>
                             Delete marker
