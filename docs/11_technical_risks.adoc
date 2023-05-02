@@ -2,19 +2,6 @@
 == Risks and Technical Debts
 
 
-[role="arc42help"]
-****
-.Contents
-A list of identified technical risks or technical debts, ordered by priority
-
-.Motivation
-“Risk management is project management for grown-ups” (Tim Lister, Atlantic Systems Guild.) 
-
-This should be your motto for systematic detection and evaluation of risks and technical debts in the architecture, which will be needed by management stakeholders (e.g. project managers, product owners) as part of the overall risk analysis and measurement planning.
-
-.Form
-List of risks and/or technical debts, probably including suggested measures to minimize, mitigate or avoid risks or reduce technical debts.
-****
 [options="header",cols="2,2"]
 |===
 |Risks/Technical debt|Description
@@ -23,4 +10,7 @@ List of risks and/or technical debts, probably including suggested measures to m
 |GitHub|Some of the team members are facing pull request and branches for the first time, so it will take time to be confortable using GitHub for the team.
 |Lack of knowledge of some technologies|We have no experience working with React or Typescript.
 |Big project and big team|We are 6 people working on that project, so communication will be crucial. We must help and collaborate with everyone in order to have good developer experience among this project.
+|Database dependency|Right now, there is no functionality developed to restore the shared resources of users. If the database gets corrupted or the data is lost, a script to reload every shared resource will need to be implemented
+|Lack of component modularity in webAPP|Right now most components in the WebAPP are not well differentiated. Upgrading or extending their functionality could be more complex than it should.
+|Pod Provider dependency|Although we do have data redundancy with the cache database, we still depend on the provider in order to do the login or access the "master" data of the users.
 |===
