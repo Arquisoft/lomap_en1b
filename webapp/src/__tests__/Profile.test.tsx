@@ -22,8 +22,8 @@ describe("Profile tests", () => {
                 <ProfileView />
             </BrowserRouter>
         )
-        // 
-        /* taking into account that the user is logged-in there must be:
+
+        /* taking into account that the user is logged-in, there must be:
          *      - two buttons (friends and map)
          *      - one avatar
          *      - two text elements 
