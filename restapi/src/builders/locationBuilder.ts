@@ -16,7 +16,7 @@ export function thingToLocation(locationThing:Thing) : Location {
         latitude: getDecimal(locationThing, SCHEMA_INRUPT.latitude)!,
         longitude: getDecimal(locationThing, SCHEMA_INRUPT.longitude)!,
         isShared: false,
-        isOwnLocation: false
+        isOwnLocation: true
     }
 }
 

@@ -12,9 +12,9 @@ export type Location = {
 
 export type Review = {
     markerId:string,
-    comment:string,
-    score:double,
-    encodedPhoto:string
+    comment:string|undefined,
+    score:number|undefined,
+    encodedPhoto:string|undefined
 }
 
 export type Friend = {
