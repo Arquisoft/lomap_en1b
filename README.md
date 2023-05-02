@@ -1,4 +1,4 @@
-#lomap_en1b:world_map: 
+# lomap_en1b:world_map: 
 
 Documentation of the project at https://arquisoft.github.io/lomap_en1b/
 
