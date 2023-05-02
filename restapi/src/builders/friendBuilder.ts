@@ -17,9 +17,9 @@ export async function thingToFriend(friendThing:Thing, loMapFriend:boolean): Pro
 export async function urlToFriend(webId:string, loMapFriend:boolean): Promise<Friend>{
     const profile = await getWebIdDataset(webId);
     const profileThing = getThing(profile, webId)!;
-    const name = getStringNoLocale(profileThing, FOAF.name)!
 
-    const nickName = ""
+    const name = getStringNoLocale(profileThing, FOAF.name)!
+    const nickName = getStringNoLocale(profileThing, FOAF.nick)!
     const profilePic = ""
 
     return {

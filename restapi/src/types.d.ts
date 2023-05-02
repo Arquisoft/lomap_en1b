@@ -21,6 +21,11 @@ export type Review = {
     ownerName:string
 }
 
+export type UserData = {
+    webId:string,
+    name: string
+}
+
 export type Friend = {
     nickName : string;
     name: string;
