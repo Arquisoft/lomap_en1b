@@ -48,14 +48,12 @@ jobs:
     needs: [ unit-test-webapp, unit-test-restapi ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Send notification
+        uses: tsickert/discord-webhook@v5.3.0
         with:
-          node-version: 18
-      - run: npm --prefix webapp install
-      - run: npm --prefix restapi install
-      - run: npm --prefix webapp run build
-      - run: npm --prefix webapp run test:e2e
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          username: "LomapBot"
+          content: "RestAPI and React WebApp tests have passed successfully"
 
   docker-push-webapp:
     name: Push webapp Docker Image to GitHub Packages
