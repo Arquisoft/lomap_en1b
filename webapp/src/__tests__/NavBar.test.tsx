@@ -15,7 +15,7 @@ jest.mock("react-router-dom", () => ({
     useNavigate: () => mockedUsedNavigate
 }));
 
-describe("NavBar", () => {
+describe("NavBar tests", () => {
     test("Test the corrent render of the component", () => {
         render(
             <BrowserRouter>
@@ -32,8 +32,6 @@ describe("NavBar", () => {
 
         const AboutButton = screen.getByText("About"); // about button
         expect(AboutButton).toBeInTheDocument();
-
-
 
         const buttons = screen.getAllByRole("link");
         expect(buttons.length).toBe(3);

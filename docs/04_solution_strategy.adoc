@@ -1,44 +1,42 @@
 [[section-solution-strategy]]
 == Solution Strategy
 
-
-[role="arc42help"]
-****
-.Contents
-A short summary and explanation of the fundamental decisions and solution strategies, that shape the system's architecture. These include
-
-* technology decisions
-* decisions about the top-level decomposition of the system, e.g. usage of an architectural pattern or design pattern
-* decisions on how to achieve key quality goals
-* relevant organizational decisions, e.g. selecting a development process or delegating certain tasks to third parties.
-
-.Motivation
-These decisions form the cornerstones for your architecture. They are the basis for many other detailed decisions or implementation rules.
-
-.Form
-Keep the explanation of these key decisions short.
-
-Motivate what you have decided and why you decided that way,
-based upon your problem statement, the quality goals and key constraints.
-Refer to details in the following sections.
-****
-
 === Technology decisions
 This are the technologies that we have decided to use, some of them may vary in future iterations of the poyect:
 
-* SOLID Pods for security
+* SOLID PODs for security
 * TypeScript as programming language
-* MongoDb as our DMBS
+* MongoDb as our cache DMBS
 * Redux using React as UI
-* Axios
-* Postman
+* Chakra UI (for the implementation of the views)
 
 
 === Design decisions:
-The general design of our project has two main parts, connected using a facade:
+The general design decisions.
 
- * Webapp (frontend): It has different views, it connects to the SOLID pods to acess user's data in an secure way, and it communicates with the backend using a facade
- * RestAPI (backend): controls the acess to the database and communicates with the frontend using the facade
+* Project has two main parts, connected using a facade:
+** Webapp (frontend): It has different views, it communicates with the user with different views, and with the backend using redux hooks
+** RestAPI (backend): controls the access to the data. This data can be stored in the user's POD or in our database
+* The application will have two sessions, one for the webApp and another one for the restAPI.
+** The webAPP session will be used to link the webAPP with the restAPI.
+** The restAPI session will be created after authenticating with the corresponding solid provider. It will contain the authenticated fetch for private resources in the pod.
+
+image:4-SolutionStrategy/Session structure.drawio.png[Session structure]
+
+* Use of a local database to cache shared resources and improve performance.
+
+image:4-SolutionStrategy/Mongo Schema.drawio.png[Mongo schema]
+
+* Resources stored in the POD will be RDF resources and will follow as close as possible the schema.org specification.
+
+image:4-SolutionStrategy/Pod Schema.drawio.png[Pod schema]
+
+
+=== Organizational decisions
+* All developments will be recorded in an issue and added to the kanban board of the project, where its state will be updated periodically.
+* All developments will be done in a personal branch forked from the "develop" branch. When the functionality is finished, it will be merged to the "develop" branch with a pull-request.
+* When the "develop" branch reaches a stable point, it will be merged to the "master" branch.
+* Documentation changes will not be done in the "develop" branch, but in the "documentation" branch, following the same strategy.
 
 
 === Quality decisions
