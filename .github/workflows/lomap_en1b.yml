@@ -119,10 +119,10 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           command: |
             wget https://raw.githubusercontent.com/arquisoft/lomap_en1b/master/docker-compose-deploy.yml -O docker-compose.yml
-            docker-compose stop
-            docker-compose rm -f
-            docker-compose pull   
-            docker-compose up -d
+            docker compose stop
+            docker compose rm -f
+            docker compose pull   
+            docker compose up -d
 
       - name: Send notification
         uses: tsickert/discord-webhook@v5.3.0
