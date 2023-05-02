@@ -1,7 +1,5 @@
 # Lomap_en1b :world_map: 
 
-Documentation of the project at https://arquisoft.github.io/lomap_en1b/
-
 
 [![Actions Status](https://github.com/arquisoft/lomap_en1b/workflows/CI%20for%20LOMAP_EN1B/badge.svg)](https://github.com/arquisoft/lomap_en1b/actions)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_lomap_en1b&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Arquisoft_lomap_en1b)
@@ -23,14 +21,14 @@ The initial focus is on the user, giving them the power to create their own pers
 And although it was developed specifically for the Council of Brussels, HappySw is committed to creating a generic software solution that can be deployed and used in other cities, so everyone can enjoy the benefits of this app.
 
  
-## Features of the application
+## Features of the application :crossed_swords:
 Some of the most notable features of this application are:
 - :couple: Add friends and share locations and reviews of places with them.
 - Add and manage markers in a private map. You can also classify the markers by categories and manage their privacy :lock: that is, share them with your friends or keep them private.
 - Add comments and reviews to different locations, as well as photos :camera:
 
 
-## Resources used in the application
+## Resources used in the application :hammer_and_wrench:
 - Typescript
 - React
 - Node.js
@@ -41,11 +39,11 @@ Some of the most notable features of this application are:
 - MongoDB
 
 
-## Deployment
-For the deployment, we have several options. The first and more flexible is to deploy to a virtual machine using SSH. This will work with any cloud service (or with our own server). Other options include using the container services that all the cloud services provide. This means, deploying our Docker containers directly. Here I am going to use the first approach. I am going to create a virtual machine in a cloud service and after installing docker and docker-compose, deploy our containers there using GitHub Actions and SSH.
+## Documentation :spiral_notepad:
+For more technical and detailed information on the application and its architecture, you can find the corresponding documentation at the following link: https://arquisoft.github.io/lomap_en1b/
 
 
-## Team members
+## Team members 👥
   
    - Mario Pérez Fernández (uo283720@uniovi.es)
    - Sara María Ramírez Pérez (uo276188@uniovi.es)
