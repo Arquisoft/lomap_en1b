@@ -17,7 +17,7 @@ jest.mock("react-router-dom", () => ({
 
 describe("Profile tests", () => {
     test("Test the corrent render of the component", () => {
-        render(
+        const {container} = render(
             <BrowserRouter>
                 <ProfileView />
             </BrowserRouter>
@@ -42,7 +42,10 @@ describe("Profile tests", () => {
         const buttons = screen.getAllByRole("button"); // there must be two buttons
         expect(buttons.length).toBe(2);
 
-        const textElements = screen.getAllByRole("Text"); // there must be two text elements
-        expect(textElements.length).toBe(2);
+        const headingElements = container.getElementsByClassName('chakra-heading') // there must be two text elements
+        expect(headingElements.length).toBe(1);
+
+        const pElements = container.getElementsByClassName('chakra-text') // there must be two text elements
+        expect(pElements.length).toBe(1);
     })
 })

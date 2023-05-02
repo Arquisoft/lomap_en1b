@@ -46,6 +46,7 @@ export function AddFriendsView(){
                       const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
                           event.preventDefault();
                           addFriendMutation(newFriend);
+
                       };
                       handleSubmit(event)
                       /* TODO:
@@ -58,7 +59,6 @@ export function AddFriendsView(){
                       setWebId("");
                       setNickName("");
                        */
-
                   }}/>
                   <Box>
                       <FormControl isRequired>
@@ -90,7 +90,7 @@ export function AddFriendsView(){
                   _hover={{
                       bg: 'orange.500',
                   }}>
-                  Add
+                  { isLoading? <Spinner /> : "Add" }
               </Button>
 
           </HStack>
