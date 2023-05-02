@@ -35,7 +35,13 @@ describe("NavBar", () => {
 
 
 
-        const avatar = screen.getAllByRole("Avatar"); // checking if the avatar is shown on the screen
+        const avatar = screen.getAllByRole("Avatar"); // there must be an avatar element
         expect(avatar.length).toBe(1);
+
+        const buttons = screen.getAllByRole("button"); // there must be two buttons
+        expect(buttons.length).toBe(2);
+
+        const textElements = screen.getAllByRole("Text"); // there must be two text elements
+        expect(textElements.length).toBe(2);
     })
 })
