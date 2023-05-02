@@ -4,5 +4,5 @@ COPY . /app
 WORKDIR /app
 #Install the dependencies
 RUN npm ci
-RUN npm run build
-CMD [ "npm", "start" ]
+RUN npm run tsc
+CMD [ "npm", "run", "start" ]
