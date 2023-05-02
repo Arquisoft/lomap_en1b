@@ -45,6 +45,8 @@ export function LocationMarkerWithStore() {
     const {isOpen, onClose, onOpen} = useDisclosure();
     let [addLocationMutation, {isLoading, isError, error}] = useAddLocationMutation();
 
+    
+
     const initialRef = React.useRef(null)
     var [name, setName] = React.useState('')
     var [category, setCategory] = React.useState('bar')

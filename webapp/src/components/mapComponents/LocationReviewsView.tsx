@@ -189,10 +189,6 @@ export function AddCommentForm(marker: MapMarker) {
 
                                     handleSubmit(event)
                                 }}>
-                                {(file.name != "") &&
-                                    <Image src={URL.createObjectURL(file)} loading={"lazy"}
-                                           fallbackSrc='https://via.placeholder.com/150'/>
-                                }
                                 <Box borderColor="gray.300" borderStyle="dashed" borderWidth="2px"
                                     rounded="md" shadow="sm" role="group" transition="all 150ms ease-in-out"
                                     _hover={{
@@ -200,7 +196,8 @@ export function AddCommentForm(marker: MapMarker) {
                                     }}
                                 >
                                     <Box position="relative" height="100%" width="100%">
-                                        <Box
+                                        {file.name == "" ?
+                                        (<Box
                                             position="relative"
                                             top="0" left="0"
                                             height="100%" width="100%"
@@ -217,7 +214,10 @@ export function AddCommentForm(marker: MapMarker) {
                                                     <Text fontWeight="light">or click to upload an image</Text>
                                                 </Stack>
                                             </Stack>
-                                        </Box>
+                                        </Box>) :
+                                            (<Image src={URL.createObjectURL(file)} loading={"lazy"}
+                                                    fallbackSrc='https://via.placeholder.com/150'/>)
+                                        }
                                         <Input
                                             type="File"
                                             height="100%" width="100%"

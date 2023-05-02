@@ -1,25 +1,23 @@
 import React, { ReactNode } from 'react';
 import {
-  Stack,
-  Container,
-  Box,
-  Flex,
-  Text,
-  Heading,
-  SimpleGrid,
-  Grid,
-  Table,
-  Thead,
-  Th,
-  Tr,
-  Tbody,
-  useColorModeValue,
-  FormControl,
-  Input,
-  FormLabel,
-  Button,
-  HStack,
-  Spinner,
+    Stack,
+    Container,
+    Box,
+    Text,
+    Heading,
+    Grid,
+    Table,
+    Thead,
+    Th,
+    Tr,
+    Tbody,
+    useColorModeValue,
+    FormControl,
+    Input,
+    FormLabel,
+    Button,
+    HStack,
+    Spinner, useToast,
 } from '@chakra-ui/react';
 import {useGetFriendsQuery, useAddFriendMutation} from "../../app/services/Friend";
 import {Friend} from '../../types';
@@ -30,6 +28,7 @@ export function AddFriendsView(){
   let [addFriendMutation, {isLoading, isError, error}] = useAddFriendMutation();
   let [webId, setWebId] = React.useState('');
   let [nickName, setNickName] = React.useState('');
+    const toast = useToast();
 
   return (
       <Stack spacing={4} bg={useColorModeValue('gray.50', 'gray.800')} paddingBottom={'1'} paddingTop={'1'}>
@@ -39,31 +38,48 @@ export function AddFriendsView(){
           <HStack maxW={'100vw'}>
               <Form id={"addFriend"} onSubmit={
                   (event) => {
-                      event.preventDefault();
-                      const newFriend: Friend = {
-                          webId: webId, nickName: nickName,
-                          loMapOnly: false, name: "", profilePic: "",
-                      };
-                      const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+                      if(webId.trim().length>0 && nickName.trim().length>0) {
                           event.preventDefault();
-                          //TODO: Remove this after testing it all works correctly
-                          console.log("webid: " + newFriend.webId);
-                          console.log("nickname: " + newFriend.nickName);
-
-                          addFriendMutation(newFriend);
-                      };
-                      handleSubmit(event)
-                      /* TODO:
-                      Right now when we do this, the textfield is not restored so:
-                       - visually there is something written
-                       - You can submit the form because the is something written
-                       - But the field that is sent is empty
-                       - We need to restore the textfield someway or dont erase the content here
-
-                      setWebId("");
-                      setNickName("");
-                       */
-
+                          setWebId('');
+                          setNickName('');
+                          const newFriend: Friend = {
+                              webId: webId, nickName: nickName,
+                              loMapOnly: false, name: "", profilePic: "",
+                          };
+                          const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+                              event.preventDefault();
+                              //TODO: Remove this after testing it all works correctly
+                              console.log("webid: " + newFriend.webId);
+                              console.log("nickname: " + newFriend.nickName);
+                              addFriendMutation(newFriend);
+                              if (!isError) {
+                                  toast({
+                                      title: 'Friend Added',
+                                      description: "The friend has been added successfully.",
+                                      status: 'success',
+                                      duration: 7000,
+                                      isClosable: true,
+                                  });
+                              } else {
+                                  toast({
+                                      title: 'Friend not added',
+                                      description: "There has been an error adding the friend.",
+                                      status: 'error',
+                                      duration: 7000,
+                                      isClosable: true,
+                                  });
+                              }
+                          };
+                          handleSubmit(event)
+                      } else {
+                          toast({
+                              title: 'Fields not correctly filled',
+                              description: "Please fill both fields before submitting.",
+                              status: 'warning',
+                              duration: 7000,
+                              isClosable: true,
+                          });
+                      }
                   }}/>
                   <Box>
                       <FormControl isRequired>
@@ -72,6 +88,7 @@ export function AddFriendsView(){
                                  placeholder="asdfghjkl123456"
                                  _placeholder={{color: 'gray.500'}}
                                  type="text"
+                                 value={webId}
                                  onChange={(e) => setWebId(e.currentTarget.value)}
                           />
                       </FormControl>
@@ -83,6 +100,7 @@ export function AddFriendsView(){
                                  placeholder="Motosarius"
                                  _placeholder={{color: 'gray.500'}}
                                  type="text"
+                                 value={nickName}
                                  onChange={(e) => setNickName(e.currentTarget.value)}
                           />
                       </FormControl>
@@ -95,9 +113,10 @@ export function AddFriendsView(){
                   _hover={{
                       bg: 'orange.500',
                   }}>
-                  Add
+                  {isLoading ?
+                      ( <Spinner ></Spinner>) :
+                      (<p>Add</p>)}
               </Button>
-
           </HStack>
       </Stack>
 
