@@ -53,13 +53,13 @@ test("invalid friend thing empty nickname", ()=>{
         .addUrl(RDFS.seeAlso, "https://validWebID.com/ASKDJFHASKFAS3294ASF")
         .addUrl(RDF.type, "http://xmlns.com/foaf/0.1/#term_Person")
         .build()
-    expect(validateFriendThing(friendThing)).toBeTruthy()
+    expect(validateFriendThing(friendThing)).toBeFalsy()
 });
 
 test("invalid friend thing - missing webID", ()=>{
     let friendThing:Thing = buildThing()
         .addStringNoLocale(FOAF.nick, "nickName")
-        .addUrl(RDFS.seeAlso, "https://validWebID.com/ASKDJFHASKFAS3294ASF")
+        .addUrl(RDF.type, "http://xmlns.com/foaf/0.1/#term_Person")
         .build()
     expect(validateFriendThing(friendThing)).toBeFalsy()
 });

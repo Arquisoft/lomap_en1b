@@ -1,29 +1,24 @@
 import {Review} from "../types";
+import {isEmpty} from "./util/validationUtils";
 
 export function validateReview(review:Review) : boolean{
-    return review.score !== undefined
-        && review.score !== null
-        && review.score <= 5;
-}
-
-export function validateReview2(review:Review) : boolean{
-    if(review == undefined
-        || review.markerId == undefined){
+    if(review == undefined || isEmpty(review.markerId)){
         return false;
     }
 
     let filledFields = 0;
 
-    if(review.comment !== null && review.comment !== undefined
-        && review.comment.trim().length > 0){
+    if(!isEmpty(review.comment)){
         filledFields++;
     }
-    //FIXME: I need to know how to check if a given photo is valid or not
-    if(review.encodedPhoto !== null && review.encodedPhoto !== undefined ){
+
+    if(!isEmpty(review.encodedPhoto)){
         filledFields++;
     }
+
     if(review.score !== null && review.score !== undefined
         && review.score > 0){
+        if(review.score>5) return false
         filledFields++;
     }
 

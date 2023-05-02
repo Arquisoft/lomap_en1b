@@ -46,7 +46,10 @@ export default {
         if(reviewsDataset == undefined) throw new PodProviderError("Unable to get the reviews dataset.");
         reviewsDataset = reviewsDataset!;
 
-        const imageURL = await ImagesService.saveImage(review.encodedPhoto, session);
+        let imageURL = ""
+        if(review.encodedPhoto !== undefined) {
+            imageURL = await ImagesService.saveImage(review.encodedPhoto, session);
+        }
 
         const reviewThing = reviewToThing(review, session.info.webId!, imageURL);
         reviewsDataset = setThing(reviewsDataset, reviewThing);
