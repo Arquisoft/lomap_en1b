@@ -1,37 +1,41 @@
-import React from 'react'
-import {render} from "../setupTests";
-import MapElement from "../components/Map";
+import React from "react";
 import {rest} from "msw";
 import {setupServer} from "msw/node";
-import {fireEvent, screen, waitFor} from "@testing-library/react";
+import {render} from "../setupTests";
+import FriendsView from "../components/FriendsPage/FriendsView";
+import MapElement from "../components/Map";
+import {fireEvent, waitFor} from "@testing-library/react";
+import {BrowserRouter} from "react-router-dom";
 import '@testing-library/jest-dom';
 
+
+const postResolver = jest.fn()
 const handlers = [
     rest.get('http://localhost:8082/friendship', (req, res, ctx) => {
         return res(
             ctx.status(200),
             ctx.json([
                 {
-                    id: '068b0c8a-fac2-4a46-b40c-07d74ccd46f7',
-                    name: 'Test',
-                    locationType: 'shop',
-                    latitude: 43.36136284334129,
-                    longitude: -5.851278233874803,
-                    isShared: false,
-                    isOwnLocation: false
+                    nickName: 'TestNick',
+                    name: 'TestFriend',
+                    webId: 'https://id.inrupt.com/mariopdev',
+                    profilePic: "",
+                    loMapOnly: false
                 },
                 {
-                    id: 'Test',
-                    name: 'Test2',
-                    locationType: 'restaurant',
-                    latitude: 43.365143614762374,
-                    longitude: -5.851593017578125,
-                    isShared: false,
-                    isOwnLocation: false
-                }
+                    nickName: 'TestNick2',
+                    name: 'TestFriend2',
+                    webId: 'https://id.inrupt.com/mariopdev2',
+                    profilePic: "",
+                    loMapOnly: false
+                },
             ]),
         )
     }),
+    rest.post('*/friendship', (req, res, ctx) => {
+        console.log("INTERCEPTADA")
+        return res(postResolver());
+    })
 ]
 
 const server = setupServer(...handlers)
@@ -41,22 +45,54 @@ afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
 
-describe("Map tests", () =>{
-    test('Renders the response from restAPI', async () => {
-        const { container } = render(<MapElement />)
-        await waitFor(() => {
-            const markers = container.querySelectorAll('.leaflet-marker-icon');
-            expect(markers.length).toBe(2);
-        });
-    })
+describe("Friends tests", () =>{
+        test('Renders the response from restAPI', async () => {
+            const { container } = render(<FriendsView />)
+            await waitFor(() => {
+                const markers = container.querySelectorAll('.table-friend');
+                expect(markers.length).toBe(2);
+            });
+        })
 
-    test('Pressing the filter button, a modal to filter should appear', async () => {
-        render(<MapElement />);
+    test('Add a new friend', async () => {
+        const { getByRole , container } = render(<FriendsView />)
+        await waitFor(() => container.querySelectorAll('.table-friend'))
 
-        const filterButton = screen.getByText("Filter Locations");
-        fireEvent.click(filterButton);
+        const webIDInput = container.querySelector('#friendWbId')
+        const nickInput = container.querySelector('#nickname')
+        expect(webIDInput).toBeInTheDocument()
+        expect(nickInput).toBeInTheDocument()
 
-        const modalContent = await screen.findByRole("dialog");
-        expect(modalContent).toHaveClass("chakra-modal__content");
+        fireEvent.change(webIDInput!, { target: { value: 'newfriend.webid.com' } })
+        fireEvent.change(nickInput!, { target: { value: 'New Friend' } })
+
+        const addButton = getByRole('button', { name: 'Add' })
+        expect(addButton).toBeInTheDocument()
+
+        fireEvent.click(addButton)
+
+        expect(postResolver).toHaveBeenCalledTimes(1)
     })
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
