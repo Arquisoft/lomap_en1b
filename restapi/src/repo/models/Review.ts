@@ -5,8 +5,8 @@ const ReviewSchema = new Schema({
     comment : String,
     encodedPhoto : String,
     owner : String,
-    location : String
-
+    location : String,
+    ownerName : String
 })
 
 ReviewSchema.statics.getReviewsFromListOfLocation = function(locations : [String]): Promise<string[]> {

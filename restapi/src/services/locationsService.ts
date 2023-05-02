@@ -1,6 +1,6 @@
 import {
-    getPodUrlAll,
-    getThingAll,
+    getPodUrlAll, getStringNoLocale, getThing,
+    getThingAll, getWebIdDataset,
     saveSolidDatasetAt,
     setThing
 } from "@inrupt/solid-client";
@@ -11,6 +11,7 @@ import {validateLocation, validateLocationThing} from "../validators/locationVal
 import {getOrCreateDataset} from "./util/podAccessUtil";
 import {InvalidRequestBodyError, PodProviderError} from "./util/customErrors";
 import MongoService from "./MongoService"
+import {FOAF} from "@inrupt/vocab-common-rdf";
 
 export default {
 
@@ -27,7 +28,12 @@ export default {
 
         const locationThing = locationToThing(location)
         locationsDataset = setThing(locationsDataset, locationThing);
+
+        //Extra review information for DB
         location.id = locationThing.url.split("/").pop()!
+        const profile = await getWebIdDataset(session.info.webId!);
+        const profileThing = getThing(profile, session.info.webId!)!;
+        location.ownerName = getStringNoLocale(profileThing, FOAF.name)!
 
         await Promise.all([
             saveSolidDatasetAt(
@@ -48,10 +54,16 @@ export default {
         if(locationsDataset == undefined) throw new PodProviderError("Unable to get the locations dataset.")
         locationsDataset = locationsDataset!
 
-        let locations = await getThingAll(locationsDataset)
-                .filter(locationThing=>validateLocationThing(locationThing))
-                .map(locationThing=>thingToLocation(locationThing))
-                .concat(await MongoService.getLocationsSharedWithUser(session.info.webId!))
+        // owner will always be the loged in user for locations in the pod, we get it here
+        // to reduce the number of calls
+        const profile = await getWebIdDataset(session.info.webId!);
+        const profileThing = getThing(profile, session.info.webId!)!;
+        const name = getStringNoLocale(profileThing, FOAF.name)!
+
+        let locations = getThingAll(locationsDataset)
+            .filter(locationThing => validateLocationThing(locationThing))
+            .map(locationThing => thingToLocation(locationThing, name))
+            .concat(await MongoService.getLocationsSharedWithUser(session.info.webId!))
 
         console.log("Locations(LocationsService.ts)")
         console.log(locations)

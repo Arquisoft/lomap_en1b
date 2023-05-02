@@ -9,7 +9,8 @@ const LocationSchema = new Schema({
     longitude: Number,
     isShared: Boolean,
     isOwnLocation: Boolean,
-    owner : String
+    owner : String,
+    ownerName: String
 })
 
 LocationSchema.statics.getSharedLocationsFromUsers = function(users : [string]): Promise<string[]> {

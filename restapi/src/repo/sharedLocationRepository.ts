@@ -11,7 +11,8 @@ export const SharedLocationRepository = {
             longitude: location.longitude,
             isShared: true,
             isOwnLocation: false,
-            owner : location.owner
+            owner : location.owner,
+            ownerName: location.ownerName
         })
         newLocation.save()
     },

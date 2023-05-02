@@ -8,7 +8,8 @@ export type Location = {
     longitude:number
     isShared:boolean,
     isOwnLocation:boolean,
-    owner:string
+    owner:string,
+    ownerName:string
 };
 
 export type Review = {
@@ -16,7 +17,8 @@ export type Review = {
     comment:string,
     score:double,
     encodedPhoto:string,
-    owner:string
+    owner:string,
+    ownerName:string
 }
 
 export type Friend = {

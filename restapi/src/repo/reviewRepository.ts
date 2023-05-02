@@ -8,7 +8,8 @@ export const ReviewRepository = {
             comment : review.comment,
             location : review.markerId,
             encodedPhoto : review.encodedPhoto,
-            owner : review.owner
+            owner : review.owner,
+            ownerName : review.ownerName
         })
 
         newReview.save()

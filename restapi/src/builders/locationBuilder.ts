@@ -3,7 +3,7 @@ import {Location} from "../types";
 import {LocationType} from "../locationType";
 import {RDF, SCHEMA_INRUPT} from "@inrupt/vocab-common-rdf";
 
-export function thingToLocation(locationThing:Thing) : Location {
+export function thingToLocation(locationThing:Thing, ownerName:string) : Location {
     let splitId = locationThing.url.split("#").pop()
     if(splitId === null || splitId === 'undefined'){
         splitId = ''
@@ -17,7 +17,8 @@ export function thingToLocation(locationThing:Thing) : Location {
         longitude: getDecimal(locationThing, SCHEMA_INRUPT.longitude)!,
         isShared: false,        //sacarlo del pod
         isOwnLocation: true,   // true porque si lo sacas del pod, si o si tiene que ser tuyo
-        owner:""                //sacarlo del pod
+        owner:"",                //sacarlo del pod
+        ownerName:ownerName //sacarlo del pod
     }
 }
 //TODO: añadir owner
