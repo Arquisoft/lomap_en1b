@@ -1,7 +1,7 @@
 [[section-architecture-constraints]]
 == Architecture Constraints
 === Technical constraints
-Use of SOLID pods:: The user’s information must be secured and stored in personal SOLID pods.
+Use of SOLID PODs:: The user’s information must be secured and stored in personal SOLID pods.
 Use of Git:: The version control of the project must be done using Git.
 
 === Organizational constraints
