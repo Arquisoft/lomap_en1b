@@ -9,7 +9,8 @@ import {MapContainer} from "react-leaflet";
 
 const postResolver = jest.fn()
 const handlers = [
-    rest.get('http://api.lomap.mariopdev.com/location', (req, res, ctx) => {
+    //rest.get('http://api.lomap.mariopdev.com/location', (req, res, ctx) => {
+    rest.get('http://localhost:8082/location', (req, res, ctx) => {
         return res(
             ctx.status(200),
             ctx.json([
@@ -20,7 +21,9 @@ const handlers = [
                     latitude: 43.36136284334129,
                     longitude: -5.851278233874803,
                     isShared: false,
-                    isOwnLocation: false
+                    owner: 'Yo',
+                    isOwnLocation: false,
+                    ownerName: 'OwnerName'
                 },
                 {
                     id: 'Test',
@@ -29,12 +32,15 @@ const handlers = [
                     latitude: 43.365143614762374,
                     longitude: -5.851593017578125,
                     isShared: false,
-                    isOwnLocation: false
+                    owner: 'Yo',
+                    isOwnLocation: false,
+                    ownerName: 'OwnerName'
                 }
             ]),
         )
     }),
-    rest.post('http://api.lomap.mariopdev.com/location', (req, res, ctx) => {
+    //rest.post('http://api.lomap.mariopdev.com/location', (req, res, ctx) => {
+    rest.post('http://localhost:8082/location', (req, res, ctx) => {
         return res(postResolver);
     })
 ]
@@ -67,6 +73,11 @@ describe("Map tests", () =>{
 
     test('Unchecking a filter, the markers of that category disappear', async () => {
         const { getByLabelText, container } = render(<MapElement />);
+
+        await waitFor(() => {
+            const markers = container.querySelectorAll('.leaflet-marker-icon');
+            expect(markers.length).toBe(2);
+        });
 
         const filterButton = screen.getByText("Filter Locations");
         fireEvent.click(filterButton);
