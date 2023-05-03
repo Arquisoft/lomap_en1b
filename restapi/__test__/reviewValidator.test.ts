@@ -8,6 +8,8 @@ test("valid review - only score", () => {
         comment:undefined,
         score: 4,
         encodedPhoto: undefined,
+        owner: "",
+        ownerName:""
     }
     expect(validateReview(review)).toBeTruthy();
 });
@@ -17,7 +19,9 @@ test("valid review - only image", () => {
         markerId: "markerID-1234654fgh",
         comment:undefined,
         score: undefined,
-        encodedPhoto: "encodedPhoto-5293084750924theiruh"
+        encodedPhoto: "encodedPhoto-5293084750924theiruh",
+        owner: "",
+        ownerName:""
     }
     expect(validateReview(review)).toBeTruthy();
 });
@@ -27,7 +31,9 @@ test("valid review - only comment", () => {
         markerId: "markerID-1234654fgh",
         comment:"comment",
         score: undefined,
-        encodedPhoto: undefined
+        encodedPhoto: undefined,
+        owner: "",
+        ownerName:""
     }
     expect(validateReview(review)).toBeTruthy();
 });
@@ -37,7 +43,9 @@ test("valid review - two elements", () => {
         markerId: "markerID-1234654fgh",
         comment:"comment",
         score: 3,
-        encodedPhoto: undefined
+        encodedPhoto: undefined,
+        owner: "",
+        ownerName:""
     }
     expect(validateReview(review)).toBeTruthy();
 });
@@ -47,7 +55,9 @@ test("valid review - all elements", () => {
         markerId: "markerID-1234654fgh",
         comment:"comment",
         score: 3,
-        encodedPhoto: "encodedPhoto-2093485iughsidg"
+        encodedPhoto: "encodedPhoto-2093485iughsidg",
+        owner: "",
+        ownerName:""
     }
     expect(validateReview(review)).toBeTruthy();
 });
@@ -57,7 +67,9 @@ test("invalid review - no elements", () => {
         markerId: "markerID-1234654fgh",
         comment:undefined,
         score: undefined,
-        encodedPhoto: undefined
+        encodedPhoto: undefined,
+        owner: "",
+        ownerName:""
     }
     expect(validateReview(review)).toBeFalsy();
 });
@@ -67,7 +79,9 @@ test("invalid review - no marker id", () => {
         markerId: "    ",
         comment:"comment",
         score: 3,
-        encodedPhoto: "encodedPhoto-2093485iughsidg"
+        encodedPhoto: "encodedPhoto-2093485iughsidg",
+        owner: "",
+        ownerName:""
     }
     expect(validateReview(review)).toBeFalsy();
 });
