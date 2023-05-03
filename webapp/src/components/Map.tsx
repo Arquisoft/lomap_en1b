@@ -63,7 +63,19 @@ export function LocationMarkerWithStore() {
         },
 
     })
-
+    const checkAndClose = () => {
+        if(name.trim().length > 0 && category.trim().length > 0) {
+            onClose();
+        } else {
+            toast({
+                title: 'Marker not added',
+                description: "Locations must have a non blank name, please try again.",
+                status: 'warning',
+                duration: 7000,
+                isClosable: true,
+            });
+        }
+    };
     //Use .map to iterate and generate the corresponding markers
     //This need to be optimiced because I think it generates again
     //all the markers on top of each other
@@ -77,6 +89,7 @@ export function LocationMarkerWithStore() {
                     <ModalBody>
                         <form id={"formMarker"} onSubmit = {
                             (event) => {
+                            if(name.trim().length > 0 && category.trim().length > 0) {
                                 event.preventDefault();
                                 const marker: MapMarker = {
                                     latitude: lati,
@@ -97,7 +110,7 @@ export function LocationMarkerWithStore() {
                                         title: 'Marker Added',
                                         description: "The location has been added successfully",
                                         status: 'success',
-                                        duration: 7000,
+                                        duration: 3000,
                                         isClosable: true,
                                     });
                                 };
@@ -105,7 +118,7 @@ export function LocationMarkerWithStore() {
                                 setName('')
                                 setCategory('bar')
                                 setShared(false)
-                            }}>
+                            }}}>
                             <Stack spacing={2} direction='column'>
                                 <FormControl isRequired={true}>
                                     <FormLabel>Name</FormLabel>
@@ -132,7 +145,7 @@ export function LocationMarkerWithStore() {
                         </form>
                     </ModalBody>
                     <ModalFooter>
-                        <Button form={"formMarker"} type={"submit"} onClick={onClose}>Place Marker</Button>
+                        <Button form={"formMarker"} type={"submit"} onClick={checkAndClose}>Place Marker</Button>
                     </ModalFooter>
                 </ModalContent>
             </ModalOverlay>
@@ -176,7 +189,8 @@ export default function MapElement(): JSX.Element {
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        noWrap = {true}
+                        noWrap={true}
+                        maxZoom={19}
                     />
                     {isLoading
                         ?
@@ -301,6 +315,7 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
 }
 
 export function PopupContent(marker: MapMarker){
+
     return(
             <Card size={'sm'}>
                 <CardBody>
