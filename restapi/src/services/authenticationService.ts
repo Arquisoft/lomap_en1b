@@ -14,7 +14,7 @@ export default {
 
         await session.login({
             // If login successfully, redirect here
-            redirectUrl: 'http://localhost:8082/auth/loginconfirm',
+            redirectUrl: 'http://api.lomap.mariopdev.com/auth/loginconfirm',
             // Set user SOLID identity provider
             oidcIssuer: req.query.providerURL as string,
             //oidcIssuer: "https://login.inrupt.com",
@@ -31,13 +31,13 @@ export default {
         const session = await getSessionFromStorage(req.session.solidSessionId!);
         // Complete login process using the data appended by the Solid Identity Provider
         try{
-            await session!.handleIncomingRedirect(`http://localhost:8082/auth${req.url}`);
+            await session!.handleIncomingRedirect(`http://api.lomap.mariopdev.com/auth${req.url}`);
         }catch (e){
             return res.sendStatus(500);
         }
         // Session now contains an authenticated Session instance.
         if (session!.info.isLoggedIn) {
-            return res.redirect("http://localhost:3000/login/confirm")
+            return res.redirect("http://lomap.mariopdev.com/login/confirm")
         }
         return res.sendStatus(401)
     },
@@ -46,7 +46,7 @@ export default {
     logout : async function(req:Request, res : Response){
         const session = await getSessionFromStorage(req.session.solidSessionId!);
         await session!.logout();
-        res.redirect("http://localhost:3000")
+        res.redirect("http://lomap.mariopdev.com")
     },
 
 }
