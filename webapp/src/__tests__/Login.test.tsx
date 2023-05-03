@@ -8,7 +8,7 @@ import {BrowserRouter} from "react-router-dom";
 import '@testing-library/jest-dom';
 
 export const handlers = [
-    rest.get('http://localhost:8082/auth/login', (req, res, ctx) => {
+    rest.get('http://api.lomap.mariopdev.com/auth/login', (req, res, ctx) => {
         return res(
             // Respond with a redirect (3xx) status code.
             ctx.status(301),
