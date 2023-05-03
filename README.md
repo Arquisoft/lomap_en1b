@@ -43,6 +43,10 @@ Some of the most notable features of this application are:
 For more technical and detailed information on the application and its architecture, you can find the corresponding documentation at the following link: https://arquisoft.github.io/lomap_en1b/
 
 
+## Deployed application
+In the following link you can find the deployed application: http://lomap.mariopdev.com
+
+
 ## Team members 👥
   
    - Mario Pérez Fernández (uo283720@uniovi.es)
