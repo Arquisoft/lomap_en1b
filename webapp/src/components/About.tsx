@@ -82,11 +82,6 @@ export default function AboutPage(): JSX.Element {
   );
 }
 
-const StatsText = ({ children }: { children: ReactNode }) => (
-  <Text as={'span'} fontWeight={700} color={'white'}>
-    {children}
-  </Text>
-);
 
 const stats = [
   {

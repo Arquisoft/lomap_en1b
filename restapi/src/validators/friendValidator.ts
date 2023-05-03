@@ -1,19 +1,16 @@
 import {Friend} from "../types";
 import {getStringNoLocale, getUrl, Thing} from "@inrupt/solid-client";
 import {FOAF, RDFS} from "@inrupt/vocab-common-rdf";
+import {isEmpty} from "./util/validationUtils";
 
 export function validateFriendThing(friendThing:Thing) : boolean {
-    return getStringNoLocale(friendThing, FOAF.nick) !== undefined
-        && getStringNoLocale(friendThing, FOAF.nick) !== null
-        && getUrl(friendThing, RDFS.seeAlso) !== undefined
-        && getUrl(friendThing, RDFS.seeAlso) !== null
+    return !isEmpty(getStringNoLocale(friendThing, FOAF.nick))
+        && !isEmpty(getUrl(friendThing, RDFS.seeAlso))
 }
 
 export function validateFriend(friend:Friend) : boolean{
     return friend !==undefined
         && friend !== null
-        && friend.nickName !== undefined
-        && friend.nickName !== null
-        && friend.webId !== undefined
-        && friend.webId !== null
+        && !isEmpty(friend.nickName)
+        && !isEmpty(friend.webId)
 }

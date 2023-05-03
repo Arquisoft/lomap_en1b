@@ -11,7 +11,7 @@ import {Friend} from "../../types";
  */
 export const locationApi = createApi({
     reducerPath: 'location',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8082/' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://api.lomap.mariopdev.com/' }),
     tagTypes: ['Locations'],
     endpoints: (builder) => ({
         // MyLocation: what is returned

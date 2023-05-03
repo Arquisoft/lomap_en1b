@@ -28,8 +28,6 @@ export default {
 
         const locationThing = locationToThing(location)
         locationsDataset = setThing(locationsDataset, locationThing);
-
-        //Extra review information for DB
         location.id = locationThing.url.split("/").pop()!
         const profile = await getWebIdDataset(session.info.webId!);
         const profileThing = getThing(profile, session.info.webId!)!;

@@ -31,12 +31,11 @@ import "../css/react_leaflet.css";
 import 'leaflet/dist/leaflet.css';
 import {Icon, LatLngExpression} from 'leaflet';
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useAddLocationMutation, useGetLocationsQuery} from "../app/services/Location";
 import type {MapMarker} from '../types';
 import {LocationType} from "../locationType";
 import DetailsDrawer from './mapComponents/LocationReviewsView'
-
 
 export function LocationMarkerWithStore() {
     const dispatch = useDispatch();
@@ -69,7 +68,6 @@ export function LocationMarkerWithStore() {
     //This need to be optimiced because I think it generates again
     //all the markers on top of each other
     return  (
-        <>
         <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef} isCentered={true} size={'lg'}>
             <ModalOverlay>
                 <ModalContent>
@@ -77,7 +75,7 @@ export function LocationMarkerWithStore() {
                         <ModalCloseButton/>
                     </ModalHeader>
                     <ModalBody>
-                        <form id={"formMarker"} onSubmit={
+                        <form id={"formMarker"} onSubmit = {
                             (event) => {
                                 event.preventDefault();
                                 const marker: MapMarker = {
@@ -104,8 +102,6 @@ export function LocationMarkerWithStore() {
                                     });
                                 };
                                 handleSubmit(event)
-
-                                //set default values
                                 setName('')
                                 setCategory('bar')
                                 setShared(false)
@@ -113,13 +109,12 @@ export function LocationMarkerWithStore() {
                             <Stack spacing={2} direction='column'>
                                 <FormControl isRequired={true}>
                                     <FormLabel>Name</FormLabel>
-                                    <Input value={name} type={"text"} ref={initialRef}
-                                           onChange={(e) => setName(e.currentTarget.value)}/>
+                                    <Input data-testid="form-add-location-input" value={name} type={"text"} ref={initialRef}
+                                           onChange={(e)=>setName(e.currentTarget.value)}/>
                                 </FormControl>
                                 <FormControl isRequired={true}>
                                     <FormLabel>Category</FormLabel>
-                                    <Select value={category}
-                                            onChange={(e) => setCategory(e.currentTarget.value)}>
+                                    <Select value={category} onChange={(e)=>setCategory(e.currentTarget.value)}>
                                         <option>bar</option>
                                         <option>restaurant</option>
                                         <option>shop</option>
@@ -129,7 +124,7 @@ export function LocationMarkerWithStore() {
                                 </FormControl>
                                 <FormControl isRequired={false}>
                                     <Checkbox isChecked={isShared}
-                                              onChange={(e) => setShared(e.target.checked)}>
+                                        onChange={(e) => setShared(e.target.checked)}>
                                         Public
                                     </Checkbox>
                                 </FormControl>
@@ -142,7 +137,6 @@ export function LocationMarkerWithStore() {
                 </ModalContent>
             </ModalOverlay>
         </Modal>
-        </>
     );
 }
 
@@ -164,7 +158,7 @@ export default function MapElement(): JSX.Element {
         <Flex
             minH={'100vh'}
             align={'center'}
-            justify={'center'}>
+            justify={'center'} data-testid="map-element">
 
             <Stack>
                 <Flex>
@@ -184,6 +178,7 @@ export default function MapElement(): JSX.Element {
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        noWrap = {true}
                     />
                     {isLoading
                         ?
@@ -270,7 +265,7 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
     && props.showMonuments() && props.showSharedLocations() && props.showSights());
 
     return (
-        <>
+        <div role={"dialog"}>
             <Button colorScheme='blue' zIndex={'1300'} float={'right'} width={'10rem'} onClick={onOpen}>Filter
                 Locations</Button>
 
@@ -307,16 +302,11 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
                     </ModalContent>
                 </ModalOverlay>
             </Modal>
-        </>
+        </div>
     )
 }
 
 export function PopupContent(marker: MapMarker){
-
-    const deleteAction = ()=> {
-
-    }
-
     return(
             <Card size={'sm'}>
                 <CardBody>
@@ -358,9 +348,6 @@ export function PopupContent(marker: MapMarker){
                                        owner={marker.owner}
                                        ownerName={marker.ownerName}
                                        isOwnLocation={marker.isOwnLocation}/>
-                        {marker.isOwnLocation?<Button colorScheme={"red"} onClick={deleteAction}>
-                            Delete marker
-                        </Button> : <></> }
                     </ButtonGroup>
                 </CardFooter>
             </Card>
