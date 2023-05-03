@@ -150,7 +150,6 @@ export default function MapElement(): JSX.Element {
     const [showShops, setShowShops] = useState(true)
     const [showSights, setShowSights] = useState(true)
     const [showMonuments, setShowMonuments] = useState(true)
-    const [showSharedLocations, setShowSharedLocations] = useState(true)
     const [showMyLocations, setShowMyLocations] = useState(true)
     const [showFriendLocations, setShowFriendLocations] = useState(true)
 
@@ -168,7 +167,6 @@ export default function MapElement(): JSX.Element {
                         showShops={() => showShops} setShowShops={setShowShops}
                         showSights={() => showSights} setShowSights={setShowSights}
                         showMonuments={() => showMonuments} setShowMonuments={setShowMonuments}
-                        showSharedLocations={() => showSharedLocations} setShowSharedLocations={setShowSharedLocations}
                         showMyLocations={() => showMyLocations} setShowMyLocations={setShowMyLocations}
                         showFriendLocations={() => showFriendLocations} setShowFriendLocations={setShowFriendLocations}
                     />
@@ -189,7 +187,6 @@ export default function MapElement(): JSX.Element {
                         </Alert>) :
                     <>
                     ({locations?.filter( loc => {
-                        if(loc.isShared && showSharedLocations == false) return false
                         if(loc.isOwnLocation && showMyLocations == false) return false
                         if(loc.isOwnLocation == false && showFriendLocations == false) return false
 
@@ -237,8 +234,6 @@ interface FilterModalProps {
     setShowSights : React.Dispatch<React.SetStateAction<boolean>>,
     showMonuments : () => boolean,
     setShowMonuments  : React.Dispatch<React.SetStateAction<boolean>>,
-    showSharedLocations  : () => boolean,
-    setShowSharedLocations : React.Dispatch<React.SetStateAction<boolean>>,
     showMyLocations  : () => boolean,
     setShowMyLocations : React.Dispatch<React.SetStateAction<boolean>>,
     showFriendLocations  : () => boolean,
@@ -255,14 +250,13 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
             { id: "shops", name: "Shops", value: props.showShops, onChange: props.setShowShops },
             { id: "sights", name: "Sights", value: props.showSights, onChange: props.setShowSights },
             { id: "monuments", name: "Monuments", value: props.showMonuments, onChange: props.setShowMonuments },
-            { id: "sharedLocations", name: "Public Locations", value: props.showSharedLocations, onChange: props.setShowSharedLocations },
             { id: "myLocations", name: "My Locations", value: props.showMyLocations, onChange: props.setShowMyLocations },
             { id: "friendLocations", name: "Friend Locations", value: props.showFriendLocations, onChange: props.setShowFriendLocations }
         ]
     };
 
     const propsChecked = (props.showBars() && props.showRestaurants() && props.showShops()
-    && props.showMonuments() && props.showSharedLocations() && props.showSights());
+    && props.showMonuments() && props.showSights());
 
     return (
         <div role={"dialog"}>
