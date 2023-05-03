@@ -1,6 +1,6 @@
 import {
-    getPodUrlAll,
-    getThingAll,
+    getPodUrlAll, getStringNoLocale, getThing,
+    getThingAll, getWebIdDataset,
     saveSolidDatasetAt,
     setThing
 } from "@inrupt/solid-client";
@@ -11,11 +11,13 @@ import {validateLocation, validateLocationThing} from "../validators/locationVal
 import {getOrCreateDataset} from "./util/podAccessUtil";
 import {InvalidRequestBodyError, PodProviderError} from "./util/customErrors";
 import MongoService from "./MongoService"
+import {FOAF} from "@inrupt/vocab-common-rdf";
 
 export default {
 
     saveLocation: async function (location:Location, session:Session){
         if(!validateLocation(location)) throw new InvalidRequestBodyError("Not valid location.")
+        location.owner = session.info.webId!
 
         let locationsURL = await getLocationsURL(session.info.webId);
         if(locationsURL == undefined) throw new PodProviderError("Unable to get the locations dataset URL.")
@@ -27,13 +29,19 @@ export default {
         const locationThing = locationToThing(location)
         locationsDataset = setThing(locationsDataset, locationThing);
         location.id = locationThing.url.split("/").pop()!
+        const profile = await getWebIdDataset(session.info.webId!);
+        const profileThing = getThing(profile, session.info.webId!)!;
+        let name = getStringNoLocale(profileThing, FOAF.name)!
+        location.ownerName = (name == null || name == 'undefined' || name.trim().length <= 0)
+            ? "Pod name not defined"
+            : name
 
         await Promise.all([
             saveSolidDatasetAt(
                 locationsURL,
                 locationsDataset,
                 {fetch: session.fetch}),
-            MongoService.addLocation(location, session.info.webId!)
+            MongoService.addLocation(location)
         ])
 
         return locationThing.url
@@ -47,14 +55,20 @@ export default {
         if(locationsDataset == undefined) throw new PodProviderError("Unable to get the locations dataset.")
         locationsDataset = locationsDataset!
 
-        let locations = getThingAll(locationsDataset)
-                .filter(locationThing=>validateLocationThing(locationThing))
-                .map(locationThing=>thingToLocation(locationThing))
-                .concat(await MongoService.getLocationsSharedWithUser(session.info.webId!))
+        // owner will always be the loged in user for locations in the pod, we get it here
+        // to reduce the number of calls
+        const profile = await getWebIdDataset(session.info.webId!);
+        const profileThing = getThing(profile, session.info.webId!)!;
+        const name = getStringNoLocale(profileThing, FOAF.name)!
 
-        console.log("Shared locations(LocationsService.ts)")
+        let locations = getThingAll(locationsDataset)
+            .filter(locationThing => validateLocationThing(locationThing))
+            .map(locationThing => thingToLocation(locationThing, name))
+            .concat(await MongoService.getLocationsSharedWithUser(session.info.webId!))
+
+        console.log("Locations(LocationsService.ts)")
         console.log(locations)
-        console.log("Shared locations")
+        console.log("Locations")
         return locations
     },
 

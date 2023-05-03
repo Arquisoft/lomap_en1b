@@ -2,7 +2,7 @@ import {LocationModel} from '../repo/models/Location'
 import {Location} from '../types';
 
 export const SharedLocationRepository = {
-    async addSharedLocation(location: Location, ownerId: String) {
+    async addSharedLocation(location: Location) {
         const newLocation = new LocationModel({
             id: location.id,
             name: location.name,
@@ -10,10 +10,9 @@ export const SharedLocationRepository = {
             latitude: location.latitude,
             longitude: location.longitude,
             isShared: true,
-            isOwnLocation: location.isOwnLocation,
-            owner : ownerId
-
-            //OJO para ver una review tienes que ser amigo de la persona que tiene la localizacvion
+            isOwnLocation: false,
+            owner : location.owner,
+            ownerName: location.ownerName
         })
         newLocation.save()
     },
@@ -38,6 +37,8 @@ export const SharedLocationRepository = {
                 longitude: location.longitude,
                 isShared: true,
                 isOwnLocation: false,
+                owner : location.owner,
+                ownerName: location.ownerName
             }))
 
         return sharedLocations

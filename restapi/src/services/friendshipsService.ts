@@ -4,16 +4,11 @@ import {
     saveSolidDatasetAt,
     getPodUrlAll,
     getThingAll,
-    getThing,
-    Thing,
-    getUrlAll,
-    getWebIdDataset
 } from "@inrupt/solid-client";
 import {Session} from "@inrupt/solid-client-authn-node";
-import {friendToThing, thingToFriend, urlToFriend} from "../builders/friendBuilder";
+import {friendToThing, thingToFriend} from "../builders/friendBuilder";
 import {validateFriend, validateFriendThing} from "../validators/friendValidator";
 import {Friend} from "../types";
-import {FOAF} from "@inrupt/vocab-common-rdf";
 import {getOrCreateDataset} from "./util/podAccessUtil";
 import {InvalidRequestBodyError, PodProviderError} from "./util/customErrors";
 import MongoService from "./MongoService"
@@ -30,9 +25,11 @@ export default {
         friendsDataset = friendsDataset!
 
         //Get friends from profile
+        /*
         const profile = await getWebIdDataset(decodeURIComponent(session.info.webId!));
         const profileThing = getThing(profile, decodeURIComponent(session.info.webId!));
         const profileFriends = getUrlAll(profileThing as Thing, FOAF.knows);
+        */
 
         //Get friends from extended profile
         //TODO
@@ -41,8 +38,6 @@ export default {
             getThingAll(friendsDataset)
                 .filter(friendThing=>validateFriendThing(friendThing))
                 .map(async friendThing=>await thingToFriend(friendThing, true))
-                .concat(
-                    profileFriends.map(async webId =>await urlToFriend(webId, false)))
             )
     },
 

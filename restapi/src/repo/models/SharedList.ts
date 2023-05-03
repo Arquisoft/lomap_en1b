@@ -35,8 +35,10 @@ SharedListSchema.statics.addToList = function(userWebId : String , friendWebId :
                 })
                 newList.save()
             }else{
-                result.sharedList.push(friendWebId)
-                result.save()
+                if(result.sharedList.includes(userWebId) == false){
+                    result.sharedList.push(friendWebId)
+                    result.save()
+                }
             }
         })
         //@ts-ignore

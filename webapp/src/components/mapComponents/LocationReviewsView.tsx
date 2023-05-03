@@ -9,15 +9,32 @@ import {
     DrawerHeader,
     DrawerOverlay,
     FormControl,
-    FormLabel, Heading, Input,
+    FormLabel,
+    Heading,
+    Input,
     Modal,
     ModalBody,
     ModalCloseButton,
-    ModalContent, ModalFooter,
+    ModalContent,
+    ModalFooter,
     ModalHeader,
     ModalOverlay,
-    Stack, Text, Textarea, Image,
-    useDisclosure, Flex, DrawerFooter, Spacer, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverHeader, PopoverBody, PopoverCloseButton
+    Stack,
+    Text,
+    Textarea,
+    Image,
+    useDisclosure,
+    Flex,
+    DrawerFooter,
+    Spacer,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    PopoverArrow,
+    PopoverHeader,
+    PopoverBody,
+    PopoverCloseButton,
+    Spinner, createStandaloneToast
 } from "@chakra-ui/react";
 import React, {ChangeEvent, useState} from "react";
 // @ts-ignore
@@ -27,7 +44,7 @@ import {useAddReviewMutation, useGetReviewsQuery} from "../../app/services/Revie
 export default function DetailsDrawer(marker: MapMarker) {
     console.log("[MARKER_ID: " + marker.id + "]");
 
-    const {data: reviews, error, isLoading} = useGetReviewsQuery(marker.id);
+    const {data: reviews, error, isLoading, isFetching} = useGetReviewsQuery(marker.id);
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     return (
@@ -51,17 +68,24 @@ export default function DetailsDrawer(marker: MapMarker) {
                     <DrawerBody>
                         <Stack spacing='24px'>
                             <Box>
-                                <h1>Reviews</h1>
-                                <Stack spacing={'24px'} direction='column'>
-                                    {reviews?.map( (review) => (
+
+                                {isLoading ||isFetching
+                                    ? (<h2>Loading reviews <Spinner></Spinner> </h2>) :
+                                    (<Stack spacing={'24px'} direction='column'>
+                                        ({reviews?.map((review) => (
                                         <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden'>
-                                            {review.encodedPhoto!="" ?<Image src={`data:image/jpg;base64,${review.encodedPhoto}`} loading={"lazy"} fallbackSrc='https://via.placeholder.com/150'/> : <></> }
-                                            {review.score >0 ? <ReactStars count={5} value={review.score} isHalf={true} size={28} activeColor="#ffd700" edit={false}/> : <></> }
+                                            <Box borderWidth='0.5px' fontSize={15} fontWeight={"semibold"}>{review.ownerName}</Box>
+                                            {review.encodedPhoto!="" ?<Box borderWidth='0.5px' >
+                                                <Image src={`data:image/jpg;base64,${review.encodedPhoto}`} loading={"lazy"}
+                                                    fallbackSrc='https://via.placeholder.com/150'/></Box> : <></> }
+                                            {review.score >0 ? <Box borderWidth='0.5px' ><ReactStars count={5}
+                                                value={review.score} isHalf={true} size={28} activeColor="#ffd700" edit={false}/></Box> : <></> }
                                             {review.comment.length != 0 ?<Box borderWidth='0.5px' >{review.comment}</Box> : <></> }
 
                                         </Box>
                                         ))}
-                                </Stack>
+                                    </Stack>)
+                                }
                             </Box>
                         </Stack>
                     </DrawerBody>
@@ -71,7 +95,10 @@ export default function DetailsDrawer(marker: MapMarker) {
                                          id={marker.id}
                                          latitude={marker.latitude}
                                          longitude={marker.longitude}
-                                         isShared={marker.isShared}/>
+                                         isShared={marker.isShared}
+                                         owner={marker.owner}
+                                         ownerName={marker.ownerName}
+                                         isOwnLocation={marker.isOwnLocation}/>
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
@@ -95,6 +122,10 @@ export function AddCommentForm(marker: MapMarker) {
         }
     };
 
+    var [reviewAdded, setReviewAdded] = React.useState(false)
+    const { ToastContainer, toast } = createStandaloneToast()
+    const idToast = 'addedRevSuccess-Toast'
+
     const resetAndOpen = () => {
         onOpen()
         setTextComment("");
@@ -109,8 +140,7 @@ export function AddCommentForm(marker: MapMarker) {
             <Button colorScheme='teal' onClick={resetAndOpen}>
                 Add a Review
             </Button>
-
-            <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef} isCentered={true} size={'lg'}>
+                <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef} isCentered={true} size={'lg'}>
                 <ModalOverlay>
                     <ModalContent>
                         <ModalHeader fontSize={24}>
@@ -123,7 +153,16 @@ export function AddCommentForm(marker: MapMarker) {
                             <form id={"formMarker"} onSubmit = {
                                 (event) => {
                                     event.preventDefault();
-                                    const review : Review = {markerId:marker.id, comment:textComment, photo: file ,score:rating, encodedPhoto: ""};
+                                    const review : Review =
+                                        {
+                                            markerId:marker.id,
+                                            comment:textComment,
+                                            photo: file ,
+                                            score:rating,
+                                            encodedPhoto: "",
+                                            owner:"",
+                                            ownerName:""
+                                        };
 
                                     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
                                         event.preventDefault();
@@ -132,6 +171,13 @@ export function AddCommentForm(marker: MapMarker) {
                                                 .then(result => {
                                                     review.encodedPhoto = result;
                                                     addReviewMutation(review);
+                                                    toast({
+                                                        title: 'Review Added',
+                                                        description: "Your review has been added successfully",
+                                                        status: 'success',
+                                                        duration: 7000,
+                                                        isClosable: true,
+                                                    });
                                                 })
                                                 .catch(err => {
                                                     console.log(err);
@@ -228,7 +274,6 @@ export function AddCommentForm(marker: MapMarker) {
         </>
     );
 }
-
 export function InformationPopup(){
     return(
         <>
@@ -240,7 +285,7 @@ export function InformationPopup(){
                     <PopoverArrow />
                     <PopoverCloseButton />
                     <PopoverHeader>Adding Reviews</PopoverHeader>
-                    <PopoverBody>While adding a review you can upload an image, add a score or/and add
+                    <PopoverBody fontSize={'17'}>While adding a review you can upload an image, add a score or/and add
                     a text comment without or adding any of the other two but you must submit at least one.</PopoverBody>
                 </PopoverContent>
             </Popover>

@@ -9,7 +9,8 @@ const LocationSchema = new Schema({
     longitude: Number,
     isShared: Boolean,
     isOwnLocation: Boolean,
-    owner : String
+    owner : String,
+    ownerName: String
 })
 
 LocationSchema.statics.getSharedLocationsFromUsers = function(users : [string]): Promise<string[]> {
@@ -33,7 +34,7 @@ LocationSchema.statics.getSharedLocationsFromUsers = function(users : [string]):
 };
 
 LocationSchema.methods.removeSharedLocation = function(locationId: string) {
-    this.deleteOne({ id: locationId })
+    this.deleteOne({ id: locationId }).save()
 }
 
 export const LocationModel = model('Location', LocationSchema)

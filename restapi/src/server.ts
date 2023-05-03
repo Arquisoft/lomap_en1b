@@ -5,6 +5,7 @@ import locationsRouter from "./routes/locationsRouter";
 import authenticationRouter from "./routes/authenticationRouter";
 import friendshipsRouter from "./routes/friendshipsRouter";
 import reviewsRouter from "./routes/reviewsRouter"
+import userDataRouter from "./routes/userDataRouter"
 const mongoose = require('mongoose'); //not an import because if we use import we get typing problems
 
 //dotenv.config()
@@ -41,6 +42,7 @@ const app = express()
     .use('/location', locationsRouter)
     .use('/friendship', friendshipsRouter)
     .use('/review', reviewsRouter)
+    .use('/userData', userDataRouter)
     .use(function (_err:Errback, _req:Request, res:Response, _next:NextFunction){
         return res.status(500).send("Internal server error.")
     })

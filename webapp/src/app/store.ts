@@ -2,6 +2,8 @@ import {configureStore, createSlice, PreloadedState, combineReducers} from '@red
 import {locationApi} from "./services/Location";
 import {friendApi} from "./services/Friend";
 import {reviewApi} from "./services/Reviews";
+import {userApi} from "./services/User";
+import * as querystring from "querystring";
 
 export const authSlice = createSlice({
     name: 'auth',
@@ -16,6 +18,7 @@ export const isLoggedInSelector = (state: RootState) => state.auth.isLoggedIn
 
 
 const rootReducer = combineReducers({
+    [userApi.reducerPath]:userApi.reducer,
     [locationApi.reducerPath]: locationApi.reducer,
     [friendApi.reducerPath]: friendApi.reducer,
     [reviewApi.reducerPath]: reviewApi.reducer,
@@ -28,6 +31,7 @@ export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
         middleware: (getDefaultMiddleware) =>
             getDefaultMiddleware().concat(
                 locationApi.middleware,
+                userApi.middleware,
                 friendApi.middleware,
                 reviewApi.middleware
             ),
