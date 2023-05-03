@@ -7,7 +7,7 @@
     "dev": "ts-node-dev src/server.ts",
     "start": "node build/src/server.js",
     "tsc": "tsc",
-    "test": "jest"
+    "test": "jest --coverage --watchAll=false"
   },
   "keywords": [],
   "author": "",
