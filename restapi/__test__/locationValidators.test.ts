@@ -14,8 +14,9 @@ test("valid location - 0 coordinates", () => {
         longitude:0,
         isShared: false,
         isOwnLocation: true,
-        owner: "",
+        owner:"",
         ownerName:""
+
     }
     expect(validateLocation(location))
 });
@@ -29,8 +30,9 @@ test("valid location - max positive coordinates", () => {
         longitude:180,
         isShared: false,
         isOwnLocation: true,
-        owner: "",
+        owner:"",
         ownerName:""
+
     }
     expect(validateLocation(location))
 });
@@ -44,7 +46,7 @@ test("valid location - max negative coordinates", () => {
         longitude:-180,
         isShared: false,
         isOwnLocation: true,
-        owner: "",
+        owner:"",
         ownerName:""
     }
     expect(validateLocation(location))
@@ -59,7 +61,7 @@ test("invalid location - max negative coordinates", () => {
         longitude:-180.001,
         isShared: false,
         isOwnLocation: true,
-        owner: "",
+        owner:"",
         ownerName:""
     }
     expect(!validateLocation(location))
@@ -74,7 +76,7 @@ test("invalid location - max positive coordinates", () => {
         longitude:-180.001,
         isShared: false,
         isOwnLocation: true,
-        owner: "",
+        owner:"",
         ownerName:""
     }
     expect(!validateLocation(location))
@@ -89,7 +91,7 @@ test("invalid location - empty name", ()=> {
         longitude:-180.001,
         isShared: false,
         isOwnLocation: true,
-        owner: "",
+        owner:"",
         ownerName:""
     }
     expect(!validateLocation(location))

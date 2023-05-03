@@ -61,6 +61,7 @@ export default {
             ? "Pod name not defined"
             : name
 
+        MongoService.createReview(review);
 
         const reviewThing = reviewToThing(review, session.info.webId!, imageURL);
         reviewsDataset = setThing(reviewsDataset, reviewThing);
@@ -69,8 +70,7 @@ export default {
                 reviewsURL,
                 reviewsDataset,
                 {fetch: session.fetch}
-            ),
-            MongoService.createReview(review)
+            )
         ])
         return reviewThing.url;
     },

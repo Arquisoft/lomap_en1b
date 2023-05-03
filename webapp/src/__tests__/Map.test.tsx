@@ -20,7 +20,9 @@ const handlers = [
                     latitude: 43.36136284334129,
                     longitude: -5.851278233874803,
                     isShared: false,
-                    isOwnLocation: false
+                    owner: 'Yo',
+                    isOwnLocation: false,
+                    ownerName: 'OwnerName'
                 },
                 {
                     id: 'Test',
@@ -29,7 +31,9 @@ const handlers = [
                     latitude: 43.365143614762374,
                     longitude: -5.851593017578125,
                     isShared: false,
-                    isOwnLocation: false
+                    owner: 'Yo',
+                    isOwnLocation: false,
+                    ownerName: 'OwnerName'
                 }
             ]),
         )
@@ -67,6 +71,11 @@ describe("Map tests", () =>{
 
     test('Unchecking a filter, the markers of that category disappear', async () => {
         const { getByLabelText, container } = render(<MapElement />);
+
+        await waitFor(() => {
+            const markers = container.querySelectorAll('.leaflet-marker-icon');
+            expect(markers.length).toBe(2);
+        });
 
         const filterButton = screen.getByText("Filter Locations");
         fireEvent.click(filterButton);

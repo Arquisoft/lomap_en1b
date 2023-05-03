@@ -8,8 +8,8 @@ test("valid review - only score", () => {
         comment:undefined,
         score: 4,
         encodedPhoto: undefined,
-        owner: "",
-        ownerName:""
+        owner:"",
+        ownerName: ""
     }
     expect(validateReview(review)).toBeTruthy();
 });
@@ -20,8 +20,8 @@ test("valid review - only image", () => {
         comment:undefined,
         score: undefined,
         encodedPhoto: "encodedPhoto-5293084750924theiruh",
-        owner: "",
-        ownerName:""
+        owner:"",
+        ownerName: ""
     }
     expect(validateReview(review)).toBeTruthy();
 });
@@ -32,8 +32,8 @@ test("valid review - only comment", () => {
         comment:"comment",
         score: undefined,
         encodedPhoto: undefined,
-        owner: "",
-        ownerName:""
+        owner:"",
+        ownerName: ""
     }
     expect(validateReview(review)).toBeTruthy();
 });
@@ -44,8 +44,8 @@ test("valid review - two elements", () => {
         comment:"comment",
         score: 3,
         encodedPhoto: undefined,
-        owner: "",
-        ownerName:""
+        owner:"",
+        ownerName: ""
     }
     expect(validateReview(review)).toBeTruthy();
 });
@@ -56,8 +56,8 @@ test("valid review - all elements", () => {
         comment:"comment",
         score: 3,
         encodedPhoto: "encodedPhoto-2093485iughsidg",
-        owner: "",
-        ownerName:""
+        owner:"",
+        ownerName: ""
     }
     expect(validateReview(review)).toBeTruthy();
 });
@@ -68,8 +68,8 @@ test("invalid review - no elements", () => {
         comment:undefined,
         score: undefined,
         encodedPhoto: undefined,
-        owner: "",
-        ownerName:""
+        owner:"",
+        ownerName: ""
     }
     expect(validateReview(review)).toBeFalsy();
 });
@@ -80,8 +80,8 @@ test("invalid review - no marker id", () => {
         comment:"comment",
         score: 3,
         encodedPhoto: "encodedPhoto-2093485iughsidg",
-        owner: "",
-        ownerName:""
+        owner:"",
+        ownerName: ""
     }
     expect(validateReview(review)).toBeFalsy();
 });
