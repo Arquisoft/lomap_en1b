@@ -45,6 +45,7 @@ For more technical and detailed information on the application and its architect
 
 ## Deployed application
 In the following link you can find the deployed application: http://lomap.mariopdev.com
+Please, note that in order to deploy the application locally, you should be in the develop branch, not in the master branch.
 
 
 ## Team members 👥
