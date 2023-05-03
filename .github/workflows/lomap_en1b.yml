@@ -38,6 +38,7 @@ jobs:
         with:
           node-version: 16
       - run: npm ci
+      - run: npm run tsc
       - run: npm run test
       - name: Analyze with SonarCloud
         uses: sonarsource/sonarcloud-github-action@master
