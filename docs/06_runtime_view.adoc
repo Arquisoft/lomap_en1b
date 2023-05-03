@@ -4,9 +4,9 @@
 === User Login
 * The user wants to log in with their POD to access the webapp.
 ** The user will be able to fill a form that will redirect him to its POD's provider in order to give the application access to its POD's information or deny it.
-** The structure of the login is not as simple as a typical login flow, since it is not managed by our application but by the users Solid POD provider. The information flow works as follows:
+** The structure of the login is not as simple as a typical login flow, since it is not managed by our application but by the users Solid POD provider. The information flow works as follows.
 
-image:6-RuntimeView/Login flow.drawio.png
+image:6-RuntimeView/Login flow.drawio.png[Flow of information when a user logs in]
 
 
 === Adding a Location
