@@ -918,7 +918,7 @@ The credentials of the users are stored in the PODs and the maps service provide
 <div class="sect2">
 <h3 id="_technology_decisions">4.1. Technology decisions</h3>
 <div class="paragraph">
-<p>This are the technologies that we have decided to use, some of them may vary in future iterations of the poyect:</p>
+<p>These are the technologies that we have decided to use, some of them may vary in future iterations of the project:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -998,6 +998,13 @@ The credentials of the users are stored in the PODs and the maps service provide
 <div class="paragraph">
 <p><span class="image"><img src="./images/4-SolutionStrategy/Pod%20Schema.drawio.png" alt="Pod schema"></span></p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>Friendships will work without a friendships invite system. When a user adds a friend, it is allowing that friend to see his/her shared resources, and asking the application to fetch the other user&#8217;s resources. If the other user also adds the first one as a friend, he/she will be able to see the resources, but they will not be retrieved if one of them dos not.</p>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_organizational_decisions">4.3. Organizational decisions</h3>
@@ -1050,7 +1057,7 @@ The credentials of the users are stored in the PODs and the maps service provide
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Accessibility</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">All users, regardless of their physical and mental capabilities should be able to use the application.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">We are going to use external accesibility tools.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">We are going to use external accessibility tools.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1151,7 +1158,7 @@ On login, it redirects the user to its POD provider to handle the login process,
 <p>The user will be able to fill a form that will redirect him to its POD&#8217;s provider in order to give the application access to its POD&#8217;s information or deny it.</p>
 </li>
 <li>
-<p>The structure of the login is not as simple as a typical login flow, since it is not managed by our application but by the users Solid POD provider. The information flow works as follows:</p>
+<p>The structure of the login is not as simple as a typical login flow, since it is not managed by our application but by the users Solid POD provider. The information flow works as follows.</p>
 </li>
 </ul>
 </div>
@@ -1159,7 +1166,7 @@ On login, it redirects the user to its POD provider to handle the login process,
 </ul>
 </div>
 <div class="paragraph">
-<p>image:6-RuntimeView/Login flow.drawio.png</p>
+<p><span class="image"><img src="./images/6-RuntimeView/Login%20flow.drawio.png" alt="Flow of information when a user logs in"></span></p>
 </div>
 </div>
 <div class="sect2">
@@ -1716,7 +1723,7 @@ on the PODs.</p>
 <dl>
 <dt class="hdlist1">Reason</dt>
 <dd>
-<p>the weight of the package was optimal and it is intuitive.</p>
+<p>The weight of the package was optimal and it is intuitive.</p>
 </dd>
 <dt class="hdlist1">Pros</dt>
 <dd>
@@ -1743,6 +1750,38 @@ on the PODs.</p>
 </li>
 <li>
 <p>We have not found many examples of using the component templates it offers.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<div class="title">Inrupt solid libraries</div>
+<dl>
+<dt class="hdlist1">Reason</dt>
+<dd>
+<p>Managing the pods with ease</p>
+</dd>
+<dt class="hdlist1">Pros</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Greatly reduces the necessary code to do basic operation with tho user&#8217;s pod.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Cons</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>We have an extra dependency that could be avoided.</p>
+</li>
+<li>
+<p>Some basic functionality that we need is not implemented in the library.</p>
 </li>
 </ul>
 </div>
