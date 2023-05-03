@@ -4,7 +4,7 @@ import {MapMarker} from "../../types";
 
 export const friendApi = createApi({
     reducerPath: 'friendship',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8082/' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://api.lomap.mariopdev.com/' }),
     tagTypes: ['Friends'],
     endpoints: (builder ) => ({
 

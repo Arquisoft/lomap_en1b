@@ -9,8 +9,7 @@ import {MapContainer} from "react-leaflet";
 
 const postResolver = jest.fn()
 const handlers = [
-    //rest.get('http://api.lomap.mariopdev.com/location', (req, res, ctx) => {
-    rest.get('http://localhost:8082/location', (req, res, ctx) => {
+    rest.get('http://api.lomap.mariopdev.com/location', (req, res, ctx) => {
         return res(
             ctx.status(200),
             ctx.json([
@@ -39,8 +38,7 @@ const handlers = [
             ]),
         )
     }),
-    //rest.post('http://api.lomap.mariopdev.com/location', (req, res, ctx) => {
-    rest.post('http://localhost:8082/location', (req, res, ctx) => {
+    rest.post('http://api.lomap.mariopdev.com/location', (req, res, ctx) => {
         return res(postResolver);
     })
 ]
