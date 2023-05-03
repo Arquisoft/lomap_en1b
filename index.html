@@ -466,7 +466,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_technology_decisions">4.1. Technology decisions</a></li>
 <li><a href="#_design_decisions">4.2. Design decisions:</a></li>
-<li><a href="#_quality_decisions">4.3. Quality decisions</a></li>
+<li><a href="#_organizational_decisions">4.3. Organizational decisions</a></li>
+<li><a href="#_quality_decisions">4.4. Quality decisions</a></li>
 </ul>
 </li>
 <li><a href="#section-building-block-view">5. Building Block View</a>
@@ -478,7 +479,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_user_login">6.1. User Login</a></li>
 <li><a href="#_adding_a_location">6.2. Adding a Location</a></li>
-<li><a href="#_reviewing_information_about_a_place_not_implemented_yet">6.3. Reviewing information about a place (Not implemented yet)</a></li>
+<li><a href="#_reviewing_information_about_a_place">6.3. Reviewing information about a place</a></li>
 <li><a href="#_changing_privacy_settings_not_implemented_yet">6.4. Changing privacy settings (Not implemented yet)</a></li>
 <li><a href="#_adding_a_new_friend">6.5. Adding a new friend</a></li>
 <li><a href="#_deleting_a_friend_not_implemented_yet">6.6. Deleting a friend (Not implemented yet)</a></li>
@@ -914,43 +915,6 @@ The credentials of the users are stored in the PODs and the maps service provide
 <div class="sect1">
 <h2 id="section-solution-strategy">4. Solution Strategy</h2>
 <div class="sectionbody">
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<div class="title">Contents</div>
-<p>A short summary and explanation of the fundamental decisions and solution strategies, that shape the system&#8217;s architecture. These include</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>technology decisions</p>
-</li>
-<li>
-<p>decisions about the top-level decomposition of the system, e.g. usage of an architectural pattern or design pattern</p>
-</li>
-<li>
-<p>decisions on how to achieve key quality goals</p>
-</li>
-<li>
-<p>relevant organizational decisions, e.g. selecting a development process or delegating certain tasks to third parties.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>These decisions form the cornerstones for your architecture. They are the basis for many other detailed decisions or implementation rules.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>Keep the explanation of these key decisions short.</p>
-</div>
-<div class="paragraph">
-<p>Motivate what you have decided and why you decided that way,
-based upon your problem statement, the quality goals and key constraints.
-Refer to details in the following sections.</p>
-</div>
-</div>
-</div>
 <div class="sect2">
 <h3 id="_technology_decisions">4.1. Technology decisions</h3>
 <div class="paragraph">
@@ -965,16 +929,10 @@ Refer to details in the following sections.</p>
 <p>TypeScript as programming language</p>
 </li>
 <li>
-<p>MongoDb as our DMBS</p>
+<p>MongoDb as our cache DMBS</p>
 </li>
 <li>
 <p>Redux using React as UI</p>
-</li>
-<li>
-<p>Axios</p>
-</li>
-<li>
-<p>Postman</p>
 </li>
 <li>
 <p>Chakra UI (for the implementation of the views)</p>
@@ -985,8 +943,12 @@ Refer to details in the following sections.</p>
 <div class="sect2">
 <h3 id="_design_decisions">4.2. Design decisions:</h3>
 <div class="paragraph">
-<p>The general design of our project has two main parts, connected using a facade:</p>
+<p>The general design decisions.</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>Project has two main parts, connected using a facade:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -997,9 +959,67 @@ Refer to details in the following sections.</p>
 </li>
 </ul>
 </div>
+</li>
+<li>
+<p>The application will have two sessions, one for the webApp and another one for the restAPI.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The webAPP session will be used to link the webAPP with the restAPI.</p>
+</li>
+<li>
+<p>The restAPI session will be created after authenticating with the corresponding solid provider. It will contain the authenticated fetch for private resources in the pod.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./images/4-SolutionStrategy/Session%20structure.drawio.png" alt="Session structure"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Use of a local database to cache shared resources and improve performance.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./images/4-SolutionStrategy/Mongo%20Schema.drawio.png" alt="Mongo schema"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Resources stored in the POD will be RDF resources and will follow as close as possible the schema.org specification.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./images/4-SolutionStrategy/Pod%20Schema.drawio.png" alt="Pod schema"></span></p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_quality_decisions">4.3. Quality decisions</h3>
+<h3 id="_organizational_decisions">4.3. Organizational decisions</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>All developments will be recorded in an issue and added to the kanban board of the project, where its state will be updated periodically.</p>
+</li>
+<li>
+<p>All developments will be done in a personal branch forked from the "develop" branch. When the functionality is finished, it will be merged to the "develop" branch with a pull-request.</p>
+</li>
+<li>
+<p>When the "develop" branch reaches a stable point, it will be merged to the "master" branch.</p>
+</li>
+<li>
+<p>Documentation changes will not be done in the "develop" branch, but in the "documentation" branch, following the same strategy.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_quality_decisions">4.4. Quality decisions</h3>
 <div class="paragraph">
 <p>The main quality attributes that we will focus on are the following:</p>
 </div>
@@ -1081,7 +1101,7 @@ On login, it redirects the user to its POD provider to handle the login process,
 </div>
 <div class="paragraph">
 <div class="title">Solid access</div>
-<p>Component in charge of accessing the user solid POD. Right now this component is in the Web App module, but it could change during the development of the project.</p>
+<p>Component in charge of accessing the user solid POD. The POD accessing logic is completly transparent for the WebAPP, only the RestAPI has to manage that connection.</p>
 </div>
 <div class="paragraph">
 <div class="title">Facade</div>
@@ -1091,6 +1111,26 @@ On login, it redirects the user to its POD provider to handle the login process,
 <div class="title">DB access</div>
 <p>Component in charge of accessing the database. Reads, stores, updates and deletes information.</p>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_level_3">5.1.3. Level 3</h4>
+<div class="paragraph">
+<p>Let´s now have a closer look at both the WebAPP and RestAPI individually, showing the information flow and the communication between the different modules.</p>
+</div>
+<div class="paragraph">
+<div class="title">WebAPP</div>
+<p>Here we can see that the WebAPP actually has a middle component between the views and the RestAPI access components, responsible for cache information in the client in order to improve performance.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./images/5-BuildingBlock/BuildingBlockLvl3-WebAPP.drawio.png" alt="Building block level 3" width="WebAPP."></span></p>
+</div>
+<div class="paragraph">
+<div class="title">RestAPI</div>
+<p>Here is a more detailed explanation of the RestAPI structure. We can see that the facade is implemented in a module with several routers. Those routers access the services, which apart from accessing the Solid POD, are in charge of data validation and transformation. Those services are also in charge of managing the database access.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./images/5-BuildingBlock/BuildingBlockLvl3-RestAPI.drawio.png" alt="Building block level 3" width="RestAPI"></span></p>
+</div>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
@@ -1099,79 +1139,27 @@ On login, it redirects the user to its POD provider to handle the login process,
 <div class="sect1">
 <h2 id="section-runtime-view">6. Runtime View</h2>
 <div class="sectionbody">
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<div class="title">Contents</div>
-<p>The runtime view describes concrete behavior and interactions of the system’s building blocks in form of scenarios from the following areas:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>important use cases or features: how do building blocks execute them?</p>
-</li>
-<li>
-<p>interactions at critical external interfaces: how do building blocks cooperate with users and neighboring systems?</p>
-</li>
-<li>
-<p>operation and administration: launch, start-up, stop</p>
-</li>
-<li>
-<p>error and exception scenarios</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Remark: The main criterion for the choice of possible scenarios (sequences, workflows) is their <strong>architectural relevance</strong>. It is <strong>not</strong> important to describe a large number of scenarios. You should rather document a representative selection.</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>You should understand how (instances of) building blocks of your system perform their job and communicate at runtime.
-You will mainly capture scenarios in your documentation to communicate your architecture to stakeholders that are less willing or able to read and understand the static models (building block view, deployment view).</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>There are many notations for describing scenarios, e.g.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>numbered list of steps (in natural language)</p>
-</li>
-<li>
-<p>activity diagrams or flow charts</p>
-</li>
-<li>
-<p>sequence diagrams</p>
-</li>
-<li>
-<p>BPMN or EPCs (event process chains)</p>
-</li>
-<li>
-<p>state machines</p>
-</li>
-<li>
-<p>&#8230;&#8203;</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
 <div class="sect2">
 <h3 id="_user_login">6.1. User Login</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>The user wants to log in with their POD to acess the webapp.</p>
+<p>The user wants to log in with their POD to access the webapp.</p>
 <div class="ulist">
 <ul>
 <li>
 <p>The user will be able to fill a form that will redirect him to its POD&#8217;s provider in order to give the application access to its POD&#8217;s information or deny it.</p>
 </li>
+<li>
+<p>The structure of the login is not as simple as a typical login flow, since it is not managed by our application but by the users Solid POD provider. The information flow works as follows:</p>
+</li>
 </ul>
 </div>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>image:6-RuntimeView/Login flow.drawio.png</p>
 </div>
 </div>
 <div class="sect2">
@@ -1192,7 +1180,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 </div>
 </div>
 <div class="sect2">
-<h3 id="_reviewing_information_about_a_place_not_implemented_yet">6.3. Reviewing information about a place (Not implemented yet)</h3>
+<h3 id="_reviewing_information_about_a_place">6.3. Reviewing information about a place</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1200,12 +1188,18 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <div class="ulist">
 <ul>
 <li>
-<p>Locations made public or shared with the user will be able to be accesed by the user to review aditional information that the creator added to the place.</p>
+<p>Locations made public or shared with the user will be able to be accessed by the user to review additional information that the creator added to the place.</p>
+</li>
+<li>
+<p>When accessing any shared resource (not only shared locations, but reviews as well), the information flow does not go through only the user´s pod, but through our database as well. This database´s intention is not to manage the user´s data (the "master" data is always the one stored in the pod), but improve performance by reducing the calls to external places.</p>
 </li>
 </ul>
 </div>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./images/6-RuntimeView/Cache%20Flow.drawio.png" alt="Flow of information when adding and accessing any shared resource"></span></p>
 </div>
 </div>
 <div class="sect2">
@@ -1286,7 +1280,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <h3 id="_general_diagram">7.1. General Diagram</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/deployment-general-diagram.png" alt="deployment general diagram" width="590" height="502">
+<img src="./images/deployment-general-diagram.png" alt="deployment general diagram" width="590" height="508">
 </div>
 </div>
 </div>
@@ -1294,7 +1288,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <h3 id="_infrastructure_level_1">7.2. Infrastructure Level 1</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/deployment-l1-diagram.png" alt="deployment l1 diagram" width="503" height="220">
+<img src="./images/deployment-l1-diagram.png" alt="deployment l1 diagram" width="509" height="210">
 </div>
 </div>
 <div class="dlist">
@@ -1362,7 +1356,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <h4 id="_staticprovidercontainer">7.3.1. StaticProviderContainer</h4>
 <div class="imageblock">
 <div class="content">
-<img src="./images/deployment-nginx-diagram.png" alt="deployment nginx diagram" width="356" height="292">
+<img src="./images/deployment-nginx-diagram.png" alt="deployment nginx diagram" width="362" height="298">
 </div>
 </div>
 <div class="dlist">
@@ -1401,7 +1395,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <h4 id="_nodejscontainer">7.3.2. NodeJsContainer</h4>
 <div class="imageblock">
 <div class="content">
-<img src="./images/deployment-node-diagram.png" alt="deployment node diagram" width="233" height="280">
+<img src="./images/deployment-node-diagram.png" alt="deployment node diagram" width="239" height="286">
 </div>
 </div>
 <div class="dlist">
@@ -1575,44 +1569,6 @@ on the PODs.</p>
 <div class="sect1">
 <h2 id="section-design-decisions">9. Design Decisions</h2>
 <div class="sectionbody">
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<div class="title">Contents</div>
-<p>Important, expensive, large scale or risky architecture decisions including rationals.
-With "decisions" we mean selecting one alternative based on given criteria.</p>
-</div>
-<div class="paragraph">
-<p>Please use your judgement to decide whether an architectural decision should be documented
-here in this central section or whether you better document it locally
-(e.g. within the white box template of one building block).</p>
-</div>
-<div class="paragraph">
-<p>Avoid redundancy. Refer to section 4, where you already captured the most important decisions of your architecture.</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>Stakeholders of your system should be able to comprehend and retrace your decisions.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>Various options:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>List or table, ordered by importance and consequences or:</p>
-</li>
-<li>
-<p>more detailed in form of separate sections per decision</p>
-</li>
-<li>
-<p>ADR (architecture decision record) for every important decision</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
 <div class="sect2">
 <h3 id="_technologies">9.1. Technologies</h3>
 <div class="dlist">
@@ -1755,25 +1711,25 @@ here in this central section or whether you better document it locally
 </dd>
 </dl>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_architecture">9.2. Architecture</h3>
 <div class="dlist">
-<div class="title">SOLID pods connection to the WebApp</div>
+<div class="title">Chakra UI</div>
 <dl>
 <dt class="hdlist1">Reason</dt>
 <dd>
-<p>The application will be divided into two big modules: WebApp (front-end) and API (back-end). We have the option of connecting the SOLID pods to any of the two modules. Our decision is to connect it to the WebApp.</p>
+<p>the weight of the package was optimal and it is intuitive.</p>
 </dd>
 <dt class="hdlist1">Pros</dt>
 <dd>
 <div class="ulist">
 <ul>
 <li>
-<p>More resources of integration with React.</p>
+<p>It has a great variety of components and they are very useful.</p>
 </li>
 <li>
-<p>It will reduce overhead.</p>
+<p>Accessibility.</p>
+</li>
+<li>
+<p>Easy-to-understand documentation.</p>
 </li>
 </ul>
 </div>
@@ -1783,7 +1739,110 @@ here in this central section or whether you better document it locally
 <div class="ulist">
 <ul>
 <li>
-<p>It will add complexity to the WebApp module.</p>
+<p>It is not possible to style some of the components it provides.</p>
+</li>
+<li>
+<p>We have not found many examples of using the component templates it offers.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_architecture">9.2. Architecture</h3>
+<div class="dlist">
+<div class="title">SOLID pods connection to the RestAPI</div>
+<dl>
+<dt class="hdlist1">Reason</dt>
+<dd>
+<p>The application will be divided into two big modules: WebApp (front-end) and API (back-end). We have the option of connecting the SOLID pods to any of the two modules. Our decision is to connect it to the RestAPI.</p>
+</dd>
+<dt class="hdlist1">Pros</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Business logic isolation in the WebAPP.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Cons</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Not many examples of SOLID Pod access from the server side.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<div class="title">Local database used as cache</div>
+<dl>
+<dt class="hdlist1">Reason</dt>
+<dd>
+<p>After developing the first prototype of our application, we realised that around 80% of the response time of the server was due to the delay in retrieving data from the user´s Pod. In order to improve performance, we decided to store all the information in the user´s pod and keep it as the "master" information, but to store a copy in a local database and use it when accessing shared resources (information from other users' pods).</p>
+</dd>
+<dt class="hdlist1">Pros</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Improved performance.</p>
+</li>
+<li>
+<p>Data redundancy.</p>
+</li>
+<li>
+<p>The user privacy is not affected, only data that the user wants to share is stored.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Cons</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Only improves performance when accessing other users´ data.</p>
+</li>
+<li>
+<p>Adds complexity to the RestAPI.
+image:</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<div class="title">Location filters in the WebAPP</div>
+<dl>
+<dt class="hdlist1">Reason</dt>
+<dd>
+<p>In order to reduce the number of calls to the RestAPI and consequently the number of calls to external sites (Pod Providers), the filters will be executed in the WebAPP cache (store module).</p>
+</dd>
+<dt class="hdlist1">Pros</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Reduced response time when applying filters.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Cons</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Implementation of some business logic in the WebAPP.</p>
 </li>
 </ul>
 </div>
@@ -1860,25 +1919,6 @@ here in this central section or whether you better document it locally
 <div class="sect1">
 <h2 id="section-technical-risks">11. Risks and Technical Debts</h2>
 <div class="sectionbody">
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<div class="title">Contents</div>
-<p>A list of identified technical risks or technical debts, ordered by priority</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>“Risk management is project management for grown-ups” (Tim Lister, Atlantic Systems Guild.)</p>
-</div>
-<div class="paragraph">
-<p>This should be your motto for systematic detection and evaluation of risks and technical debts in the architecture, which will be needed by management stakeholders (e.g. project managers, product owners) as part of the overall risk analysis and measurement planning.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>List of risks and/or technical debts, probably including suggested measures to minimize, mitigate or avoid risks or reduce technical debts.</p>
-</div>
-</div>
-</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -1910,6 +1950,18 @@ here in this central section or whether you better document it locally
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Big project and big team</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">We are 6 people working on that project, so communication will be crucial. We must help and collaborate with everyone in order to have good developer experience among this project.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database dependency</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Right now, there is no functionality developed to restore the shared resources of users. If the database gets corrupted or the data is lost, a script to reload every shared resource will need to be implemented</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lack of component modularity in webAPP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Right now most components in the WebAPP are not well differentiated. Upgrading or extending their functionality could be more complex than it should.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pod Provider dependency</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Although we do have data redundancy with the cache database, we still depend on the provider in order to do the login or access the "master" data of the users.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1986,7 +2038,7 @@ Created by Dr. Peter Hruschka &amp; Dr. Gernot Starke.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-03-07 14:56:44 +0100
+Last updated 2023-02-19 21:51:22 +0100
 </div>
 </div>
 </body>
