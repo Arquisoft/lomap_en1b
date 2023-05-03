@@ -326,7 +326,7 @@ export function PopupContent(marker: MapMarker){
                                 Created by
                             </Heading>
                             <Text pt='2' fontSize='md'>
-                                {marker.ownerName}
+                                {marker.isOwnLocation? "You" : marker.ownerName}
                             </Text>
                         </Box>
                     </Stack>
