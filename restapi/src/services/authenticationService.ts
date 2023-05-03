@@ -37,7 +37,7 @@ export default {
         }
         // Session now contains an authenticated Session instance.
         if (session!.info.isLoggedIn) {
-            return res.redirect("http://localhost:8082/login/confirm")
+            return res.redirect("http://localhost:3000/login/confirm")
         }
         return res.sendStatus(401)
     },
