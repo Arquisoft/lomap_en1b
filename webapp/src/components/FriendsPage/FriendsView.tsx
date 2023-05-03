@@ -24,7 +24,6 @@ import {
 import {useGetFriendsQuery, useAddFriendMutation} from "../../app/services/Friend";
 import {Friend} from '../../types';
 import { Entry } from './Entry';
-import {Form} from "react-router-dom";
 
 export function AddFriendsView(){
   let [addFriendMutation, {isLoading, isError, error}] = useAddFriendMutation();
@@ -37,7 +36,7 @@ export function AddFriendsView(){
               Add a new friend
           </Heading>
           <HStack maxW={'100vw'}>
-              <Form id={"addFriend"} onSubmit={
+              <form id={"addFriend"} onSubmit={
                   (event) => {
                       event.preventDefault();
                       const newFriend: Friend = {
@@ -46,24 +45,14 @@ export function AddFriendsView(){
                       };
                       const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
                           event.preventDefault();
-                          //TODO: Remove this after testing it all works correctly
-                          console.log("webid: " + newFriend.webId);
-                          console.log("nickname: " + newFriend.nickName);
-
                           addFriendMutation(newFriend);
+
                       };
+
                       handleSubmit(event)
-                      /* TODO:
-                      Right now when we do this, the textfield is not restored so:
-                       - visually there is something written
-                       - You can submit the form because the is something written
-                       - But the field that is sent is empty
-                       - We need to restore the textfield someway or dont erase the content here
 
                       setWebId("");
                       setNickName("");
-                       */
-
                   }}/>
                   <Box>
                       <FormControl isRequired>
@@ -72,6 +61,7 @@ export function AddFriendsView(){
                                  placeholder="asdfghjkl123456"
                                  _placeholder={{color: 'gray.500'}}
                                  type="text"
+                                 value = {webId}
                                  onChange={(e) => setWebId(e.currentTarget.value)}
                           />
                       </FormControl>
@@ -83,6 +73,7 @@ export function AddFriendsView(){
                                  placeholder="Motosarius"
                                  _placeholder={{color: 'gray.500'}}
                                  type="text"
+                                 value = {nickName}
                                  onChange={(e) => setNickName(e.currentTarget.value)}
                           />
                       </FormControl>
@@ -95,7 +86,7 @@ export function AddFriendsView(){
                   _hover={{
                       bg: 'orange.500',
                   }}>
-                  Add
+                  { isLoading? <Spinner /> : "Add" }
               </Button>
 
           </HStack>
@@ -105,7 +96,7 @@ export function AddFriendsView(){
 }
 
 export default function FriendsView(): JSX.Element {
-  let { data: friends, error, isLoading } = useGetFriendsQuery();
+  let { data: friends, error, isLoading, isFetching } = useGetFriendsQuery();
 
   return (
     <Container maxW={'100vw'} >
@@ -128,8 +119,8 @@ export default function FriendsView(): JSX.Element {
           <Heading lineHeight={1.1} fontSize={{ base: '1xl', md: '3xl' }} color={'orange.400'} paddingTop={'1.5'}>
             Your friends
           </Heading>
-          {isLoading
-              ? (<h2>Cargando amigos <Spinner></Spinner> </h2>)
+          {isLoading || isFetching
+              ? (<h2>Loading friends <Spinner></Spinner> </h2>)
               : (<Table variant="striped" colorScheme="black" size="sm">
                             <Thead>
                               <Tr>
@@ -152,37 +143,5 @@ export default function FriendsView(): JSX.Element {
 
       </Stack>
     </Container>
-
-
   );
 }
-
-const StatsText = ({ children }: { children: ReactNode }) => (
-  <Text as={'span'} fontWeight={700} color={'white'}>
-    {children}
-  </Text>
-);
-
-const stats = [
-  {
-    title: 'Team members',
-    content: (
-      <>
-        {/* <StatsText>Sara María Ramírez Perez</StatsText> alias motosara <br/>
-        <StatsText>Iván Vega García</StatsText> alias señor iván <br/>
-        <StatsText>Mario Pérez</StatsText> alias (...)<br/>
-        <StatsText>Elías Llera García-Riaño</StatsText> alias eli <br/>
-        <StatsText>Silvia Suárez Prendes</StatsText> alias laquellora <br/>
-        <StatsText>Dana</StatsText> alias cuac <br/> */}
-
-        Sara María Ramírez Perez UO276188 <br />
-        Iván Vega García UO276670 <br />
-        Mario Pérez Fernández UO283720 <br />
-        Elías Llera García-Riaño  UO271407 <br />
-        Silvia Suárez Prendes UO277412 <br />
-        Andrés Álvarez Murillo UO278249 <br />
-
-      </>
-    ),
-  },
-];

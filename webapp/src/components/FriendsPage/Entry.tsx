@@ -9,7 +9,7 @@ export const Entry = (friend: Friend) => {
     let [removeFriendMutation, {isLoading, isError, error}] = useRemoveFriendMutation();
 
     return (
-        <Tr>
+        <Tr className={"table-friend"}>
             {/* <Td>{friend.profilePic}</Td> */}
             <Td>
                 <Avatar

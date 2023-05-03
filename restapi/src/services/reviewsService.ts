@@ -2,8 +2,8 @@ import {Request, Response} from "express";
 import {Session} from "@inrupt/solid-client-authn-node";
 import {Review} from "../types";
 import {
-    getPodUrlAll,
-    getThingAll,
+    getPodUrlAll, getStringNoLocale, getThing,
+    getThingAll, getWebIdDataset,
     saveSolidDatasetAt,
     setThing
 } from "@inrupt/solid-client";
@@ -13,6 +13,7 @@ import ImagesService from "./imagesService";
 import {getOrCreateDataset} from "./util/podAccessUtil";
 import {InvalidRequestBodyError, PodProviderError} from "./util/customErrors";
 import MongoService from "./MongoService"
+import {FOAF} from "@inrupt/vocab-common-rdf";
 
 export default {
 
@@ -46,7 +47,21 @@ export default {
         if(reviewsDataset == undefined) throw new PodProviderError("Unable to get the reviews dataset.");
         reviewsDataset = reviewsDataset!;
 
-        const imageURL = await ImagesService.saveImage(review.encodedPhoto, session);
+        let imageURL = ""
+        if(review.encodedPhoto !== undefined) {
+            imageURL = await ImagesService.saveImage(review.encodedPhoto, session);
+        }
+
+        //extra review information for database
+        review.owner = session.info.webId!
+        const profile = await getWebIdDataset(session.info.webId!);
+        const profileThing = getThing(profile, session.info.webId!)!;
+        let name = getStringNoLocale(profileThing, FOAF.name)!
+        review.ownerName = (name == null || name == 'undefined' || name.trim().length <= 0)
+            ? "Pod name not defined"
+            : name
+
+        MongoService.createReview(review);
 
         const reviewThing = reviewToThing(review, session.info.webId!, imageURL);
         reviewsDataset = setThing(reviewsDataset, reviewThing);
@@ -55,8 +70,7 @@ export default {
                 reviewsURL,
                 reviewsDataset,
                 {fetch: session.fetch}
-            ),
-            MongoService.createReview(review)
+            )
         ])
         return reviewThing.url;
     },

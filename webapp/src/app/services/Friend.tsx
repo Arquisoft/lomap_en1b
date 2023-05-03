@@ -4,14 +4,16 @@ import {MapMarker} from "../../types";
 
 export const friendApi = createApi({
     reducerPath: 'friendship',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8082/' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://api.lomap.mariopdev.com/' }),
+    tagTypes: ['Friends'],
     endpoints: (builder ) => ({
 
         getFriends: builder.query<Friend[], void>({
             query: (name) => ({
                 url:`friendship`,
                 credentials:"include"
-            })
+            }),
+            providesTags:['Friends']
         }),
         addFriend: builder.mutation<void , Friend>({
             query: (newFriend) => ({
@@ -25,6 +27,7 @@ export const friendApi = createApi({
                 mode:"cors",
                 body: JSON.stringify({friend: newFriend })
             }),
+            invalidatesTags: ['Friends']
         }),
         //TODO: Once restapi implementation is done, use the correct URL. This is just a placeholder
         removeFriend: builder.mutation<void, Friend>({

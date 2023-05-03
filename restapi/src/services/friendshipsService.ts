@@ -4,19 +4,19 @@ import {
     saveSolidDatasetAt,
     getPodUrlAll,
     getThingAll,
-    getThing,
+    getWebIdDataset,
     Thing,
+    getThing,
     getUrlAll,
-    getWebIdDataset
 } from "@inrupt/solid-client";
 import {Session} from "@inrupt/solid-client-authn-node";
 import {friendToThing, thingToFriend, urlToFriend} from "../builders/friendBuilder";
 import {validateFriend, validateFriendThing} from "../validators/friendValidator";
 import {Friend} from "../types";
-import {FOAF} from "@inrupt/vocab-common-rdf";
 import {getOrCreateDataset} from "./util/podAccessUtil";
 import {InvalidRequestBodyError, PodProviderError} from "./util/customErrors";
 import MongoService from "./MongoService"
+import { FOAF } from "@inrupt/vocab-common-rdf";
 
 export default {
 
@@ -37,13 +37,17 @@ export default {
         //Get friends from extended profile
         //TODO
 
-        return await Promise.all(
+        let aux = await Promise.all(
             getThingAll(friendsDataset)
                 .filter(friendThing=>validateFriendThing(friendThing))
                 .map(async friendThing=>await thingToFriend(friendThing, true))
                 .concat(
-                    profileFriends.map(async webId =>await urlToFriend(webId, false)))
-            )
+                    profileFriends.map(async webId =>await urlToFriend(webId, false, "")))
+        )
+        console.log("friendshipService ==============")
+        console.log(aux)
+        console.log("friendshipService ==============")
+        return aux;
     },
 
     addFriend : async function (friend:Friend, session:Session){
@@ -58,6 +62,10 @@ export default {
 
         const friendThing = friendToThing(friend);
         friendsDataset = setThing(friendsDataset, friendThing);
+
+        console.log("friendshipService ==============")
+        console.log(friend)
+        console.log("friendshipService ==============")
 
         await Promise.all([
             saveSolidDatasetAt(

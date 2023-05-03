@@ -25,7 +25,7 @@ import {
     Text,
     useDisclosure,
     CardFooter,
-    ButtonGroup
+    ButtonGroup, Spinner, AlertIcon, AlertTitle, AlertDescription, Alert, useToast, createStandaloneToast
 } from '@chakra-ui/react';
 import "../css/react_leaflet.css";
 import 'leaflet/dist/leaflet.css';
@@ -38,7 +38,6 @@ import {LocationType} from "../locationType";
 import DetailsDrawer from './mapComponents/LocationReviewsView'
 
 export function LocationMarkerWithStore() {
-    // const [position, setPosition] : LatLng = {lat: 0, lng: 0};
     const dispatch = useDispatch();
     const [lati, setLat] = useState(0);
     const [lngi, setLng] = useState(0);
@@ -48,9 +47,9 @@ export function LocationMarkerWithStore() {
     const initialRef = React.useRef(null)
     var [name, setName] = React.useState('')
     var [category, setCategory] = React.useState('bar')
-    var [details, setDetails] = React.useState('')
     var [isShared, setShared] = React.useState(false)
 
+    const toast = useToast();
 
     const map = useMapEvents({
         click: (e) => {
@@ -60,7 +59,6 @@ export function LocationMarkerWithStore() {
             onOpen();
             setName('')
             setCategory('bar')
-            setDetails('')
             setShared(false)
         },
 
@@ -80,23 +78,38 @@ export function LocationMarkerWithStore() {
                         <form id={"formMarker"} onSubmit = {
                             (event) => {
                                 event.preventDefault();
-                                const marker : MapMarker = {latitude : lati, longitude : lngi,
-                                    name: name,locationType: category as LocationType, id: lati + " - " + lngi,isShared: isShared};
+                                const marker: MapMarker = {
+                                    latitude: lati,
+                                    longitude: lngi,
+                                    name: name,
+                                    locationType: category as LocationType,
+                                    isOwnLocation:true,
+                                    isShared: isShared,
+                                    id: "",
+                                    owner: "",
+                                    ownerName: ""
+                                };
 
                                 const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
                                     event.preventDefault();
                                     addLocationMutation(marker);
+                                    toast({
+                                        title: 'Marker Added',
+                                        description: "The location has been added successfully",
+                                        status: 'success',
+                                        duration: 7000,
+                                        isClosable: true,
+                                    });
                                 };
                                 handleSubmit(event)
                                 setName('')
                                 setCategory('bar')
-                                setDetails('')
                                 setShared(false)
                             }}>
                             <Stack spacing={2} direction='column'>
                                 <FormControl isRequired={true}>
                                     <FormLabel>Name</FormLabel>
-                                    <Input value={name} type={"text"} ref={initialRef}
+                                    <Input data-testid="form-add-location-input" value={name} type={"text"} ref={initialRef}
                                            onChange={(e)=>setName(e.currentTarget.value)}/>
                                 </FormControl>
                                 <FormControl isRequired={true}>
@@ -129,7 +142,7 @@ export function LocationMarkerWithStore() {
 
 export default function MapElement(): JSX.Element {
     const escuela: LatLngExpression = {lat: 43.354, lng: -5.851};
-    const {data: locations, error, isLoading} = useGetLocationsQuery();
+    const {data: locations, error, isLoading, isFetching} = useGetLocationsQuery();
     const dispatch = useDispatch()
 
     const [showBars, setShowBars] = useState(true)
@@ -137,13 +150,14 @@ export default function MapElement(): JSX.Element {
     const [showShops, setShowShops] = useState(true)
     const [showSights, setShowSights] = useState(true)
     const [showMonuments, setShowMonuments] = useState(true)
-    const [showSharedLocations, setShowSharedLocations] = useState(true)
+    const [showMyLocations, setShowMyLocations] = useState(true)
+    const [showFriendLocations, setShowFriendLocations] = useState(true)
 
     return (
         <Flex
             minH={'100vh'}
             align={'center'}
-            justify={'center'}>
+            justify={'center'} data-testid="map-element">
 
             <Stack>
                 <Flex>
@@ -153,7 +167,8 @@ export default function MapElement(): JSX.Element {
                         showShops={() => showShops} setShowShops={setShowShops}
                         showSights={() => showSights} setShowSights={setShowSights}
                         showMonuments={() => showMonuments} setShowMonuments={setShowMonuments}
-                        showSharedLocations={() => showSharedLocations} setShowSharedLocations={setShowSharedLocations}
+                        showMyLocations={() => showMyLocations} setShowMyLocations={setShowMyLocations}
+                        showFriendLocations={() => showFriendLocations} setShowFriendLocations={setShowFriendLocations}
                     />
                 </Flex>
                 <MapContainer center={escuela} zoom={13} scrollWheelZoom={true}>
@@ -161,10 +176,20 @@ export default function MapElement(): JSX.Element {
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        noWrap = {true}
                     />
+                    {isLoading || isFetching
+                        ?
+                        (<Alert zIndex={'1400'} status={'info'} variant='solid'>
+                            <AlertIcon  height='50px'/>
+                            <AlertTitle fontSize={17}>Loading markers </AlertTitle>
+                            <AlertDescription> <Spinner thickness='3.2px' size={'lg'}></Spinner></AlertDescription>
+                        </Alert>) :
+                    <>
+                    ({locations?.filter( loc => {
+                        if(loc.isOwnLocation && showMyLocations == false) return false
+                        if(loc.isOwnLocation == false && showFriendLocations == false) return false
 
-                    {locations?.filter( loc => {
-                        if(loc.isShared && showSharedLocations == false) return false
                         if(loc.locationType == LocationType.restaurant && showRestaurants) return true
                         if(loc.locationType == LocationType.bar && showBars) return true
                         if(loc.locationType == LocationType.shop && showShops) return true
@@ -183,10 +208,15 @@ export default function MapElement(): JSX.Element {
                                               latitude={location.latitude}
                                               longitude={location.longitude}
                                               isShared={location.isShared}
+                                              owner={location.owner}
+                                              ownerName={location.ownerName}
+                                              isOwnLocation={location.isOwnLocation}
                                 />
                             </Popup>
                         </Marker>
-                    ))}
+                    ))})
+                    </>
+                    }
                 </MapContainer>
             </Stack>
         </Flex>
@@ -204,8 +234,10 @@ interface FilterModalProps {
     setShowSights : React.Dispatch<React.SetStateAction<boolean>>,
     showMonuments : () => boolean,
     setShowMonuments  : React.Dispatch<React.SetStateAction<boolean>>,
-    showSharedLocations  : () => boolean,
-    setShowSharedLocations : React.Dispatch<React.SetStateAction<boolean>>,
+    showMyLocations  : () => boolean,
+    setShowMyLocations : React.Dispatch<React.SetStateAction<boolean>>,
+    showFriendLocations  : () => boolean,
+    setShowFriendLocations : React.Dispatch<React.SetStateAction<boolean>>,
 }
 
 export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
@@ -218,15 +250,16 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
             { id: "shops", name: "Shops", value: props.showShops, onChange: props.setShowShops },
             { id: "sights", name: "Sights", value: props.showSights, onChange: props.setShowSights },
             { id: "monuments", name: "Monuments", value: props.showMonuments, onChange: props.setShowMonuments },
-            { id: "sharedLocations", name: "Shared Locations", value: props.showSharedLocations, onChange: props.setShowSharedLocations }
+            { id: "myLocations", name: "My Locations", value: props.showMyLocations, onChange: props.setShowMyLocations },
+            { id: "friendLocations", name: "Friend Locations", value: props.showFriendLocations, onChange: props.setShowFriendLocations }
         ]
     };
 
     const propsChecked = (props.showBars() && props.showRestaurants() && props.showShops()
-    && props.showMonuments() && props.showSharedLocations() && props.showSights());
+    && props.showMonuments() && props.showSights());
 
     return (
-        <>
+        <div role={"dialog"}>
             <Button colorScheme='blue' zIndex={'1300'} float={'right'} width={'10rem'} onClick={onOpen}>Filter
                 Locations</Button>
 
@@ -263,43 +296,54 @@ export const FilterModal : FC<FilterModalProps> = ( props ) : JSX.Element => {
                     </ModalContent>
                 </ModalOverlay>
             </Modal>
-        </>
+        </div>
     )
 }
 
 export function PopupContent(marker: MapMarker){
     return(
-        <Card size={'sm'}>
-            <CardBody>
-                <Stack divider={<StackDivider />} spacing='4' minWidth={'sm'}>
-                    <Box>
-                        <Heading size='sm' textTransform='uppercase'>
-                            Name
-                        </Heading>
-                        <Text pt='2' fontSize='sm'>
-                            {marker.name}
-                        </Text>
-                    </Box>
-                    <Box>
-                        <Heading size='sm' textTransform='uppercase'>
-                            Category
-                        </Heading>
-                        <Text pt='2' fontSize='sm'>
-                            {marker.locationType}
-                        </Text>
-                    </Box>
-                </Stack>
-            </CardBody>
-            <CardFooter>
-                <ButtonGroup spacing='2'>
-                    <DetailsDrawer name={marker.name}
-                                   locationType={marker.locationType}
-                                   id={marker.id}
-                                   latitude={marker.latitude}
-                                   longitude={marker.longitude}
-                                   isShared={marker.isShared}/>
-                </ButtonGroup>
-            </CardFooter>
-        </Card>
+            <Card size={'sm'}>
+                <CardBody>
+                    <Stack divider={<StackDivider />} spacing='4' minWidth={'sm'}>
+                        <Box>
+                            <Heading size='sm' textTransform='uppercase'>
+                                Name
+                            </Heading>
+                            <Text pt='2' fontSize='md'>
+                                {marker.name}
+                            </Text>
+                        </Box>
+                        <Box>
+                            <Heading size='sm' textTransform='uppercase'>
+                                Category
+                            </Heading>
+                            <Text pt='2' fontSize='md'>
+                                {marker.locationType}
+                            </Text>
+                        </Box>
+                        <Box>
+                            <Heading size='sm' textTransform='uppercase'>
+                                Created by
+                            </Heading>
+                            <Text pt='2' fontSize='md'>
+                                {marker.isOwnLocation? "You" : marker.ownerName}
+                            </Text>
+                        </Box>
+                    </Stack>
+                </CardBody>
+                <CardFooter>
+                    <ButtonGroup spacing='2'>
+                        <DetailsDrawer name={marker.name}
+                                       locationType={marker.locationType}
+                                       id={marker.id}
+                                       latitude={marker.latitude}
+                                       longitude={marker.longitude}
+                                       isShared={marker.isShared}
+                                       owner={marker.owner}
+                                       ownerName={marker.ownerName}
+                                       isOwnLocation={marker.isOwnLocation}/>
+                    </ButtonGroup>
+                </CardFooter>
+            </Card>
     )
 }
