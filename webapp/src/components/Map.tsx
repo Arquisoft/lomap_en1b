@@ -142,7 +142,7 @@ export function LocationMarkerWithStore() {
 
 export default function MapElement(): JSX.Element {
     const escuela: LatLngExpression = {lat: 43.354, lng: -5.851};
-    const {data: locations, error, isLoading} = useGetLocationsQuery();
+    const {data: locations, error, isLoading, isFetching} = useGetLocationsQuery();
     const dispatch = useDispatch()
 
     const [showBars, setShowBars] = useState(true)
@@ -178,7 +178,7 @@ export default function MapElement(): JSX.Element {
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         noWrap = {true}
                     />
-                    {isLoading
+                    {isLoading || isFetching
                         ?
                         (<Alert zIndex={'1400'} status={'info'} variant='solid'>
                             <AlertIcon  height='50px'/>

@@ -48,17 +48,11 @@ export function AddFriendsView(){
                           addFriendMutation(newFriend);
 
                       };
+
                       handleSubmit(event)
-                      /* TODO:
-                      Right now when we do this, the textfield is not restored so:
-                       - visually there is something written
-                       - You can submit the form because the is something written
-                       - But the field that is sent is empty
-                       - We need to restore the textfield someway or dont erase the content here
 
                       setWebId("");
                       setNickName("");
-                       */
                   }}/>
                   <Box>
                       <FormControl isRequired>
@@ -67,6 +61,7 @@ export function AddFriendsView(){
                                  placeholder="asdfghjkl123456"
                                  _placeholder={{color: 'gray.500'}}
                                  type="text"
+                                 value = {webId}
                                  onChange={(e) => setWebId(e.currentTarget.value)}
                           />
                       </FormControl>
@@ -78,6 +73,7 @@ export function AddFriendsView(){
                                  placeholder="Motosarius"
                                  _placeholder={{color: 'gray.500'}}
                                  type="text"
+                                 value = {nickName}
                                  onChange={(e) => setNickName(e.currentTarget.value)}
                           />
                       </FormControl>
@@ -149,33 +145,3 @@ export default function FriendsView(): JSX.Element {
     </Container>
   );
 }
-
-const StatsText = ({ children }: { children: ReactNode }) => (
-  <Text as={'span'} fontWeight={700} color={'white'}>
-    {children}
-  </Text>
-);
-
-const stats = [
-  {
-    title: 'Team members',
-    content: (
-      <>
-        {/* <StatsText>Sara María Ramírez Perez</StatsText> alias motosara <br/>
-        <StatsText>Iván Vega García</StatsText> alias señor iván <br/>
-        <StatsText>Mario Pérez</StatsText> alias (...)<br/>
-        <StatsText>Elías Llera García-Riaño</StatsText> alias eli <br/>
-        <StatsText>Silvia Suárez Prendes</StatsText> alias laquellora <br/>
-        <StatsText>Dana</StatsText> alias cuac <br/> */}
-
-        Sara María Ramírez Perez UO276188 <br />
-        Iván Vega García UO276670 <br />
-        Mario Pérez Fernández UO283720 <br />
-        Elías Llera García-Riaño  UO271407 <br />
-        Silvia Suárez Prendes UO277412 <br />
-        Andrés Álvarez Murillo UO278249 <br />
-
-      </>
-    ),
-  },
-];
