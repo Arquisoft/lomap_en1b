@@ -45,7 +45,7 @@ export default {
 
     logout : async function(req:Request, res : Response){
         const session = await getSessionFromStorage(req.session.solidSessionId!);
-        await session!.logout();
+        await session?.logout();
         res.redirect("http://localhost:3000")
     },
 
